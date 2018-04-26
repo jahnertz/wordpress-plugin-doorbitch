@@ -14,3 +14,9 @@ Author: Jordan Han
 Version: 0.0.1
 Author URI: https://jhanrahan.com.au
 */
+
+function doorbitch_install () {
+	global $wpdb;
+
+	$table_name = $wpdb->prefix . "doorbitch";
+}
