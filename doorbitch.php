@@ -15,8 +15,80 @@ Version: 0.0.1
 Author URI: https://jhanrahan.com.au
 */
 
-function doorbitch_install () {
+global $bitch_db_version;
+$bitch_db_version = '1.0';
+
+function bitch_install() {
+
+	global $wpdb;
+	global $bitch_db_version;
+
+	$table_name = $wpdb->prefix . 'doorbitch';
+	
+	$charset_collate = $wpdb->get_charset_collate();
+
+	$sql = "CREATE TABLE $table_name (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		name tinytext NOT NULL,
+		text text NOT NULL,
+		url varchar(55) DEFAULT '' NOT NULL,
+		PRIMARY KEY  (id)
+	) $charset_collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+
+	add_option( 'bitch_db_version', $bitch_db_version );
+}
+
+function bitch_install_data() {
 	global $wpdb;
 
-	$table_name = $wpdb->prefix . "doorbitch";
+	$welcome_name = "Mr. Doorbitch";
+	$welcome_text = "Congratulations, the plugin was successfully installed";
+
+	$table_name = $wpdb->prefix . 'doorbitch';
+
+	$wpdb->insert(
+		$table_name,
+		array(
+				'time' => current_time( 'mysql' ),
+				'name' => $welcome_name,
+				'text' => $welcome_text,
+			)
+	);
 }
+
+register_activation_hook( __FILE__, 'bitch_install' );
+register_activation_hook( __FILE__, 'bitch_install_data' );
+
+//upgrade the database if necessary:
+global $wpdb;
+$installed_ver = get_option( "jal_db_version" );
+if ( $installed_ver != $bitch_db_version ) {
+
+	$table_name = $wpdb->prefix . 'doorbitch';
+
+	$sql = "CREATE TABLE $table_name (
+		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+		name tinytext NOT NULL,
+		text text NOT NULL,
+		url varchar(100) DEFAULT '' NOT NULL,
+		PRIMARY KEY  (id)
+	);";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $sql );
+
+	update_option( "bitch_db_version", $bitch_db_version );
+}
+//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
+function doorbitch_update_db_check() {
+	global $bitch_db_version;
+	if ( get_site_option( 'bitch_db_version' ) != $bitch_db_version ) {
+		bitch_install();
+	}
+}
+add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
