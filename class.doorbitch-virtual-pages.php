@@ -2,7 +2,7 @@
 
 Class Doorbitch_Virtual_Pages
 {
-	public static function __construct()
+	public function __construct()
 	{
 
 		doorbitch::debug_add( 'Initializing VPages' );
