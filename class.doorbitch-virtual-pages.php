@@ -35,12 +35,12 @@ Class Doorbitch_Virtual_Pages
 		 */
 		function virtualpage_template_include ( $template )
 		{
-			doorbitch::debug( 'Adding virtual page templates' );
+			// doorbitch::debug( 'Adding virtual page templates' );
 			global $wp_query;
 			$new_template = '';
 
 			if ( array_key_exists( 'virtualpage', $wp_query->query_vars ) ) {
-				doorbitch::debug( 'Array key \'virtualpage\' exists' );
+				// TODO: dynamically add virtualpages according to the plugin's existing templates
 				switch ( $wp_query->query_vars['virtualpage'] ) {
 					case 'doorbitch':
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-form.php';
