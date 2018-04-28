@@ -38,9 +38,6 @@ class Doorbitch_Admin
         <div class="wrap">
             <?php
                 // doorbitch::debug('Nothing to see here');
-                if ( get_option('doorbitch_debug_mode') ){
-                    doorbitch::debug_show();
-                }
             ?>
             <h1>Doorbitch</h1>
             <form method="post" action="options.php">

@@ -105,3 +105,8 @@ if( is_admin() ) $doorbitch_admin = new Doorbitch_Admin();
 //Add virtual page for the frontend form:
 require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
 $doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
+
+
+if ( get_option('doorbitch_debug_mode') ){
+	add_action( 'admin_notices', 'doorbitch::debug_show' );
+}
