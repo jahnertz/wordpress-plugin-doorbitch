@@ -8,6 +8,7 @@ class Doorbitch {
 		if ( ! self::$initiated ) {
 			self::init_hooks();
 		}
+		add_option( 'doorbitch_debug_mode', $debug );
 	}
 	
 	/**

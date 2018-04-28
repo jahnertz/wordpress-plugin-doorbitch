@@ -37,10 +37,9 @@ class Doorbitch_Admin
         ?>
         <div class="wrap">
             <?php
-                // if ( get_option('doorbitch_debug_mode') ){
+                if ( get_option('doorbitch_debug_mode') ){
                     doorbitch::show_debug();
-                    echo get_option( 'doorbitch_debug_mode' );
-                // }
+                }
             ?>
             <h1>Doorbitch</h1>
             <form method="post" action="options.php">
