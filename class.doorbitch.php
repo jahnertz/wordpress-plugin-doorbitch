@@ -10,6 +10,7 @@ class Doorbitch {
 			self::init_hooks();
 		}
 		add_option( 'doorbitch_debug_mode', $debug_mode );
+		debug_add( 'initializing' );
 	}
 	
 	/**

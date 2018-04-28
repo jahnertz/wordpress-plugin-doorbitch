@@ -2,7 +2,9 @@
 
 Class Doorbitch_Virtual_Pages
 {
-	public static function init() {
+	public static function __construct()
+	{
+
 		doorbitch::debug_add( 'Initializing VPages' );
 		function virtualpage_query_vars ( $vars ) {
 			$vars[] = 'virtualpage';
@@ -12,7 +14,8 @@ Class Doorbitch_Virtual_Pages
 
 		// Add redirects for virtual page urls to index.php?virtualpage=name
 		// permalink settings in admin inteface must be saved. This can be done with flush_rewrite_rules() on theme activation.
-		function virtualpage_add_rewrite_rules () {
+		function virtualpage_add_rewrite_rules ()
+		{
 			add_rewrite_tag( '%virtualpage%', '([^&])' );
 			add_rewrite_rule(
 			  'vp/([^/]*)/?$',
@@ -31,7 +34,8 @@ Class Doorbitch_Virtual_Pages
 		/*
 		 * Assign Templates to the virtual pages:
 		 */
-		function virtualpage_template_include ( $template ) {
+		function virtualpage_template_include ( $template )
+		{
 			global $wp_query;
 			$new_template = '';
 
