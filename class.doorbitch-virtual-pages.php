@@ -44,12 +44,12 @@ Class Doorbitch_Virtual_Pages
 				switch ( $wp_query->query_vars['virtualpage'] ) {
 					case 'doorbitch':
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-form.php';
-						doorbitch::debug( 'Including doorbitch template:' . $new_template );
+						// doorbitch::debug( 'Including doorbitch template:' . $new_template );
 						break;
 				}
 
 				if ( $new_template != '' ) {
-					doorbitch::debug( 'Using vpage template' );
+					// doorbitch::debug( 'Using vpage template' );
 					return $new_template;
 				}
 				else {
