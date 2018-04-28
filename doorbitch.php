@@ -109,4 +109,5 @@ $doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
 
 if ( get_option('doorbitch_debug_mode') ){
 	add_action( 'admin_notices', 'doorbitch::debug_show' );
+	add_action( 'wp_footer', 'doorbitch::debug_show' );
 }
