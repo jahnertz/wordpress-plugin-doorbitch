@@ -2,6 +2,7 @@
 
 class Doorbitch {
 	private static $initiated = false;
+	public static $debug = true;
 
 	public static function init() {
 		if ( ! self::$initiated ) {
@@ -14,6 +15,10 @@ class Doorbitch {
 	 */
 	private static function init_hooks() {
 		self::$initiated = true;
+	}
+
+	public static function show_debug() {
+		echo "<h4>Debug</h4>";
 	}
 }
 

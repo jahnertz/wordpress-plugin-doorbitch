@@ -59,6 +59,9 @@ function bitch_install_data() {
 				'text' => $welcome_text,
 			)
 	);
+
+	$event_r = ['unknwn-event' => date(DATE_ISO8601), 1, false ];
+	add_option( 'doorbitch_events', $event_r );
 }
 
 register_activation_hook( __FILE__, 'bitch_install' );

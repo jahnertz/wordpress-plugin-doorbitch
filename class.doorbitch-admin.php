@@ -36,6 +36,12 @@ class Doorbitch_Admin
         $this->options = get_option( 'doorbitch_options' );
         ?>
         <div class="wrap">
+            <?php
+                // if ( get_option('doorbitch_debug_mode') ){
+                    doorbitch::show_debug();
+                    echo get_option( 'doorbitch_debug_mode' );
+                // }
+            ?>
             <h1>Doorbitch</h1>
             <form method="post" action="options.php">
             <?php
