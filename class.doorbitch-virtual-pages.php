@@ -35,6 +35,7 @@ Class Doorbitch_Virtual_Pages
 		 */
 		function virtualpage_template_include ( $template )
 		{
+			doorbitch::debug( 'Adding virtual page templates' );
 			global $wp_query;
 			$new_template = '';
 
