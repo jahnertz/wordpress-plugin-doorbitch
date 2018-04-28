@@ -69,7 +69,7 @@ register_activation_hook( __FILE__, 'bitch_install_data' );
 
 //upgrade the database if necessary:
 global $wpdb;
-$installed_ver = get_option( "jal_db_version" );
+$installed_ver = get_option( "bitch_db_version" );
 if ( $installed_ver != $bitch_db_version ) {
 
 	$table_name = $wpdb->prefix . 'doorbitch';
