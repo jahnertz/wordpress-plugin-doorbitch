@@ -5,7 +5,7 @@ Class Doorbitch_Virtual_Pages
 	public function __construct()
 	{
 
-		doorbitch::debug( 'Initializing VPages' );
+		// doorbitch::debug( 'Initializing VPages' );
 		function virtualpage_query_vars ( $vars ) {
 			$vars[] = 'virtualpage';
 			return $vars;
@@ -16,13 +16,13 @@ Class Doorbitch_Virtual_Pages
 		// permalink settings in admin inteface must be saved. This can be done with flush_rewrite_rules() on theme activation.
 		function virtualpage_add_rewrite_rules ()
 		{
-			doorbitch::debug( 'Adding rewrite rules.' );
+			// doorbitch::debug( 'Adding rewrite rules.' );
 			add_rewrite_tag( '%virtualpage%', '([^&])' );
 			add_rewrite_rule(
 				'vp/([^/]*)/?$',
 				'index.php?virtualpage=$matches[1]',
 				'top'
-				// An alternative approach.
+				// an alternative approach.
 				// 'doorbitch/?$',
 				// 'index.php?virtualpage=doorbitch',
 				// 'top'
@@ -40,13 +40,16 @@ Class Doorbitch_Virtual_Pages
 			$new_template = '';
 
 			if ( array_key_exists( 'virtualpage', $wp_query->query_vars ) ) {
+				doorbitch::debug( 'Array key \'virtualpage\' exists' );
 				switch ( $wp_query->query_vars['virtualpage'] ) {
 					case 'doorbitch':
-						$new_template = locate_template( array( plugin_dir_path( __FILE__ ) . 'templates/doorbitch-form.php' ) );
+						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-form.php';
+						doorbitch::debug( 'Including doorbitch template:' . $new_template );
 						break;
 				}
 
 				if ( $new_template != '' ) {
+					doorbitch::debug( 'Using vpage template' );
 					return $new_template;
 				}
 				else {
