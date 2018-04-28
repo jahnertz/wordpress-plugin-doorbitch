@@ -16,6 +16,7 @@ Class Doorbitch_Virtual_Pages
 		// permalink settings in admin inteface must be saved. This can be done with flush_rewrite_rules() on theme activation.
 		function virtualpage_add_rewrite_rules ()
 		{
+			doorbitch::debug_add( 'Adding rewrite rules.' );
 			add_rewrite_tag( '%virtualpage%', '([^&])' );
 			add_rewrite_rule(
 				'vp/([^/]*)/?$',
