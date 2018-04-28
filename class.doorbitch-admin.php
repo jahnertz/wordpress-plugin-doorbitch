@@ -37,7 +37,7 @@ class Doorbitch_Admin
         ?>
         <div class="wrap">
             <?php
-                doorbitch::debug_add('Nothing to see here');
+                // doorbitch::debug_add('Nothing to see here');
                 if ( get_option('doorbitch_debug_mode') ){
                     doorbitch::debug_show();
                 }
