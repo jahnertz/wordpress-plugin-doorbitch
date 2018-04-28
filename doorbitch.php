@@ -102,9 +102,7 @@ function doorbitch_plugin_menu() {
 }
 
 function register_doorbitch_settings() {
-	register_setting( 'doorbitch-settings-group', 'new_option_name' );
-	register_setting( 'doorbitch-settings-group', 'some_other_option' );
-	register_setting( 'doorbitch-settings-group', 'option_etc' );
+	register_setting( 'doorbitch-settings-group', 'data_fields' );
 }
 
 function doorbitch_plugin_settings_page() {
@@ -122,17 +120,7 @@ function doorbitch_plugin_settings_page() {
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row">New Option Name</th>
-					<td><input type="text" name="new_option_name" value="<?php echo esc_attr( get_option('new_option_name') ); ?>" /></td>
-				</tr>
-
-				<tr valign="top">
-					<th scope="row">Some Other Option</th>
-					<td><input type="text" name="some_other_option" value="<?php echo esc_attr( get_option('some_other_option') ); ?>" /></td>
-				</tr>
-
-				<tr valign="top">
-					<th scope="row">Options, Etc.</th>
-					<td><input type="text" name="option_etc" value="<?php echo esc_attr( get_option('option_etc') ); ?>" /></td>
+					<td><input type="text" name="data_fields" value="<?php echo esc_attr( get_option('data_fields') ); ?>" /></td>
 				</tr>
 			</table>
 
