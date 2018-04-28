@@ -93,17 +93,51 @@ function doorbitch_update_db_check() {
 }
 add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
 
-//Add menu page under tools
+//Add options menu page under tools
 add_action( 'admin_menu', 'doorbitch_plugin_menu' );
+
 function doorbitch_plugin_menu() {
-	add_submenu_page( 'tools.php', 'Doorbitch Options', 'Doorbitch', 'manage_options', 'doorbitch-options', 'doorbitch_plugin_options' );
+	add_submenu_page( 'tools.php', 'Doorbitch Options', 'Doorbitch', 'manage_options', 'doorbitch-options', 'doorbitch_plugin_settings_page' );
+	add_action( 'admin_init', 'register_doorbitch_settings' );
 }
 
-function doorbitch_plugin_options() {
+function register_doorbitch_settings() {
+	register_setting( 'doorbitch-settings-group', 'new_option_name' );
+	register_setting( 'doorbitch-settings-group', 'some_other_option' );
+	register_setting( 'doorbitch-settings-group', 'option_etc' );
+}
+
+function doorbitch_plugin_settings_page() {
 	if ( !current_user_can( 'manage_options' ) ) {
 		wp_die( __( 'You do not have sufficient privileges to view this page. ' ) );
 	}
-	echo '<div class="wrap">';
-	echo '<p>TODO: add form options';
-	echo '</div>';
-}
+	//include 'options.php';
+	?>
+	<div class="wrap">
+		<h1>Doorbitch</h1>
+
+		<form method="post" action="options.php">
+			<?php settings_fields( 'doorbitch-settings-group' ); ?>
+			<?php do_settings_sections( 'doorbitch-settings-group' ); ?>
+			<table class="form-table">
+				<tr valign="top">
+					<th scope="row">New Option Name</th>
+					<td><input type="text" name="new_option_name" value="<?php echo esc_attr( get_option('new_option_name') ); ?>" /></td>
+				</tr>
+
+				<tr valign="top">
+					<th scope="row">Some Other Option</th>
+					<td><input type="text" name="some_other_option" value="<?php echo esc_attr( get_option('some_other_option') ); ?>" /></td>
+				</tr>
+
+				<tr valign="top">
+					<th scope="row">Options, Etc.</th>
+					<td><input type="text" name="option_etc" value="<?php echo esc_attr( get_option('option_etc') ); ?>" /></td>
+				</tr>
+			</table>
+
+			<?php submit_button(); ?>
+
+		</form>
+	</div>
+<?php } ?>
