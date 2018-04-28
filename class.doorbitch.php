@@ -10,7 +10,7 @@ class Doorbitch {
 			self::init_hooks();
 		}
 		add_option( 'doorbitch_debug_mode', $debug_mode );
-		debug_add( 'initializing' );
+		debug( 'initializing' );
 	}
 	
 	/**
@@ -28,7 +28,7 @@ class Doorbitch {
 		echo "</div>";
 	}
 
-	public static function debug_add( $debug_text ) {
+	public static function debug( $debug_text ) {
 		$file = basename( debug_backtrace()[0]['file'] );
 		self::$debug[] = '<p><i>' . $debug_text . '</i> -> ' . $file . '</p>';
 		//TODO: Print errors from table of common errors.
