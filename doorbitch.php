@@ -13,7 +13,9 @@ Author: Jordan Han
 Version: 0.0.1
 Author URI: https://jhanrahan.com.au
 */
+define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
+require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 global $bitch_db_version;
 $bitch_db_version = '1.0';
 
@@ -96,5 +98,3 @@ add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
 include( plugin_dir_path( __FILE__ ) . 'class.doorbitch-admin.php');
 
 if( is_admin() ) $doorbitch_admin = new Doorbitch_Admin();
-
-add_filter()
