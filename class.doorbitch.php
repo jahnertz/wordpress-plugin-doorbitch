@@ -19,12 +19,16 @@ class Doorbitch {
 		self::$initiated = true;
 	}
 
-	public static function show_debug() {
+	public static function debug_show() {
 		echo "<div class='doorbitch-debug'><h4>Debug</h4>";
 		for ($i = 0; $i < count( self::$debug ); $i++ ) {
 			print_r( self::$debug[$i] );
 		}
 		echo "</div>";
+	}
+
+	public static function debug_add() {
+
 	}
 }
 

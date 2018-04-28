@@ -38,7 +38,7 @@ class Doorbitch_Admin
         <div class="wrap">
             <?php
                 if ( get_option('doorbitch_debug_mode') ){
-                    doorbitch::show_debug();
+                    doorbitch::debug_show();
                 }
             ?>
             <h1>Doorbitch</h1>
