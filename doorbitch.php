@@ -92,3 +92,19 @@ function doorbitch_update_db_check() {
 	}
 }
 add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
+
+//Add menu page under tools
+add_action( 'admin_menu', 'doorbitch_plugin_menu' );
+function doorbitch_plugin_menu() {
+	// add_options_page( 'Doorbitch Options', 'Doorbitch', 'manage_options', 'doorbitch-options', 'doorbitch_plugin_options' );
+	add_submenu_page( 'tools.php', 'Doorbitch Options', 'Doorbitch', 'manage_options', 'doorbitch-options', 'doorbitch_plugin_options' );
+}
+
+function doorbitch_plugin_options() {
+	if ( !current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have sufficient privileges to view this page. ' ) );
+	}
+	echo '<div class="wrap">';
+	echo '<p>TODO: add form options';
+	echo '</div>';
+}
