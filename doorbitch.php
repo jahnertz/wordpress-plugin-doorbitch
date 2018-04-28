@@ -95,6 +95,6 @@ function doorbitch_update_db_check() {
 add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
 
 //Add admin options page under 'tools' section:
-include( plugin_dir_path( __FILE__ ) . 'class.doorbitch-admin.php');
+require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
 
 if( is_admin() ) $doorbitch_admin = new Doorbitch_Admin();
