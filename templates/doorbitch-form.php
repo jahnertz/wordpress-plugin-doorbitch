@@ -13,6 +13,20 @@ get_header(); ?>
 		<main id="main" class="site-main" role="main">
 			<div class="page-content">
 				<h1>Doorbitch</h1>
+				<form action="../form-action.php" method="get">
+					<table>
+						<tr>
+							<td>
+								Name: <input type="text" name="fname"><br>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="submit" value="Submit">
+							</td>
+						</tr>
+					</table>
+				</form>
 			</div>
 
 		</main><!-- .site-main -->
