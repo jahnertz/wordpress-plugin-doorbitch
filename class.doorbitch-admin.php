@@ -1,5 +1,5 @@
 <?php
-class MySettingsPage
+class Doorbitch_Admin
 {
     /**
      * Holds the values to be used in the fields callbacks
@@ -131,4 +131,3 @@ class MySettingsPage
         );
     }
 }
-
