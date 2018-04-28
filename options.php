@@ -1,3 +1,4 @@
+?>
 <div class="wrap">
 	<h1>Doorbitch</h1>
 
@@ -25,3 +26,4 @@
 
 	</form>
 </div>
+<?php
