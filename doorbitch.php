@@ -108,7 +108,9 @@ $doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
 
 
 if ( get_option('doorbitch_debug_mode') ){
-	function enqueue_debug_styles() { wp_enqueue_style( 'debug', DOORBITCH__PLUGIN_DIR . '/css/debug.css' ); }
+	function enqueue_debug_styles() { 
+		wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
+	}
 	add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
 	add_action( 'admin_notices', 'doorbitch::debug_show' );
 	add_action( 'wp_footer', 'doorbitch::debug_show' );
