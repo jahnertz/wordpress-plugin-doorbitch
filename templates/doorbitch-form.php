@@ -17,7 +17,8 @@ get_header(); ?>
 					<table>
 						<tr>
 							<td>
-								Name: <input type="text" name="fname"><br>
+								<label for="fname">Name</label>
+								<input type="text" name="fname"><br>
 							</td>
 						</tr>
 						<tr>
