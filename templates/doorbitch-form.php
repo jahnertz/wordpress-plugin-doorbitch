@@ -18,12 +18,24 @@ get_header(); ?>
 						<tr>
 							<td>
 								<label for="fname">Name</label>
-								<input type="text" name="fname"><br>
+								<input type="text" name="fname" >
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<input type="submit" value="Submit">
+								<label for="18-25">18-25</label>
+								<input type="radio" name="18-25">
+								<label for="26-30">26-30</label>
+								<input type="radio" name="26-30">
+								<label for="30-35">30-35</label>
+								<input type="radio" name="30-35">
+								<label for="35+">35+</label>
+								<input type="radio" name="35+">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="submit" value="Submit" >
 							</td>
 						</tr>
 					</table>
