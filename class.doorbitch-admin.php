@@ -32,6 +32,7 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
+        global $wpdb;
         // Set class property
         $this->options = get_option( 'doorbitch_options' );
         ?>
@@ -39,7 +40,15 @@ class Doorbitch_Admin
             <?php
                 // doorbitch::debug('Nothing to see here');
             ?>
-            <h1>Doorbitch</h1>
+            <?php
+            if( isset( $_GET[ 'tab' ] ) ) {
+                $active_tab = $_GET[ 'tab' ];
+            }
+            ?>
+            <h2 class="nav-tab-wrapper">
+                <a href="?page=doorbitch-settings-admin&tab=export" class="nav-tab">View &amp; Export</a>
+                <a href="?page=doorbitch-settings-admin&tab=settings" class="nav-tab">Settings</a>
+            </h2>
             <form method="post" action="options.php">
             <?php
                 // This prints out all hidden setting fields
@@ -48,6 +57,21 @@ class Doorbitch_Admin
                 submit_button();
             ?>
             </form>
+            <table>
+            <?php
+            // Show data:
+            $result = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
+            foreach ( $result as $print ) {
+            ?>
+            <tr>
+                <td><?php echo $print->time; ?></td>
+                <td><?php echo $print->name; ?></td>
+                <td><?php echo $print->text; ?></td>
+            </tr>
+            <?php
+            }
+            ?>
+            </table>
         </div>
         <?php
     }
