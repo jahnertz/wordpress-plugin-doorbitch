@@ -11,7 +11,6 @@ class Doorbitch_Admin
      */
     public function __construct()
     {
-        doorbitch::debug( var_dump( get_option( 'doorbitch_options' ) ) );
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
     }
@@ -47,7 +46,17 @@ class Doorbitch_Admin
             <?php
             switch ( $active_tab ) {
                 case 'export':
-                    $this->display_records() ;
+                    ?>
+                    <form method="post" action="">
+                        <label for="event">Event</label>
+                        <select name="event">
+                           <?php
+                           // TODO: retrieve list of events;
+                           ?> 
+                        </select>
+                    </form>
+                    <?php
+                    $this->display_records();
                     break;
                 
                 default:
@@ -159,9 +168,9 @@ class Doorbitch_Admin
             foreach ( $result as $print ) {
                 ?>
                 <tr>
+                    <td><?php echo $print->event; ?></td>
                     <td><?php echo $print->time; ?></td>
-                    <td><?php echo $print->name; ?></td>
-                    <td><?php echo $print->text; ?></td>
+                    <td><?php echo $print->data; ?></td>
                 </tr>
                 <?php
             }

@@ -53,17 +53,17 @@ function bitch_install() {
 function bitch_install_data() {
 	global $wpdb;
 
-	$welcome_name = "Mr. Doorbitch";
-	$welcome_text = "Congratulations, the plugin was successfully installed";
+	$welcome_event = "Example";
+	$welcome_data = "Name:Example Person,Age:18-25,Comment:Nothing to see here.";
 
 	$table_name = $wpdb->prefix . 'doorbitch';
 
 	$wpdb->insert(
 		$table_name,
 		array(
+				'event' => $welcome_event,
 				'time' => current_time( 'mysql' ),
-				'name' => $welcome_name,
-				'text' => $welcome_text,
+				'data' => $welcome_data
 			)
 	);
 
