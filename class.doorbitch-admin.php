@@ -32,7 +32,6 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        global $wpdb;
         // Set class property
         $this->options = get_option( 'doorbitch_options' );
         ?>
@@ -46,33 +45,19 @@ class Doorbitch_Admin
             </h2>
             <form method="post" action="options.php">
             <?php
-                if ( $active_tab == 'export' ) {
-                    ?>
-                    <h3>Nothing to see here</h3>
-                    <?php
-                }
-                else {
+            switch ( $active_tab ) {
+                case 'export':
+                    $this->display_records() ;
+                    break;
+                
+                default:
                     settings_fields( 'doorbitch_options_group' );
                     do_settings_sections( 'doorbitch-settings-admin' );
+                    submit_button();
+                    break;
                 }
-            submit_button();
             ?>
             </form>
-            <table>
-            <?php
-            // Show data:
-            $result = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
-            foreach ( $result as $print ) {
-            ?>
-            <tr>
-                <td><?php echo $print->time; ?></td>
-                <td><?php echo $print->name; ?></td>
-                <td><?php echo $print->text; ?></td>
-            </tr>
-            <?php
-            }
-            ?>
-            </table>
         </div>
         <?php
     }
@@ -157,5 +142,26 @@ class Doorbitch_Admin
             '<input type="text" id="title" name="my_option_name[title]" value="%s" />',
             isset( $this->options['title'] ) ? esc_attr( $this->options['title']) : ''
         );
+    }
+
+    private function display_records() {
+        global $wpdb;
+        ?>
+        <table>
+            <?php
+            // Show data:
+            $result = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
+            foreach ( $result as $print ) {
+                ?>
+                <tr>
+                    <td><?php echo $print->time; ?></td>
+                    <td><?php echo $print->name; ?></td>
+                    <td><?php echo $print->text; ?></td>
+                </tr>
+                <?php
+            }
+            ?>
+        </table>
+        <?php
     }
 }
