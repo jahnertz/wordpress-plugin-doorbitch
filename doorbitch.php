@@ -31,10 +31,9 @@ function bitch_install() {
 
 	$sql = "CREATE TABLE $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		event tinytext NOT NULL,
 		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-		name tinytext NOT NULL,
-		text text NOT NULL,
-		url varchar(55) DEFAULT '' NOT NULL,
+		data text NOT NULL,	
 		PRIMARY KEY  (id)
 	) $charset_collate;";
 
@@ -63,7 +62,7 @@ function bitch_install_data() {
 		array(
 				'event' => $welcome_event,
 				'time' => current_time( 'mysql' ),
-				'data' => $welcome_data
+				'data' => $welcome_data,
 			)
 	);
 
@@ -83,10 +82,9 @@ if ( $installed_ver != $bitch_db_version ) {
 
 	$sql = "CREATE TABLE $table_name (
 		id mediumint(9) NOT NULL AUTO_INCREMENT,
+		event tinytext NOT NULL,
 		time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-		name tinytext NOT NULL,
-		text text NOT NULL,
-		url varchar(100) DEFAULT '' NOT NULL,
+		data text NOT NULL,	
 		PRIMARY KEY  (id)
 	);";
 
