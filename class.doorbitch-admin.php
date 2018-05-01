@@ -46,11 +46,18 @@ class Doorbitch_Admin
             <?php
             switch ( $active_tab ) {
                 case 'export':
+                    global $wpdb;
                     ?>
                     <form method="post" action="">
                         <label for="event">Event</label>
                         <select name="event">
                            <?php
+                            $events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
+                            foreach ($events as $event) {
+                                ?>
+                                <option value="<?php echo $event->event ?>"><?php echo $event->event ?></option>
+                                <?php
+                            }
                            // TODO: retrieve list of events;
                            ?> 
                         </select>
@@ -164,13 +171,13 @@ class Doorbitch_Admin
         <table class="doorbitch-records">
             <?php
             // Show data:
-            $result = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
-            foreach ( $result as $print ) {
+            $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
+            foreach ( $results as $result ) {
                 ?>
                 <tr>
-                    <td><?php echo $print->event; ?></td>
-                    <td><?php echo $print->time; ?></td>
-                    <td><?php echo $print->data; ?></td>
+                    <td><?php echo $result->event; ?></td>
+                    <td><?php echo $result->time; ?></td>
+                    <td><?php echo $result->data; ?></td>
                 </tr>
                 <?php
             }
