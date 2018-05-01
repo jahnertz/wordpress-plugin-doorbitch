@@ -41,7 +41,11 @@ function bitch_install() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $sql );
 
+	// set initial frontend form:
+	$bitch_frontend_form = file_get_contents( plugin_dir_path( __FILE__ ) . 'forms/doorbitch-form.php' );
+
 	add_option( 'bitch_db_version', $bitch_db_version );
+	add_option( 'bitch_frontend_form', $bitch_frontend_form );
 }
 
 function bitch_install_data() {
