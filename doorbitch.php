@@ -109,7 +109,7 @@ if( is_admin() ) {
 	function enqueue_admin_styles() {
 		wp_enqueue_style( 'doorbitch-admin', plugins_url( '/css/doorbitch-admin.css', __FILE__ ) );
 	}
-	add_action( 'wp_enqueue_scripts', 'enqueue_admin_styles' );
+	add_action( 'admin_enqueue_scripts', 'enqueue_admin_styles' );
 }
 
 //Add virtual page for the frontend form:
