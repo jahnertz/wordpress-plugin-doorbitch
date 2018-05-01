@@ -18,7 +18,7 @@ define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 
 global $bitch_db_version;
-$bitch_db_version = '1.0';
+$bitch_db_version = '1.1';
 
 function bitch_install() {
 
