@@ -11,6 +11,7 @@ class Doorbitch_Admin
      */
     public function __construct()
     {
+        doorbitch::debug( var_dump( get_option( 'doorbitch_options' ) ) );
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
     }
@@ -43,7 +44,6 @@ class Doorbitch_Admin
                 <a href="?page=doorbitch-settings-admin&tab=export" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>">View &amp; Export</a>
                 <a href="?page=doorbitch-settings-admin&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">Settings</a>
             </h2>
-            <form method="post" action="options.php">
             <?php
             switch ( $active_tab ) {
                 case 'export':
@@ -51,13 +51,18 @@ class Doorbitch_Admin
                     break;
                 
                 default:
+                    ?>
+                    <form method="post" action="options.php">
+                    <?php
                     settings_fields( 'doorbitch_options_group' );
                     do_settings_sections( 'doorbitch-settings-admin' );
                     submit_button();
+                    ?>
+                    </form>
+                    <?php
                     break;
                 }
             ?>
-            </form>
         </div>
         <?php
     }
@@ -147,7 +152,7 @@ class Doorbitch_Admin
     private function display_records() {
         global $wpdb;
         ?>
-        <table>
+        <table class="doorbitch-records">
             <?php
             // Show data:
             $result = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
