@@ -172,12 +172,29 @@ class Doorbitch_Admin
             <?php
             // Show data:
             $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
+            // Create headers:
+            ?>
+            <tr>
+                <th>event</th>
+                <th>date</th>
+                <th>name</th>
+                <th>age</th>
+                <th>comment</th>
+            </tr>
+            <?php
             foreach ( $results as $result ) {
                 ?>
                 <tr>
                     <td><?php echo $result->event; ?></td>
                     <td><?php echo $result->time; ?></td>
-                    <td><?php echo $result->data; ?></td>
+                    <?php $data = explode( ',', $result->data );
+                        foreach ( $data as $datum ) {
+                            $keypair = explode( ':', $datum );
+                            ?>
+                            <td><?php echo $keypair[1]; ?></td>
+                            <?php
+                        }
+                        ?>
                 </tr>
                 <?php
             }
