@@ -108,6 +108,10 @@ add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
 if( is_admin() ) {
 	require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
 	$doorbitch_admin = new Doorbitch_Admin();
+	function enqueue_admin_styles() {
+		wp_enqueue_style( 'doorbitch-admin', plugins_url( '/css/doorbitch-admin.css', __FILE__ ) );
+	}
+	add_action( 'wp_enqueue_scripts', 'enqueue_admin_styles' );
 }
 
 //Add virtual page for the frontend form:
