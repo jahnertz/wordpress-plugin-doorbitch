@@ -38,23 +38,24 @@ class Doorbitch_Admin
         ?>
         <div class="wrap">
             <?php
-                // doorbitch::debug('Nothing to see here');
-            ?>
-            <?php
-            if( isset( $_GET[ 'tab' ] ) ) {
-                $active_tab = $_GET[ 'tab' ];
-            }
+            $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'export';
             ?>
             <h2 class="nav-tab-wrapper">
-                <a href="?page=doorbitch-settings-admin&tab=export" class="nav-tab">View &amp; Export</a>
-                <a href="?page=doorbitch-settings-admin&tab=settings" class="nav-tab">Settings</a>
+                <a href="?page=doorbitch-settings-admin&tab=export" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>">View &amp; Export</a>
+                <a href="?page=doorbitch-settings-admin&tab=settings" class="nav-tab <?php echo $active_tab == 'settings' ? 'nav-tab-active' : ''; ?>">Settings</a>
             </h2>
             <form method="post" action="options.php">
             <?php
-                // This prints out all hidden setting fields
-                settings_fields( 'doorbitch_options_group' );
-                do_settings_sections( 'doorbitch-settings-admin' );
-                submit_button();
+                if ( $active_tab == 'display_export' ) {
+                    ?>
+                    <h3>Nothing to see here</h3>
+                    <?php
+                }
+                else {
+                    settings_fields( 'doorbitch_options_group' );
+                    do_settings_sections( 'doorbitch-settings-admin' );
+                }
+            submit_button();
             ?>
             </form>
             <table>
