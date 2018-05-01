@@ -46,7 +46,7 @@ class Doorbitch_Admin
             </h2>
             <form method="post" action="options.php">
             <?php
-                if ( $active_tab == 'display_export' ) {
+                if ( $active_tab == 'export' ) {
                     ?>
                     <h3>Nothing to see here</h3>
                     <?php
