@@ -17,7 +17,7 @@ get_header(); ?>
 				// require_once ( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ); 
 				$form = get_option( 'bitch_frontend_form' );
 				if ( $form == '' ) {
-					update_option( 'bitch_frontend_form', file_get_contents( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ) );
+					update_option( 'bitch_frontend_form', file_get_contents( plugin_dir_path( __FILE__ ) . '../forms/default.php' ) );
 					$form = get_option( 'bitch_frontend_form' );
 				}
 				echo $form;
