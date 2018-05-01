@@ -105,8 +105,10 @@ function doorbitch_update_db_check() {
 add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
 
 //Add admin options page under 'tools' section:
-require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
-if( is_admin() ) $doorbitch_admin = new Doorbitch_Admin();
+if( is_admin() ) {
+	require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
+	$doorbitch_admin = new Doorbitch_Admin();
+}
 
 //Add virtual page for the frontend form:
 require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
