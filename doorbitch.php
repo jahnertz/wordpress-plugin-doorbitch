@@ -1,7 +1,7 @@
 <?php
 /**
  * @package Doorbitch
- * @version 0.0.4
+ * @version 0.0.5
  *
  */
 /*
@@ -10,7 +10,7 @@ Plugin URI: https://github.com/jahnertz/wordpress-plugin-doorbitch/tree/master
 Description: A wordpress plugin to used to collect and export patrons' basic information. Use the 'Doorbitch' admin page (under Tools) to configure the plugin.
 Login to the collection page via http://yoursite.com/doorbitch
 Author: Jordan Han
-Version: 0.0.4
+Version: 0.0.5
 Author URI: https://jhanrahan.com.au
 */
 define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
@@ -104,6 +104,8 @@ add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
 
 //Add admin options page under 'tools' section:
 if( is_admin() ) {
+    // include PhpSpreadsheet library:
+    require 'vendor/autoload.php';
 	require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
 	$doorbitch_admin = new Doorbitch_Admin();
 	function enqueue_admin_styles() {

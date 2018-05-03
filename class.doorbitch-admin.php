@@ -1,4 +1,9 @@
 <?php
+// include PhpSpreadsheet library:
+require_once 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
+
 class Doorbitch_Admin
 {
     /**
@@ -201,5 +206,18 @@ class Doorbitch_Admin
             ?>
         </table>
         <?php
+    }
+
+    private function export_records( $event ) {
+        global $wpdb;
+        $filename = 'Doorbitch-' . $event . current_time( 'Y-m-d_H:i') . 'xlsx';
+
+        // TODO: read the data from the database and write it into the spreadsheet.
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setCellValue( 'A1', 'Hello World!' );
+
+        $writer = new Xlsx( $spreadsheet );
+        $writer->save( $filename );
     }
 }
