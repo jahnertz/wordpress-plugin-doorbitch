@@ -15,3 +15,7 @@ form#export select {
 form#export input[ type = submit ] {
 	padding: 1rem;
 }
+
+table.form-table textarea#form-html {
+	width:100%;
+}
