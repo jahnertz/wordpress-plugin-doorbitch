@@ -3,3 +3,15 @@ table.doorbitch-records {
 	width: 100%;
 	background-color:white;
 }
+
+form#export table {
+	width: 100%;
+}
+
+form#export select {
+	width: 100%;
+}
+
+form#export input[ type = submit ] {
+	padding: 1rem;
+}

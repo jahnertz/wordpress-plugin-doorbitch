@@ -53,19 +53,31 @@ class Doorbitch_Admin
                 case 'export':
                     global $wpdb;
                     ?>
-                    <form method="post" action="">
-                        <label for="event">Event</label>
-                        <select name="event">
-                           <?php
-                            $events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
-                            foreach ($events as $event) {
-                                ?>
-                                <option value="<?php echo $event->event ?>"><?php echo $event->event ?></option>
-                                <?php
-                            }
-                           // TODO: retrieve list of events;
-                           ?> 
-                        </select>
+                    <form method="post" action="" id="export">
+                        <table>
+                            <tr>
+                                <td>
+                                    <label for="event">Event</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select name="event">
+                               <?php
+                                $events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
+                                foreach ($events as $event) {
+                                    ?>
+                                    <option value="<?php echo $event->event ?>"><?php echo $event->event ?></option>
+                                    <?php
+                                }
+                               // TODO: retrieve list of events;
+                               ?> 
+                            </select>
+                        </td>
+                        <td>
+                            <input type="submit" value="export">
+                        </td>
+                        </table>
                     </form>
                     <?php
                     $this->display_records();
