@@ -53,7 +53,7 @@ class Doorbitch_Admin
                 case 'export':
                     global $wpdb;
                     ?>
-                    <form method="post" action="<?php echo plugin_dir_path( __FILE__ );?>export.php" id="export">
+                    <form method="post" action="doorbitch-export.php" id="export">
                         <table>
                             <tr>
                                 <td>
