@@ -6,7 +6,7 @@ class Doorbitch {
 	public static $debug_mode = true;
 	public static $debug = array();
 
-	public static function init() {
+	public function __construct() {
 		if ( self::$debug_mode ){
 			function enqueue_debug_styles() { 
 				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
