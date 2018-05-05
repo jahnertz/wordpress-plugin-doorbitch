@@ -43,9 +43,9 @@ function bitch_install() {
 	add_option( 'bitch_db_version', $bitch_db_version );
 
 	// set default frontend form:
-	if ( get_option( 'bitch_frontend_form' ) == false ) {
+	if ( get_option( 'doorbitch_frontend_form' ) == false ) {
 		$bitch_frontend_form = file_get_contents( plugin_dir_path( __FILE__ ) . 'forms/default.php' );
-		add_option( 'bitch_frontend_form', $bitch_frontend_form );
+		add_option( 'doorbitch_frontend_form', $doorbitch_frontend_form );
 	}
 }
 

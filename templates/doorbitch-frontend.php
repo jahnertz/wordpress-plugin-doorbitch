@@ -22,10 +22,10 @@ get_header(); ?>
 						<form action="" method="get">
 							<?php 
 							// require_once ( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ); 
-							$form = get_option( 'bitch_frontend_form' );
+							$form = get_option( 'doorbitch_frontend_form' );
 							if ( $form == false || $form == '' ) {
-								update_option( 'bitch_frontend_form', file_get_contents( plugin_dir_path( __FILE__ ) . '../forms/default.php' ) );
-								$form = get_option( 'bitch_frontend_form' );
+								update_option( 'doorbitch_frontend_form', file_get_contents( plugin_dir_path( __FILE__ ) . '../forms/default.php' ) );
+								$form = get_option( 'doorbitch_frontend_form' );
 							}
 							echo $form;
 
