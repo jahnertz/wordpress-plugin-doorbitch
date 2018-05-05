@@ -1,11 +1,6 @@
 <form action="../form-action.php" method="get">
 	<table>
 		<tr>
-			<td colspan="2">
-				<h2>Sample Form</h2>
-			</td>
-		</tr>
-		<tr>
 			<td>
 				<label for="fname">Name</label>
 			</td>
