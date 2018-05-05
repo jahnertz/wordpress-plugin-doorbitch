@@ -1,7 +1,8 @@
 <?php
 
 class Doorbitch {
-	private static $initiated = false;
+	private static $initiated = true;
+	//TODO: initiated defaults to false, save as an option
 	public static $debug_mode = true;
 	public static $debug = array();
 
@@ -13,10 +14,6 @@ class Doorbitch {
 			add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
 			add_action( 'admin_notices', array( get_called_class(), 'debug_show' ) );
 			add_action( 'wp_footer', array( get_called_class(), 'debug_show' ) );
-		}
-
-		if ( ! self::$initiated ) {
-			self::init_hooks();
 		}
 
 		//Add virtual page for the frontend form:
@@ -38,12 +35,18 @@ class Doorbitch {
 
 		//upgrade the database if neccessary:
 		add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
+
+		if ( ! self::$initiated ) {
+			self::init_hooks();
+		}
 	}
 	
 	/**
 	 * Initialize wordpress hooks:
 	 */
 	private static function init_hooks() {
+		// flush_rewrite_rules();
+	    self::debug( 'flushing rewrite rules' );
 		self::$initiated = true;
 	}
 
