@@ -19,17 +19,17 @@ Class Doorbitch_Virtual_Pages
 			// doorbitch::debug( 'Adding rewrite rules.' );
 			add_rewrite_tag( '%virtualpage%', '([^&])' );
 			add_rewrite_rule(
-				'vp/([^/]*)/?$',
-				'index.php?virtualpage=$matches[1]',
-				'top'
-				// an alternative approach.
-				// 'doorbitch/?$',
-				// 'index.php?virtualpage=doorbitch',
+				// 'vp/([^/]*)/?$',
+				// 'index.php?virtualpage=$matches[1]',
 				// 'top'
+				// an alternative approach.
+				'doorbitch/?$',
+				'index.php?virtualpage=doorbitch',
+				'top'
 			);
 		}
 		add_action( 'init', 'virtualpage_add_rewrite_rules' );
-
+		
 		/*
 		 * Assign Templates to the virtual pages:
 		 */
