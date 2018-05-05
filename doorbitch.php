@@ -24,7 +24,7 @@ require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 $doorbitch = new Doorbitch;
 doorbitch::init();
 
-register_activation_hook( __FILE__, array( 'Doorbitch', 'bitch_install' ) );
-register_activation_hook( __FILE__, array( 'Doorbitch', 'bitch_install_data' ) );
+register_activation_hook( __FILE__, array( 'Doorbitch', 'install' ) );
+register_activation_hook( __FILE__, array( 'Doorbitch', 'install_data' ) );
 //add_action( 'plugins_loaded', 'doorbitch_update_db_check' );
 

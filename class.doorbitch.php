@@ -47,7 +47,7 @@ class Doorbitch {
 		self::$initiated = true;
 	}
 
-	public static function bitch_install() {
+	public static function install() {
 		global $wpdb;
 		global $bitch_db_version;
 
@@ -75,7 +75,7 @@ class Doorbitch {
 		}
 	}
 
-	public static function bitch_install_data() {
+	public static function install_data() {
 		global $wpdb;
 
 		$welcome_event = "Example";
@@ -123,7 +123,7 @@ class Doorbitch {
 	public static function update_db_check() {
 		global $bitch_db_version;
 		if ( get_site_option( 'bitch_db_version' ) != $bitch_db_version ) {
-			bitch_install();
+			install();
 		}
 	}
 
