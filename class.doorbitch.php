@@ -35,6 +35,9 @@ class Doorbitch {
 			}
 			add_action( 'admin_enqueue_scripts', 'enqueue_admin_styles' );
 		}
+
+		//upgrade the database if neccessary:
+		add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
 	}
 	
 	/**
@@ -117,7 +120,7 @@ class Doorbitch {
 	}
 
 	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
-	public function doorbitch_update_db_check() {
+	public static function update_db_check() {
 		global $bitch_db_version;
 		if ( get_site_option( 'bitch_db_version' ) != $bitch_db_version ) {
 			bitch_install();
