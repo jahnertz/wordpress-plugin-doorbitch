@@ -1,6 +1,6 @@
 <?php
 /**
- * The template for displaying pages
+ * The template for displaying the frontend form.
  *
  * @package WordPress
  * @subpackage Doorbitch
