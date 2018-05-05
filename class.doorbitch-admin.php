@@ -53,7 +53,7 @@ class Doorbitch_Admin
                 case 'export':
                     global $wpdb;
                     ?>
-                    <form method="post" action="" id="export">
+                    <form method="post" action="<?php echo plugin_dir_path( __FILE__ );?>export.php" id="export">
                         <table>
                             <tr>
                                 <td>
@@ -133,15 +133,6 @@ class Doorbitch_Admin
             'doorbitch-settings-admin', 
             'data-field-section'
         );      
-
-        add_settings_field(
-            // TODO: use option bitch_frontend_form instead of form_html which is used by wordpress.
-            'form-html', 
-            'Form HTML', 
-            array( $this, 'form_html_callback' ), 
-            'doorbitch-settings-admin', 
-            'data-field-section'
-        );      
     }
 
     /**
@@ -157,9 +148,6 @@ class Doorbitch_Admin
 
         if( isset( $input['title'] ) )
             $new_input['title'] = sanitize_text_field( $input['title'] );
-
-        if( isset( $input['form_html'] ) )
-            $new_input['form_html'] = sanitize_text_field( $input['form_html'] );
 
         return $new_input;
     }
@@ -191,17 +179,6 @@ class Doorbitch_Admin
         printf(
             '<input type="text" id="title" name="my_option_name[title]" value="%s" />',
             isset( $this->options['title'] ) ? esc_attr( $this->options['title']) : ''
-        );
-    }
-
-    /** 
-     * Get the settings option array and print one of its values
-     */
-    public function form_html_callback()
-    {
-        printf(
-            '<textarea rows=30 id="form-html" name="my_option_name[form_html]" value="%s" />',
-            isset( $this->options['form_html'] ) ? esc_attr( $this->options['form_html']) : ''
         );
     }
 
