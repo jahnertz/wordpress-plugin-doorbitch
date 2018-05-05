@@ -7,7 +7,16 @@
  * @since Doorbitch 0.0.2
  */
 
-get_header(); ?>
+get_header(); 
+
+// if ( current_user_can( 'edit_posts' ) )
+// {
+// 	echo 'user is logged in';
+// } else {
+// 	echo 'please log in';
+// }
+
+?>
 
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
