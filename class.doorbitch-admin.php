@@ -112,8 +112,8 @@ class Doorbitch_Admin
         );
 
         add_settings_section(
-            'data-field-section', // ID
-            'Data Fields', // Title
+            'options-section', // ID
+            'Settings', // Title
             array( $this, 'print_section_info' ), // Callback
             'doorbitch-settings-admin' // Page
         );  
@@ -123,7 +123,7 @@ class Doorbitch_Admin
             'ID Number', // Title 
             array( $this, 'id_number_callback' ), // Callback
             'doorbitch-settings-admin', // Page
-            'data-field-section' // Section           
+            'options-section' // Section           
         );      
 
         add_settings_field(
@@ -131,7 +131,7 @@ class Doorbitch_Admin
             'Title', 
             array( $this, 'title_callback' ), 
             'doorbitch-settings-admin', 
-            'data-field-section'
+            'options-section'
         );      
     }
 
