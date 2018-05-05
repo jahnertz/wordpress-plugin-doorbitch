@@ -53,7 +53,7 @@ class Doorbitch_Admin
                 case 'export':
                     global $wpdb;
                     ?>
-                    <form method="post" action="doorbitch-export.php" id="export">
+                    <form method="post" action="" id="export">
                         <table>
                             <tr>
                                 <td>

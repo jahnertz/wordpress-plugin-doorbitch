@@ -19,7 +19,7 @@ get_header(); ?>
 						<h2 class="entry-title"><?php //todo: use option for header ?>Registration</h2>
 					</header><!-- Page Header -->
 					<div class="entry-content">
-						<form action="../form-submit.php" method="get">
+						<form action="" method="get">
 							<?php 
 							// require_once ( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ); 
 							$form = get_option( 'bitch_frontend_form' );
