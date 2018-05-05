@@ -4,7 +4,7 @@ class Doorbitch {
 	private static $initiated = true;
 	//TODO: initiated defaults to false, save as an option
 	public static $debug_mode = true;
-	public static $debug = array();
+	public static $debug_messages = array();
 
 	public function __construct() {
 		if ( self::$debug_mode ){
@@ -132,7 +132,7 @@ class Doorbitch {
 
 	public static function debug_show() {
 		echo "<div class='doorbitch-debug'><h4>Debug</h4>";
-		for ($i = 0; $i < count( self::$debug ); $i++ ) {
+		for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
 			print_r( self::$debug[$i] );
 		}
 		echo "</div>";
