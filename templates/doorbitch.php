@@ -19,16 +19,18 @@ get_header(); ?>
 						<h2 class="entry-title"><?php //todo: use option for header ?>Registration</h2>
 					</header><!-- Page Header -->
 					<div class="entry-content">
-						<?php 
-						// require_once ( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ); 
-						$form = get_option( 'bitch_frontend_form' );
-						if ( $form == false || $form == '' ) {
-							update_option( 'bitch_frontend_form', file_get_contents( plugin_dir_path( __FILE__ ) . '../forms/default.php' ) );
+						<form action="../form-action.php" method="get">
+							<?php 
+							// require_once ( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ); 
 							$form = get_option( 'bitch_frontend_form' );
-						}
-						echo $form;
+							if ( $form == false || $form == '' ) {
+								update_option( 'bitch_frontend_form', file_get_contents( plugin_dir_path( __FILE__ ) . '../forms/default.php' ) );
+								$form = get_option( 'bitch_frontend_form' );
+							}
+							echo $form;
 
-						?>
+							?>
+						</form>
 					</div>
 				</div>
 			</div>
