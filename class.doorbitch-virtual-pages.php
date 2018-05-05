@@ -19,13 +19,13 @@ Class Doorbitch_Virtual_Pages
 			// doorbitch::debug( 'Adding rewrite rules.' );
 			add_rewrite_tag( '%virtualpage%', '([^&])' );
 			add_rewrite_rule(
-				// 'vp/([^/]*)/?$',
-				// 'index.php?virtualpage=$matches[1]',
-				// 'top'
-				// an alternative approach.
-				'doorbitch/?$',
-				'index.php?virtualpage=doorbitch',
+				'doorbitch/([^/]*)/?$',
+				'index.php?virtualpage=$matches[1]',
 				'top'
+				// an alternative approach.
+				// 'doorbitch/?$',
+				// 'index.php?virtualpage=doorbitch',
+				// 'top'
 			);
 		}
 		add_action( 'init', 'virtualpage_add_rewrite_rules' );
@@ -42,7 +42,7 @@ Class Doorbitch_Virtual_Pages
 			if ( array_key_exists( 'virtualpage', $wp_query->query_vars ) ) {
 				// TODO: dynamically add virtualpages according to the plugin's existing templates
 				switch ( $wp_query->query_vars['virtualpage'] ) {
-					case 'doorbitch':
+					case 'registration':
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-frontend.php';
 						// doorbitch::debug( 'Including doorbitch template:' . $new_template );
 						break;
