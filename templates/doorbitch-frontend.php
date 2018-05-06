@@ -18,11 +18,13 @@ get_header();
 
 // Check for $_POST data
 if ( isset($_POST) ) {
+	global $doorbitch;
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
 		$dataset = $dataset . $item . ':' . $data . ', ';
 	}
 	doorbitch::debug( $dataset );
+	doorbitch::add_data( $dataset );
 } else {
 	doorbitch::debug( 'There is no post data' );
 }

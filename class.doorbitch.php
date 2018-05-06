@@ -5,6 +5,7 @@ class Doorbitch {
 	//TODO: initiated defaults to false, save as an option
 	public static $debug_mode = true;
 	public static $debug_messages = array();
+	public static $table_suffix = 'doorbitch';
 
 	public function __construct() {
 		if ( self::$debug_mode ){
@@ -54,7 +55,7 @@ class Doorbitch {
 		global $wpdb;
 		global $bitch_db_version;
 
-		$table_name = $wpdb->prefix . 'doorbitch';
+		$table_name = $wpdb->prefix . self::$table_suffix;
 		
 		$charset_collate = $wpdb->get_charset_collate();
 
@@ -105,7 +106,7 @@ class Doorbitch {
 		$installed_ver = get_option( "bitch_db_version" );
 		if ( $installed_ver != $bitch_db_version ) {
 
-			$table_name = $wpdb->prefix . 'doorbitch';
+			$table_name = $wpdb->prefix . self::$table_suffix;
 
 			$sql = "CREATE TABLE $table_name (
 				id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -128,6 +129,22 @@ class Doorbitch {
 		if ( get_site_option( 'bitch_db_version' ) != $bitch_db_version ) {
 			install();
 		}
+	}
+
+	public static function add_data( $data ) {
+		global $wpdb;
+		$current_event = 'none';
+		$event = $current_event;
+		$table_name = $wpdb->prefix . self::$table_suffix;
+
+		$wpdb->insert(
+			$table_name,
+			array(
+				'event' => $event,
+				'time' => current_time( 'mysql' ),
+				'data' => $data
+			)
+		);
 	}
 
 	public static function debug_show() {
