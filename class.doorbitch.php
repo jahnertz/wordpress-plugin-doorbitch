@@ -1,7 +1,7 @@
 <?php
 
 class Doorbitch {
-	private static $initiated = true;
+	private static $initiated = false;
 	//TODO: initiated defaults to false, save as an option
 	public static $debug_mode = true;
 	public static $debug_messages = array();
@@ -11,7 +11,9 @@ class Doorbitch {
 
 	public function __construct() {
         $this->options = get_option( 'doorbitch_options' );
-        self::debug( var_dump( $this->options ) );
+        foreach ( $this->options as $option => $value ) {
+	        self::debug( $option . ':' . $value );
+        }
 
 		if ( self::$debug_mode ){
 			function enqueue_debug_styles() { 
@@ -75,14 +77,18 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		add_option( 'db_version', $db_version );
+		// add_option( 'db_version', $db_version );
 		// array_push( $this->options, 'db_version', $db_version );
 
+		// TODO: add frontend form to options
 		// set default frontend form:
-		if ( get_option( 'doorbitch_frontend_form' ) == false ) {
-			$bitch_frontend_form = file_get_contents( plugin_dir_path( __FILE__ ) . 'forms/default.php' );
-			add_option( 'doorbitch_frontend_form', $doorbitch_frontend_form );
-		}
+		// if ( get_option( 'doorbitch_frontend_form' ) == false ) {
+		// 	$bitch_frontend_form = file_get_contents( plugin_dir_path( __FILE__ ) . 'forms/default.php' );
+		// 	add_option( 'doorbitch_frontend_form', $doorbitch_frontend_form );
+		// }
+
+		// update_option( 'doorbitch_options', $this->options );
+		self::debug( 'saving options' );
 	}
 
 	public static function install_data() {
@@ -132,7 +138,9 @@ class Doorbitch {
 	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
 	public static function update_db_check() {
 		global $db_version;
-		if ( get_site_option( 'db_version' ) != $db_version ) {
+		// TODO: Check if database needs upgrading
+		if ( false ) {
+			self::debug( 'upgrading database' );
 			self::install();
 		}
 	}
