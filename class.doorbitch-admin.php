@@ -39,6 +39,7 @@ class Doorbitch_Admin
     {
         // Set class property
         $this->options = get_option( 'doorbitch_options' );
+        doorbitch::debug( var_dump( $this->options ) );
         ?>
         <div class="wrap">
             <?php
