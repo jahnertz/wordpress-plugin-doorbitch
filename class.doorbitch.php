@@ -175,7 +175,7 @@ class Doorbitch {
 
 	public static function debug( $debug_text ) {
 		$file = basename( debug_backtrace()[0]['file'] );
-		self::$debug_messages[] = '<p><i>' . $debug_text . '</i> -> ' . $file . '</p>';
+		self::$debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
 		//TODO: Print errors from table of common errors.
 
 	}
