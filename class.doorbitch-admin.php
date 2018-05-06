@@ -39,7 +39,6 @@ class Doorbitch_Admin
     {
         // Set class property
         $this->options = get_option( 'doorbitch_options' );
-        doorbitch::debug( var_dump( $this->options ) );
         ?>
         <div class="wrap">
             <?php
@@ -167,7 +166,7 @@ class Doorbitch_Admin
     public function id_number_callback()
     {
         printf(
-            '<input type="text" id="id_number" name="my_option_name[id_number]" value="%s" />',
+            '<input type="text" id="id_number" name="doorbitch_options[id_number]" value="%s" />',
             isset( $this->options['id_number'] ) ? esc_attr( $this->options['id_number']) : ''
         );
     }
@@ -178,7 +177,7 @@ class Doorbitch_Admin
     public function title_callback()
     {
         printf(
-            '<input type="text" id="title" name="my_option_name[title]" value="%s" />',
+            '<input type="text" id="title" name="doorbitch_options[title]" value="%s" />',
             isset( $this->options['title'] ) ? esc_attr( $this->options['title']) : ''
         );
     }
