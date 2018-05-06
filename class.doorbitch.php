@@ -54,7 +54,10 @@ class Doorbitch {
 
 	public static function get_options() {
 		if ( empty( self::$options ) ) {
-			self::$options = get_option( 'doorbitch_options' );
+			if ( ! self::$options = get_option( 'doorbitch_options' ) ) {
+				// get_option will return false if the option doesn't exist.
+				self::$options = array();
+			}
 		}
 		return self::$options;
 	}
