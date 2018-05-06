@@ -16,7 +16,6 @@ get_header();
 // 	echo 'please log in';
 // }
 
-// Check for $_POST data
 if ( isset($_POST) ) {
 	global $doorbitch;
 	$dataset = '';
@@ -28,7 +27,6 @@ if ( isset($_POST) ) {
 } else {
 	doorbitch::debug( 'There is no post data' );
 }
-// Add data to the database
 // Show success message
 ?>
 
