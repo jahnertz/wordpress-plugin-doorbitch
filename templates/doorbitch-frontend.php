@@ -8,6 +8,7 @@
  */
 
 get_header(); 
+// TODO: redirect user if they are not logged in.
 // if ( current_user_can( 'edit_posts' ) )
 // {
 // 	echo 'user is logged in';
@@ -15,6 +16,15 @@ get_header();
 // 	echo 'please log in';
 // }
 
+// Check for $_POST data
+if ( isset($_POST) ) {
+	$data = $_POST;
+	doorbitch::debug( 'There is post data:' . var_dump( $data ) );
+} else {
+	doorbitch::debug( 'There is no post data' );
+}
+// Add data to the database
+// Show success message
 ?>
 
 <div id="primary" class="content-area">
@@ -27,7 +37,7 @@ get_header();
 						<h2 class="entry-title"><?php //todo: use option for header ?>Registration</h2>
 					</header><!-- Page Header -->
 					<div class="entry-content">
-						<form action="" method="get">
+						<form action="" method="post">
 							<?php 
 							// require_once ( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ); 
 							$form = get_option( 'doorbitch_frontend_form' );
