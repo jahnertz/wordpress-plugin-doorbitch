@@ -7,13 +7,9 @@ class Doorbitch {
 	public static $debug_messages = array();
 	public static $table_suffix = 'doorbitch';
 
-	private $options;
+	private static $options = array();
 
 	public function __construct() {
-        $this->options = get_option( 'doorbitch_options' );
-        foreach ( $this->options as $option => $value ) {
-	        self::debug( $option . ':' . $value );
-        }
 
 		if ( self::$debug_mode ){
 			function enqueue_debug_styles() { 
@@ -48,6 +44,13 @@ class Doorbitch {
 			self::init_hooks();
 		}
 	}
+
+	public static function get_options() {
+		if ( empty( self::$options ) ) {
+			self::$options = get_option( 'doorbitch_options' );
+		}
+		return self::$options;
+	}
 	
 	/**
 	 * Initialize wordpress hooks:
@@ -55,6 +58,11 @@ class Doorbitch {
 	private static function init_hooks() {
 		// flush_rewrite_rules();
 	    // self::debug( 'flushing rewrite rules' );
+	    // self::install();
+	    $options = self::get_options();
+        foreach ( $options as $option => $value ) {
+	        self::debug( $option . ':' . $value );
+        }
 		self::$initiated = true;
 	}
 
