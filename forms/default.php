@@ -1,10 +1,10 @@
 <table>
 	<tr>
 		<td>
-			<label for="fname">Name</label>
+			<label for="name">Name</label>
 		</td>
 		<td>
-			<input type="text" name="fname">
+			<input type="text" name="name">
 		</td>
 	</tr>
 	<tr>

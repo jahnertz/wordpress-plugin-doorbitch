@@ -18,8 +18,11 @@ get_header();
 
 // Check for $_POST data
 if ( isset($_POST) ) {
-	$data = $_POST;
-	doorbitch::debug( 'There is post data:' . var_dump( $data ) );
+	$dataset = '';
+	foreach ($_POST as $item => $data ) {
+		$dataset = $dataset . ' / ' . $item . ':' . $data;
+	}
+	doorbitch::debug( $dataset );
 } else {
 	doorbitch::debug( 'There is no post data' );
 }
