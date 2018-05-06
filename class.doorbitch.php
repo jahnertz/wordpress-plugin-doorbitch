@@ -93,6 +93,29 @@ class Doorbitch {
 
 		update_option( 'doorbitch_options', $options );
 		self::debug( 'saving options' );
+
+		/* For debugging only */
+		if ( defined('WP_DEBUG') && true === WP_DEBUG && DOORBITCH__DEBUG_MODE ) { 
+		    function doorbitch_activated_plugin_error() {
+		        update_option( 'doorbitch_error',  ob_get_contents() );
+		    }
+		    function doorbitch_deactivated_plugin_error() {
+		        delete_option( 'doorbitch_error' );
+		    }
+		    add_action( 'activated_plugin', 'doorbitch_activated_plugin_error' );
+		    add_action( 'deactivated_plugin', 'doorbitch_deactivated_plugin_error' );
+		     
+		    function doorbitch_message_plugin_error() {
+		        ?>
+		        <div class="notice notice-error">
+		            <p><?php echo get_option( 'doorbitch_error' ); ?></p>
+		        </div>
+		        <?php
+		        }
+		    if( get_option( 'doorbitch_error' ) ) {
+		        add_action( 'admin_notices', 'doorbitch_message_plugin_error' ); 
+		    }
+		}
 	}
 
 	public static function install_data() {
