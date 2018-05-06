@@ -20,7 +20,7 @@ get_header();
 if ( isset($_POST) ) {
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
-		$dataset = $dataset . ' / ' . $item . ':' . $data;
+		$dataset = $dataset . $item . ':' . $data . ', ';
 	}
 	doorbitch::debug( $dataset );
 } else {
