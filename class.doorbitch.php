@@ -7,7 +7,11 @@ class Doorbitch {
 	public static $debug_messages = array();
 	public static $table_suffix = 'doorbitch';
 
+	private $options;
+
 	public function __construct() {
+        $this->options = get_option( 'doorbitch_options' );
+
 		if ( self::$debug_mode ){
 			function enqueue_debug_styles() { 
 				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
