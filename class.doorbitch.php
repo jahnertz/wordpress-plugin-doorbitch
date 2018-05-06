@@ -49,7 +49,7 @@ class Doorbitch {
 		}
 
 		//upgrade the database if neccessary:
-		add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
+		// add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
 
 	}
 
