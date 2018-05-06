@@ -54,7 +54,7 @@ class Doorbitch {
 	 */
 	private static function init_hooks() {
 		// flush_rewrite_rules();
-	    self::debug( 'flushing rewrite rules' );
+	    // self::debug( 'flushing rewrite rules' );
 		self::$initiated = true;
 	}
 
