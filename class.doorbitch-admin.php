@@ -125,6 +125,14 @@ class Doorbitch_Admin
             'doorbitch-settings-admin', 
             'options-section'
         );      
+
+        add_settings_field(
+            'form_html', 
+            'Form HTML', 
+            array( $this, 'form_html_callback' ), 
+            'doorbitch-settings-admin', 
+            'options-section'
+        );      
     }
 
     /**
@@ -137,6 +145,9 @@ class Doorbitch_Admin
         if( isset( $input['title'] ) )
             $new_input['title'] = sanitize_text_field( $input['title'] );
 
+        if( isset( $input['form_html'] ) )
+            $new_input['form_html'] = sanitize_text_field( $input['form_html'] );
+
         return $new_input;
     }
 
@@ -148,14 +159,20 @@ class Doorbitch_Admin
         print 'Enter your settings below:';
     }
 
-    /** 
-     * Get the settings option array and print one of its values
-     */
     public function title_callback()
     {
         printf(
             '<input type="text" id="title" name="doorbitch_options[title]" value="%s" />',
-            isset( $this->options['title'] ) ? esc_attr( $this->options['title']) : ''
+            isset( $this->options['title'] ) ? esc_attr( $this->options['title'] ) : ''
+        );
+    }
+
+    public function form_html_callback()
+    {
+        // TODO: html is not being saved to optoions properly
+        printf(
+            '<textarea id="form-html" rows=20 name="doorbitch_options[form_html]">%s</textarea>',
+            isset( $this->options['form_html'] ) ? esc_attr( htmlspecialchars_decode( $this->options['form_html'] ) ) : ''
         );
     }
 
