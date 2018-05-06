@@ -11,6 +11,7 @@ class Doorbitch {
 
 	public function __construct() {
         $this->options = get_option( 'doorbitch_options' );
+        self::debug( var_dump( $this->options ) );
 
 		if ( self::$debug_mode ){
 			function enqueue_debug_styles() { 
