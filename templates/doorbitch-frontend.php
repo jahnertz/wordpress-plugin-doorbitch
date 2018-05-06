@@ -42,13 +42,15 @@ if ( !empty($_POST) ) {
 					<div class="entry-content">
 						<form action="" method="post">
 							<?php 
-							// require_once ( plugin_dir_path( __FILE__ ) . '../forms/doorbitch-form.php' ); 
-							$form = get_option( 'doorbitch_frontend_form' );
-							if ( $form == false || $form == '' ) {
-								update_option( 'doorbitch_frontend_form', file_get_contents( plugin_dir_path( __FILE__ ) . '../forms/default.php' ) );
-								$form = get_option( 'doorbitch_frontend_form' );
+							$options = get_option( 'doorbitch_options' );
+							if ( $options == false ) {
+								$options = array();
 							}
-							echo $form;
+							if ( ! array_key_exists( 'form_html', $options ) || $options[ 'form_html' ] == '' ) {
+								$options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+								update_option( 'doorbitch_options', $options );
+							}
+							echo $options[ 'form_html' ];
 
 							?>
 						</form>
