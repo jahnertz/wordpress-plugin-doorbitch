@@ -87,7 +87,8 @@ class Doorbitch {
 		dbDelta( $sql );
 
 		// TODO: add frontend form to options
-		
+		$options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+
 		$options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $options );
