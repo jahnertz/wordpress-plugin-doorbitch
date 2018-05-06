@@ -119,14 +119,6 @@ class Doorbitch_Admin
         );  
 
         add_settings_field(
-            'id_number', // ID
-            'ID Number', // Title 
-            array( $this, 'id_number_callback' ), // Callback
-            'doorbitch-settings-admin', // Page
-            'options-section' // Section           
-        );      
-
-        add_settings_field(
             'title', 
             'Title', 
             array( $this, 'title_callback' ), 
@@ -142,10 +134,6 @@ class Doorbitch_Admin
      */
     public function sanitize( $input )
     {
-        $new_input = array();
-        if( isset( $input['id_number'] ) )
-            $new_input['id_number'] = absint( $input['id_number'] );
-
         if( isset( $input['title'] ) )
             $new_input['title'] = sanitize_text_field( $input['title'] );
 
@@ -158,17 +146,6 @@ class Doorbitch_Admin
     public function print_section_info()
     {
         print 'Enter your settings below:';
-    }
-
-    /** 
-     * Get the settings option array and print one of its values
-     */
-    public function id_number_callback()
-    {
-        printf(
-            '<input type="text" id="id_number" name="doorbitch_options[id_number]" value="%s" />',
-            isset( $this->options['id_number'] ) ? esc_attr( $this->options['id_number']) : ''
-        );
     }
 
     /** 
