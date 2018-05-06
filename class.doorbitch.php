@@ -1,7 +1,6 @@
 <?php
 
 class Doorbitch {
-	private static $initiated = false;
 	//TODO: initiated defaults to false, save as an option
 	public static $debug_mode = true;
 	public static $debug_messages = array();
@@ -10,6 +9,18 @@ class Doorbitch {
 	private static $options = array();
 
 	public function __construct() {
+		$options = self::get_options();
+
+		if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
+			self::install();
+		} 
+		else {
+			self::debug( 'already initiated' );
+	        foreach ( $options as $option => $value ) {
+		        self::debug( $option . ':' . $value );
+	        }
+	
+		}
 
 		if ( self::$debug_mode ){
 			function enqueue_debug_styles() { 
@@ -40,9 +51,6 @@ class Doorbitch {
 		//upgrade the database if neccessary:
 		add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
 
-		if ( ! self::$initiated ) {
-			self::init_hooks();
-		}
 	}
 
 	public static function get_options() {
@@ -51,27 +59,19 @@ class Doorbitch {
 		}
 		return self::$options;
 	}
-	
-	/**
-	 * Initialize wordpress hooks:
-	 */
-	private static function init_hooks() {
-		// flush_rewrite_rules();
-	    // self::debug( 'flushing rewrite rules' );
-	    // self::install();
-	    $options = self::get_options();
-        foreach ( $options as $option => $value ) {
-	        self::debug( $option . ':' . $value );
-        }
-		self::$initiated = true;
-	}
 
 	public static function install() {
 		global $wpdb;
-		global $db_version;
+	    $options = self::get_options();
+
+		self::debug( 'initiating...' );
+		$db_current_version = 0.0;
+ 		if ( array_key_exists( 'db_version' , $options ) ) {
+		    $db_current_version = $options[ 'db_version' ];
+	    }
+	    $db_current_version = self::update_db_check( $db_current_version );
 
 		$table_name = $wpdb->prefix . self::$table_suffix;
-		
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE $table_name (
@@ -94,8 +94,10 @@ class Doorbitch {
 		// 	$bitch_frontend_form = file_get_contents( plugin_dir_path( __FILE__ ) . 'forms/default.php' );
 		// 	add_option( 'doorbitch_frontend_form', $doorbitch_frontend_form );
 		// }
+	    $options['db_version'] = $db_current_version;
+		$options['initiated'] = true;
 
-		// update_option( 'doorbitch_options', $this->options );
+		update_option( 'doorbitch_options', $options );
 		self::debug( 'saving options' );
 	}
 
@@ -121,36 +123,33 @@ class Doorbitch {
 	}
 
 	public static function upgrade_database() {
-		//upgrade the database if necessary:
 		global $wpdb;
-		$installed_ver = get_option( "db_version" );
-		if ( $installed_ver != $db_version ) {
+		$table_name = $wpdb->prefix . self::$table_suffix;
 
-			$table_name = $wpdb->prefix . self::$table_suffix;
+		$sql = "CREATE TABLE $table_name (
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			event tinytext NOT NULL,
+			time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			data text NOT NULL,	
+			PRIMARY KEY  (id)
+		);";
 
-			$sql = "CREATE TABLE $table_name (
-				id mediumint(9) NOT NULL AUTO_INCREMENT,
-				event tinytext NOT NULL,
-				time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-				data text NOT NULL,	
-				PRIMARY KEY  (id)
-			);";
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
 
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			dbDelta( $sql );
-
-			update_option( "db_version", $db_version );
-		}
+		// update_option( "db_version", $db_version );
 	}
 
 	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
-	public static function update_db_check() {
-		global $db_version;
+	public static function update_db_check( $db_current_version ) {
+		// global $db_version;
 		// TODO: Check if database needs upgrading
-		if ( false ) {
-			self::debug( 'upgrading database' );
-			self::install();
+		$this_db_version = DOORBITCH__DATABASE_VERSION;
+		if ( $this_db_version > $db_current_version ) {
+			self::debug( "Installing database v." . DOORBITCH__DATABASE_VERSION );
+			self::upgrade_database();
 		}
+		return $this_db_version;
 	}
 
 	public static function add_data( $data ) {

@@ -13,13 +13,11 @@ Author: Jordan Han
 Version: 0.0.7
 Author URI: https://jhanrahan.com.au
 */
-
-global $bitch_db_version;
 global $doorbitch;
-$bitch_db_version = '1.1';
 
-
+define( 'DOORBITCH__DATABASE_VERSION', "1.1" );
 define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+
 require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 
 $doorbitch = new Doorbitch;
