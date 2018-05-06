@@ -40,16 +40,16 @@ Class Doorbitch_Virtual_Pages
 			$new_template = '';
 
 			if ( array_key_exists( 'virtualpage', $wp_query->query_vars ) ) {
-				// TODO: dynamically add virtualpages according to the plugin's existing templates
 				switch ( $wp_query->query_vars['virtualpage'] ) {
+					// TODO: generalise this and make a function to register virtual pages;
 					case 'registration':
+						// check the required privileges for the page and redirect if necessary:
+						if ( !current_user_can( 'edit_posts' ) ){ auth_redirect(); }
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-frontend.php';
-						// doorbitch::debug( 'Including doorbitch template:' . $new_template );
 						break;
 				}
 
 				if ( $new_template != '' ) {
-					// doorbitch::debug( 'Using vpage template' );
 					return $new_template;
 				}
 				else {

@@ -13,10 +13,10 @@ get_header();
 // {
 // 	echo 'user is logged in';
 // } else {
-// 	echo 'please log in';
+// 	auth_redirect();
 // }
 
-if ( isset($_POST) ) {
+if ( !empty($_POST) ) {
 	global $doorbitch;
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
