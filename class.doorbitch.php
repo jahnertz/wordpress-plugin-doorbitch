@@ -58,7 +58,7 @@ class Doorbitch {
 
 	public static function install() {
 		global $wpdb;
-		global $bitch_db_version;
+		global $db_version;
 
 		$table_name = $wpdb->prefix . self::$table_suffix;
 		
@@ -75,7 +75,8 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		add_option( 'bitch_db_version', $bitch_db_version );
+		add_option( 'db_version', $db_version );
+		// array_push( $this->options, 'db_version', $db_version );
 
 		// set default frontend form:
 		if ( get_option( 'doorbitch_frontend_form' ) == false ) {
@@ -108,8 +109,8 @@ class Doorbitch {
 	public static function upgrade_database() {
 		//upgrade the database if necessary:
 		global $wpdb;
-		$installed_ver = get_option( "bitch_db_version" );
-		if ( $installed_ver != $bitch_db_version ) {
+		$installed_ver = get_option( "db_version" );
+		if ( $installed_ver != $db_version ) {
 
 			$table_name = $wpdb->prefix . self::$table_suffix;
 
@@ -124,15 +125,15 @@ class Doorbitch {
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			dbDelta( $sql );
 
-			update_option( "bitch_db_version", $bitch_db_version );
+			update_option( "db_version", $db_version );
 		}
 	}
 
 	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
 	public static function update_db_check() {
-		global $bitch_db_version;
-		if ( get_site_option( 'bitch_db_version' ) != $bitch_db_version ) {
-			install();
+		global $db_version;
+		if ( get_site_option( 'db_version' ) != $db_version ) {
+			self::install();
 		}
 	}
 
