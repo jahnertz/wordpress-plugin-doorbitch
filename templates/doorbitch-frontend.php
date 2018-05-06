@@ -8,7 +8,6 @@
  */
 
 get_header(); 
-
 // if ( current_user_can( 'edit_posts' ) )
 // {
 // 	echo 'user is logged in';

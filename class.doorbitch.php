@@ -133,14 +133,14 @@ class Doorbitch {
 	public static function debug_show() {
 		echo "<div class='doorbitch-debug'><h4>Debug</h4>";
 		for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
-			print_r( self::$debug[$i] );
+			print_r( self::$debug_messages[$i] );
 		}
 		echo "</div>";
 	}
 
 	public static function debug( $debug_text ) {
 		$file = basename( debug_backtrace()[0]['file'] );
-		self::$debug[] = '<p><i>' . $debug_text . '</i> -> ' . $file . '</p>';
+		self::$debug_messages[] = '<p><i>' . $debug_text . '</i> -> ' . $file . '</p>';
 		//TODO: Print errors from table of common errors.
 
 	}
