@@ -156,7 +156,7 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-	    $options[ 'db_version' ] = $db_current_version;
+	    $options[ 'db_version' ] = DOORBITCH__DATABASE_VERSION;
 		update_option( 'doorbitch_options', $options );
 	}
 
