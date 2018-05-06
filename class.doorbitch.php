@@ -14,10 +14,7 @@ class Doorbitch {
 		if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
 			self::install();
 		} 
-		else {
-			self::debug( 'already initiated' );
-		}
-
+		
         foreach ( $options as $option => $value ) {
 	        self::debug( $option . ' : ' . $value );
         }
@@ -98,7 +95,6 @@ class Doorbitch {
 		// 	add_option( 'doorbitch_frontend_form', $doorbitch_frontend_form );
 		// }
 
-	    $options[ 'db_version' ] = $db_current_version;
 		$options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $options );
@@ -128,6 +124,8 @@ class Doorbitch {
 
 	public static function upgrade_database() {
 		global $wpdb;
+		$options = self::get_options();
+
 		$table_name = $wpdb->prefix . self::$table_suffix;
 
 		$sql = "CREATE TABLE $table_name (
@@ -141,7 +139,8 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		// update_option( "db_version", $db_version );
+	    $options[ 'db_version' ] = $db_current_version;
+		update_option( 'doorbitch_options', $options );
 	}
 
 	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
