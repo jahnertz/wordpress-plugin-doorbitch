@@ -16,13 +16,13 @@ class Doorbitch {
 		} 
 		else {
 			self::debug( 'already initiated' );
-	        foreach ( $options as $option => $value ) {
-		        self::debug( $option . ':' . $value );
-	        }
-	
 		}
 
-		if ( self::$debug_mode ){
+        foreach ( $options as $option => $value ) {
+	        self::debug( $option . ' : ' . $value );
+        }
+
+		if ( DOORBITCH__DEBUG_MODE ){
 			function enqueue_debug_styles() { 
 				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
 			}
@@ -34,7 +34,6 @@ class Doorbitch {
 		//Add virtual page for the frontend form:
 		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
 		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
-		// self::debug( 'adding virtual pages class' );
 	
 		//Add admin options page under 'tools' section:
 		if( is_admin() ) {
@@ -65,6 +64,7 @@ class Doorbitch {
 	    $options = self::get_options();
 
 		self::debug( 'initiating...' );
+
 		$db_current_version = 0.0;
  		if ( array_key_exists( 'db_version' , $options ) ) {
 		    $db_current_version = $options[ 'db_version' ];
@@ -94,8 +94,9 @@ class Doorbitch {
 		// 	$bitch_frontend_form = file_get_contents( plugin_dir_path( __FILE__ ) . 'forms/default.php' );
 		// 	add_option( 'doorbitch_frontend_form', $doorbitch_frontend_form );
 		// }
-	    $options['db_version'] = $db_current_version;
-		$options['initiated'] = true;
+
+	    $options[ 'db_version' ] = $db_current_version;
+		$options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $options );
 		self::debug( 'saving options' );
