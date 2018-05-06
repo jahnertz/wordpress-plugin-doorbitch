@@ -14,7 +14,7 @@ class Doorbitch {
 		if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
 			self::install();
 		} 
-		
+
         foreach ( $options as $option => $value ) {
 	        self::debug( $option . ' : ' . $value );
         }
@@ -74,6 +74,7 @@ class Doorbitch {
 		$table_name = $wpdb->prefix . self::$table_suffix;
 		$charset_collate = $wpdb->get_charset_collate();
 
+		// add the table to store data from the frontend form
 		$sql = "CREATE TABLE $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			event tinytext NOT NULL,
@@ -85,16 +86,8 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		// add_option( 'db_version', $db_version );
-		// array_push( $this->options, 'db_version', $db_version );
-
 		// TODO: add frontend form to options
-		// set default frontend form:
-		// if ( get_option( 'doorbitch_frontend_form' ) == false ) {
-		// 	$bitch_frontend_form = file_get_contents( plugin_dir_path( __FILE__ ) . 'forms/default.php' );
-		// 	add_option( 'doorbitch_frontend_form', $doorbitch_frontend_form );
-		// }
-
+		
 		$options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $options );
