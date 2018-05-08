@@ -67,12 +67,13 @@ class Doorbitch {
 	}
 
 	public static function get_options() {
-		if ( empty( self::$options ) ) {
-			if ( ! self::$options = get_option( 'doorbitch_options' ) ) {
-				// get_option will return false if the option doesn't exist.
-				self::$options = array();
-			}
-		}
+		// if ( empty( self::$options ) ) {
+		// 	if ( ! self::$options = get_option( 'doorbitch_options' ) ) {
+		// 		// get_option will return false if the option doesn't exist.
+		// 		self::$options = array();
+		// 	}
+		// }
+		self::$options = get_option( 'doorbitch_options' );
 		return self::$options;
 	}
 
@@ -196,7 +197,7 @@ class Doorbitch {
 		return $this_db_version;
 	}
 
-	public static function add_data( $data, $event ) {
+	public static function add_data( $event, $data ) {
 		global $wpdb;
 		$options = self::get_options();
 
