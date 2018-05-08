@@ -92,7 +92,7 @@ class Doorbitch {
 		update_option( 'doorbitch_options', $options );
 		self::debug( 'saving options' );
 
-		/* For debugging only */
+		// show error output on plugin activation
 		if ( defined('WP_DEBUG') && true === WP_DEBUG && DOORBITCH__DEBUG_MODE ) { 
 		    function doorbitch_activated_plugin_error() {
 		        update_option( 'doorbitch_error',  ob_get_contents() );
