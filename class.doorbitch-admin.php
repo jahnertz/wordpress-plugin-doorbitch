@@ -19,7 +19,7 @@ class Doorbitch_Admin
         switch ( $_POST[ 'action' ] ) {
             case 'view':
                 doorbitch::debug( 'viewing' );
-                $this->visible_event = $_POST[ 'event' ];
+                self::$visible_event = $_POST[ 'event' ];
                 break;
             
             case 'select':
@@ -101,10 +101,10 @@ class Doorbitch_Admin
                         </table>
                     </form>
                     <?php 
-                    if ( $visible_event == '' ) {
-                        $visible_event = $options[ 'current_event' ];
+                    if ( self::$visible_event == '' ) {
+                        self::$visible_event = $options[ 'current_event' ];
                     }
-                    $this->display_records( $visible_event );
+                    $this->display_records( self::$visible_event );
                     break;
                 
                 default:
@@ -219,7 +219,7 @@ class Doorbitch_Admin
                 $entries = array();
                 foreach( $results as $result ) {
                     $entry = array();
-                    $entry [ 'event' ] = $result->event;
+                    // $entry [ 'event' ] = $result->event;
                     $entry [ 'time' ] = $result->time;
                     $data = explode( ',', $result->data );
                     foreach ( $data as $datum ) {
