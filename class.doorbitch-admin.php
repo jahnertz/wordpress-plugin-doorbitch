@@ -170,6 +170,7 @@ class Doorbitch_Admin
     }
 
     private function display_records( $event ) {
+        // Todo - seperate this into its own function, move loading database entries into main class - this will make it reusable for exporting.
         global $wpdb;
         ?>
         <table class="doorbitch-records">
@@ -217,7 +218,7 @@ class Doorbitch_Admin
         global $wpdb;
         $filename = 'Doorbitch-' . $event . current_time( 'Y-m-d_H:i') . 'xlsx';
 
-        // TODO: read the data from the database and write it into the spreadsheet.
+        // TODO: read the data from the database and write it into the spreadsheet. this should be moved to the main class.
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue( 'A1', 'Hello World!' );
