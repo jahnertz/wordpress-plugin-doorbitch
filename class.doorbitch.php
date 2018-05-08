@@ -139,6 +139,14 @@ class Doorbitch {
 		add_option( 'doorbitch_events', $event_r );
 	}
 
+	public static function add_event() {
+		// Add event to options and save it
+	}
+
+	public static function set_current_event() {
+		// Set current event
+	}
+
 	public static function upgrade_database() {
 		global $wpdb;
 		$options = self::get_options();
