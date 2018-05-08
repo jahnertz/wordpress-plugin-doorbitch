@@ -24,5 +24,3 @@ require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 $doorbitch = new Doorbitch;
 
 register_activation_hook( __FILE__, array( 'Doorbitch', 'install' ) );
-register_activation_hook( __FILE__, array( 'Doorbitch', 'install_data' ) );
-

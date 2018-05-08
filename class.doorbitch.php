@@ -136,26 +136,6 @@ class Doorbitch {
 		}
 	}
 
-	public static function install_data() {
-		global $wpdb;
-
-		$welcome_event = "Example";
-		$welcome_data = "Name:Example Person,Age:18-25";
-
-		$table_name = $wpdb->prefix . 'doorbitch';
-
-		$wpdb->insert(
-			$table_name,
-			array(
-					'event' => $welcome_event,
-					'time' => current_time( 'mysql' ),
-					'data' => $welcome_data,
-				)
-		);
-
-		self::add_event( $welcome_event );
-	}
-
 	public static function add_event( $event_name ) {
 		$options = self::get_options();
 		$events = $options[ 'events' ];
