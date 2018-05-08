@@ -214,14 +214,14 @@ class Doorbitch {
 
 	public static function add_data( $data ) {
 		global $wpdb;
-		$current_event = 'none';
-		$event = $current_event;
+		$options = self::get_options();
+
 		$table_name = $wpdb->prefix . self::$table_suffix;
 
 		$wpdb->insert(
 			$table_name,
 			array(
-				'event' => $event,
+				'event' => $options[ 'current_event' ],
 				'time' => current_time( 'mysql' ),
 				'data' => $data
 			)
