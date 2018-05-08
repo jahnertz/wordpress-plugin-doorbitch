@@ -11,6 +11,7 @@ class Doorbitch {
 	public function __construct() {
 		$options = self::get_options();
 
+		// Run the install function if we're not already initiated.
 		if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
 			self::install();
 		} 
