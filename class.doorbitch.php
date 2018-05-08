@@ -15,6 +15,7 @@ class Doorbitch {
 			self::install();
 		} 
 
+		// Show options array in debug area:
         foreach ( $options as $option => $value ) {
         	if (! is_array( $value ) ){
 		        self::debug( $option . ' : ' . $value );
