@@ -81,7 +81,6 @@ class Doorbitch_Admin
                                 <td>
                                     <select name="event">
                                        <?php
-                                        // $events = $options[ 'events' ];
                                         $current_event = $options[ 'current_event' ];
                                         foreach ( $options[ 'events' ] as $event) {
                                             ?>
@@ -111,11 +110,11 @@ class Doorbitch_Admin
                 default:
                     ?>
                     <form method="post" action="options.php">
-                    <?php
-                    settings_fields( 'doorbitch_options_group' );
-                    do_settings_sections( 'doorbitch-settings-admin' );
-                    submit_button();
-                    ?>
+                        <?php
+                        settings_fields( 'doorbitch_options_group' );
+                        do_settings_sections( 'doorbitch-settings-admin' );
+                        submit_button();
+                        ?>
                     </form>
                     <?php
                     break;
