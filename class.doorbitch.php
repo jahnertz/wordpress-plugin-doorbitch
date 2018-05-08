@@ -22,18 +22,18 @@ class Doorbitch {
 		}
 
 		// Show options array in debug area:
-        foreach ( $options as $option => $value ) {
-        	if (! is_array( $value ) ){
-		        self::debug( $option . ' : ' . $value );
-		    }
-		    else {
-		    	$list = $option . ': ';
-		    	foreach ($value as $item) {
-		    		$list .= $item . ', ';
-		    	}
-		    	self::debug( $list );
-		    }
-        }
+		// foreach ( $options as $option => $value ) {
+		// 	if (! is_array( $value ) ){
+		// 		self::debug( $option . ' : ' . $value );
+		// 	}
+		// 	else {
+		// 		$list = $option . ': ';
+		// 		foreach ($value as $item) {
+		// 			$list .= $item . ', ';
+		// 		}
+		// 		self::debug( $list );
+		// 	}
+		// }
 
         // Add debugger assets if we're in debug mode.
 		if ( DOORBITCH__DEBUG_MODE ){
