@@ -220,6 +220,7 @@ class Doorbitch_Admin
                 $entries = array();
                 foreach( $results as $result ) {
                     $entry = array();
+                    // hide event column
                     // $entry [ 'event' ] = $result->event;
                     $entry [ 'time' ] = $result->time;
                     $data = explode( ',', $result->data );
