@@ -72,7 +72,7 @@ class Doorbitch_Admin
                         </table>
                     </form>
                     <?php
-                    $this->display_records();
+                    $this->display_records( $options[ 'current_event' ] );
                     break;
                 
                 default:
@@ -168,13 +168,13 @@ class Doorbitch_Admin
         );
     }
 
-    private function display_records() {
+    private function display_records( $event ) {
         global $wpdb;
         ?>
         <table class="doorbitch-records">
             <?php
             // Show data:
-            $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch" );
+            $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
             // Create headers:
             ?>
             <tr>
