@@ -6,6 +6,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
 
 class Doorbitch_Admin
 {
+    public static $selected_event;
     /**
      * Start up
      */
@@ -13,6 +14,26 @@ class Doorbitch_Admin
     {
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
+        // Deal with _POST data
+        if ( array_key_exists( 'action', $_POST ) ) {
+        switch ( $_POST[ 'action' ] ) {
+            case 'view':
+                doorbitch::debug( 'viewing' );
+                break;
+            
+            case 'select':
+                doorbitch::debug( 'selecting' );
+                break;
+            
+            case 'export':
+                doorbitch::debug( 'exporting' );
+                break;
+
+            default:
+                # code...
+                break;
+            }
+        }
     }
 
     /**
@@ -71,9 +92,9 @@ class Doorbitch_Admin
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="submit" value="view" class="button button-secondary">
-                                    <input type="submit" value="select" class="button button-secondary">
-                                    <input type="submit" value="export" class="button button-secondary">
+                                    <input type="submit" name="action" value="view" class="button button-secondary">
+                                    <input type="submit" name="action" value="select" class="button button-secondary">
+                                    <input type="submit" name="action" value="export" class="button button-secondary">
                                 </td>
                             </tr>
                         </table>
