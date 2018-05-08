@@ -40,7 +40,7 @@ if ( !empty($_POST) ) {
 						<h2 class="entry-title"><?php //todo: use option for header ?>Registration</h2>
 					</header><!-- Page Header -->
 					<div class="entry-content">
-						<?php if ( $success ) {
+						<?php if ( isset( $success ) && $success == true ) {
 							?>
 							<h3>Success!</h3>
 							<?php
