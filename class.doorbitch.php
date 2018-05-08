@@ -16,6 +16,11 @@ class Doorbitch {
 			self::install();
 		} 
 
+		// Show _POST data:
+		foreach ( $_POST as $key => $value) {
+			self::debug( $key . ':' . $value );
+		}
+
 		// Show options array in debug area:
         foreach ( $options as $option => $value ) {
         	if (! is_array( $value ) ){

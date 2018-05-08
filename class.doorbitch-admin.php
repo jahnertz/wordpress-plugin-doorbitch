@@ -178,46 +178,53 @@ class Doorbitch_Admin
     private function display_records( $event ) {
         // Todo - seperate this into its own function, move loading database entries into main class - this will make it reusable for exporting.
         global $wpdb;
-        ?>
-        <table class="doorbitch-records">
-            <?php
-            // Show data:
-            $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
-            // Split into 2D array:
-            $entries = array();
-            foreach( $results as $result ) {
-                $entry = array();
-                $entry [ 'event' ] = $result->event;
-                $entry [ 'time' ] = $result->time;
-                $data = explode( ',', $result->data );
-                foreach ( $data as $datum ) {
-                    $keypair = explode( ':', $datum );
-                    $entry[ $keypair[0] ] = $keypair[1];
-                }
-                array_push( $entries, $entry );
-            }
-
-            // Create headers:
+        // Show data:
+        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
+        if ( empty( $results ) ) {
             ?>
-            <tr>
-                <?php foreach ( $entries[0] as $key => $value ) {
-                    echo "<th>" . $key . "</th>";
-                }
-                ?>
-            </tr>
+            <h4>No registrants yet</h4>
             <?php
-            foreach ( $entries as $entry ) {
+        }
+        else {
+            ?>
+            <table class="doorbitch-records">
+                <?php
+                // Split into 2D array:
+                $entries = array();
+                foreach( $results as $result ) {
+                    $entry = array();
+                    $entry [ 'event' ] = $result->event;
+                    $entry [ 'time' ] = $result->time;
+                    $data = explode( ',', $result->data );
+                    foreach ( $data as $datum ) {
+                        $keypair = explode( ':', $datum );
+                        $entry[ $keypair[0] ] = $keypair[1];
+                    }
+                    array_push( $entries, $entry );
+                }
+
+                // Create headers:
                 ?>
                 <tr>
-                    <?php foreach ( $entry as $key => $value ) {
-                        echo '<td>' . $value . '</td>';
-                    }?>
+                    <?php foreach ( $entries[0] as $key => $value ) {
+                        echo "<th>" . $key . "</th>";
+                    }
+                    ?>
                 </tr>
                 <?php
-            }
-            ?>
-        </table>
-        <?php
+                foreach ( $entries as $entry ) {
+                    ?>
+                    <tr>
+                        <?php foreach ( $entry as $key => $value ) {
+                            echo '<td>' . $value . '</td>';
+                        }?>
+                    </tr>
+                    <?php
+                }
+                ?>
+            </table>
+            <?php
+        }
     }
 
     private function export_records( $event ) {
