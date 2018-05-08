@@ -176,29 +176,35 @@ class Doorbitch_Admin
             <?php
             // Show data:
             $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
+            // Split into 2D array:
+            $entries = array();
+            foreach( $results as $result ) {
+                $entry = array();
+                $entry [ 'event' ] = $result->event;
+                $entry [ 'time' ] = $result->time;
+                $data = explode( ',', $result->data );
+                foreach ( $data as $datum ) {
+                    $keypair = explode( ':', $datum );
+                    $entry[ $keypair[0] ] = $keypair[1];
+                }
+                array_push( $entries, $entry );
+            }
+
             // Create headers:
             ?>
             <tr>
-                <th>event</th>
-                <th>date</th>
-                <th>name</th>
-                <th>age</th>
-                <th>comment</th>
+                <?php foreach ( $entries[0] as $key => $value ) {
+                    echo "<th>" . $key . "</th>";
+                }
+                ?>
             </tr>
             <?php
-            foreach ( $results as $result ) {
+            foreach ( $entries as $entry ) {
                 ?>
                 <tr>
-                    <td><?php echo $result->event; ?></td>
-                    <td><?php echo $result->time; ?></td>
-                    <?php $data = explode( ',', $result->data );
-                        foreach ( $data as $datum ) {
-                            $keypair = explode( ':', $datum );
-                            ?>
-                            <td><?php echo $keypair[1]; ?></td>
-                            <?php
-                        }
-                        ?>
+                    <?php foreach ( $entry as $key => $value ) {
+                        echo '<td>' . $value . '</td>';
+                    }?>
                 </tr>
                 <?php
             }
