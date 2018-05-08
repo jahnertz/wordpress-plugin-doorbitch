@@ -5,6 +5,7 @@ class Doorbitch {
 	public static $debug_mode = true;
 	public static $debug_messages = array();
 	public static $table_suffix = 'doorbitch';
+	public static $default_event = 'Example Event';
 
 	private static $options = array();
 
@@ -68,12 +69,13 @@ class Doorbitch {
 
 	public static function get_options() {
 		// if ( empty( self::$options ) ) {
-		// 	if ( ! self::$options = get_option( 'doorbitch_options' ) ) {
-		// 		// get_option will return false if the option doesn't exist.
-		// 		self::$options = array();
-		// 	}
+			if ( ! self::$options = get_option( 'doorbitch_options' ) ) {
+				// get_option will return false if the option doesn't exist.
+				self::$options = array();
+				update_option( 'doorbitch_options', self::$options );
+			}
 		// }
-		self::$options = get_option( 'doorbitch_options' );
+		// self::$options = get_option( 'doorbitch_options' );
 		return self::$options;
 	}
 
@@ -105,9 +107,9 @@ class Doorbitch {
 		dbDelta( $sql );
 
 
-		self::add_event( 'Example' );
-		self::set_current_event( 'Example' );
-		self::add_data( 'Example', 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
+		self::add_event( self::$default_event );
+		self::set_current_event( self::$default_event );
+		self::add_data( self::$default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
 		// TODO: scan database for events
 		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
         $options[ 'events' ] = array();
