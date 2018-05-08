@@ -30,6 +30,7 @@ class Doorbitch {
 		    }
         }
 
+        // Add debugger assets if we're in debug mode.
 		if ( DOORBITCH__DEBUG_MODE ){
 			function enqueue_debug_styles() { 
 				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
