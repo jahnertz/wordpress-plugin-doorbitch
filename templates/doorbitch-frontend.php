@@ -29,6 +29,8 @@ if ( !empty($_POST) ) {
 } else {
 	doorbitch::debug( 'There is no post data' );
 }
+// Clear the post data:
+	unset( $_POST );
 ?>
 
 <div id="primary" class="content-area">
