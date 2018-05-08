@@ -196,7 +196,7 @@ class Doorbitch {
 		return $this_db_version;
 	}
 
-	public static function add_data( $event, $data ) {
+	public static function add_data( $data, $event ) {
 		global $wpdb;
 		$options = self::get_options();
 

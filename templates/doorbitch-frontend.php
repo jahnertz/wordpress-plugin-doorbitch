@@ -18,12 +18,14 @@ get_header();
 
 if ( !empty($_POST) ) {
 	global $doorbitch;
+	$options = doorbitch::get_options();
+
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
 		$dataset = $dataset . $item . ':' . $data . ', ';
 	}
 	doorbitch::debug( $dataset );
-	doorbitch::add_data( $dataset );
+	doorbitch::add_data( $options[ 'current_event' ], $dataset );
 } else {
 	doorbitch::debug( 'There is no post data' );
 }
