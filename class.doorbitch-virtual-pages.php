@@ -19,7 +19,7 @@ Class Doorbitch_Virtual_Pages
 			// doorbitch::debug( 'Adding rewrite rules.' );
 			add_rewrite_tag( '%virtualpage%', '([^&])' );
 			add_rewrite_rule(
-				'doorbitch/([^/]*)/?$',
+				'door/([^/]*)/?$',
 				'index.php?virtualpage=$matches[1]',
 				'top'
 				// an alternative approach.
