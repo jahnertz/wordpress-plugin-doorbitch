@@ -16,7 +16,16 @@ class Doorbitch {
 		} 
 
         foreach ( $options as $option => $value ) {
-	        self::debug( $option . ' : ' . $value );
+        	if (! is_array( $value ) ){
+		        self::debug( $option . ' : ' . $value );
+		    }
+		    else {
+		    	$list = $option . ': ';
+		    	foreach ($value as $item) {
+		    		$list .= $item . ', ';
+		    	}
+		    	self::debug( $list );
+		    }
         }
 
 		if ( DOORBITCH__DEBUG_MODE ){
@@ -85,6 +94,14 @@ class Doorbitch {
 
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
+
+		// TODO: scan database for events
+		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
+        $options[ 'events' ] = array();
+        foreach ($events as $event) {
+        	self::debug( 'adding event: ' . $event->event );
+        	array_push( $options[ 'events' ], $event->event );
+        }
 
 		$options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$options[ 'initiated' ] = true;
