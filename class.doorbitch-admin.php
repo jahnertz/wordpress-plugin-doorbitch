@@ -58,9 +58,10 @@ class Doorbitch_Admin
                                     <select name="event">
                                <?php
                                 $events = $options[ 'events' ];
+                                $current_event = $options[ 'current_event' ];
                                 foreach ( $events as $event) {
                                     ?>
-                                    <option value="<?php echo $event ?>"><?php echo $event?></option>
+                                    <option value="<?php echo $event;?>" <?php if ( $event == $current_event ) { echo 'selected';} ?>"><?php echo $event; ?></option>
                                     <?php
                                 }
                                ?> 
