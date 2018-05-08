@@ -86,9 +86,7 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-		// TODO: add frontend form to options
 		$options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
-
 		$options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $options );
