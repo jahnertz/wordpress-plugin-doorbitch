@@ -211,6 +211,7 @@ class Doorbitch {
 				'data' => $data
 			)
 		);
+		return true;
 	}
 
 	public static function debug_show() {

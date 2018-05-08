@@ -25,11 +25,10 @@ if ( !empty($_POST) ) {
 		$dataset = $dataset . $item . ':' . $data . ', ';
 	}
 	doorbitch::debug( $dataset );
-	doorbitch::add_data( $options[ 'current_event' ], $dataset );
+	$success = doorbitch::add_data( $options[ 'current_event' ], $dataset );
 } else {
 	doorbitch::debug( 'There is no post data' );
 }
-// Show success message
 ?>
 
 <div id="primary" class="content-area">
@@ -37,11 +36,15 @@ if ( !empty($_POST) ) {
 		<div class="page-content">
 			<div class="panel-content">
 				<div class="wrap">
-					<!-- <h1>Doorbitch</h1> -->
 					<header class="entry-header">
 						<h2 class="entry-title"><?php //todo: use option for header ?>Registration</h2>
 					</header><!-- Page Header -->
 					<div class="entry-content">
+						<?php if ( $success ) {
+							?>
+							<h3>Success!</h3>
+							<?php
+						}?>
 						<form action="" method="post">
 							<?php 
 							$options = get_option( 'doorbitch_options' );
