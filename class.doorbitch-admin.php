@@ -32,8 +32,6 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        // Set class property
-        // $this->options = get_option( 'doorbitch_options' );
         $options = doorbitch::get_options();
         ?>
         <div class="wrap">
