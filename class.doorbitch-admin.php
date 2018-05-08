@@ -38,7 +38,8 @@ class Doorbitch_Admin
     public function create_admin_page()
     {
         // Set class property
-        $this->options = get_option( 'doorbitch_options' );
+        // $this->options = get_option( 'doorbitch_options' );
+        $options = doorbitch::get_options();
         ?>
         <div class="wrap">
             <?php
@@ -51,7 +52,7 @@ class Doorbitch_Admin
             <?php
             switch ( $active_tab ) {
                 case 'export':
-                    global $wpdb;
+                    // global $wpdb;
                     ?>
                     <form method="post" action="" id="export">
                         <table>
@@ -64,10 +65,11 @@ class Doorbitch_Admin
                                 <td>
                                     <select name="event">
                                <?php
-                                $events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
-                                foreach ($events as $event) {
+                                // $events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
+                                $events = $options[ 'events' ];
+                                foreach ( $events as $event) {
                                     ?>
-                                    <option value="<?php echo $event->event ?>"><?php echo $event->event ?></option>
+                                    <option value="<?php echo $event ?>"><?php echo $event?></option>
                                     <?php
                                 }
                                // TODO: retrieve list of events;
