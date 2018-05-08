@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
 
 class Doorbitch_Admin
 {
-    public static $selected_event;
+    public static $visible_event;
     /**
      * Start up
      */
