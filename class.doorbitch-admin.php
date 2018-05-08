@@ -46,6 +46,7 @@ class Doorbitch_Admin
             switch ( $active_tab ) {
                 case 'export':
                     ?>
+                    <h3>Current Event: <i><?php echo $options[ 'current_event' ] ?></i></h3>
                     <form method="post" action="" id="export">
                         <table>
                             <tr>
