@@ -7,11 +7,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
 class Doorbitch_Admin
 {
     /**
-     * Holds the values to be used in the fields callbacks
-     */
-    private $options;
-
-    /**
      * Start up
      */
     public function __construct()
