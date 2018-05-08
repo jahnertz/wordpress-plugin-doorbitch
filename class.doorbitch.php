@@ -140,7 +140,7 @@ class Doorbitch {
 		global $wpdb;
 
 		$welcome_event = "Example";
-		$welcome_data = "Name:Example Person,Age:18-25,Comment:Nothing to see here.";
+		$welcome_data = "Name:Example Person,Age:18-25";
 
 		$table_name = $wpdb->prefix . 'doorbitch';
 
@@ -212,7 +212,7 @@ class Doorbitch {
 		return $this_db_version;
 	}
 
-	public static function add_data( $data ) {
+	public static function add_data( $event, $data ) {
 		global $wpdb;
 		$options = self::get_options();
 
@@ -221,7 +221,7 @@ class Doorbitch {
 		$wpdb->insert(
 			$table_name,
 			array(
-				'event' => $options[ 'current_event' ],
+				'event' => $event,
 				'time' => current_time( 'mysql' ),
 				'data' => $data
 			)
