@@ -63,6 +63,7 @@ class Doorbitch {
 			if ( ! self::$options = get_option( 'doorbitch_options' ) ) {
 				// get_option will return false if the option doesn't exist.
 				self::$options = array();
+				// todo: set default options here.
 			}
 		}
 		return self::$options;
