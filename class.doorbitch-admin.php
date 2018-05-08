@@ -104,6 +104,7 @@ class Doorbitch_Admin
                     if ( self::$visible_event == '' ) {
                         self::$visible_event = $options[ 'current_event' ];
                     }
+                    echo "<h3>" . self::$visible_event . "</h3>";
                     $this->display_records( self::$visible_event );
                     break;
                 
