@@ -155,18 +155,23 @@ class Doorbitch {
 
 	public static function add_event( $event_name ) {
 		$options = self::get_options();
-		array_push( $options[ 'events' ], $event_name );
+		$events = $options[ 'events' ];
+		// add the event iff it doesn't already exist
+		if ( ! in_array( $event_name, $options[ 'events' ] ) ) {
+			array_push( $options[ 'events' ], $event_name );
+		}
 		$options[ 'current_event' ] = $event_name;
 		update_option( 'doorbitch_options', $options );
 	}
 
 	public static function set_current_event( $event_name ) {
 		$options = self::get_options();
-		if ( array_key_exists( '$event_name', $options[ 'events' ] ) ) {
+		$events = $options[ 'events' ];
+		if ( in_array( $event_name, $events ) ) {
 			$options[ 'current_event' ] = $event_name;
 		}
 		else {
-			self::debug( 'event \'' . $event_name . '\' has no entries' );
+			self::debug( 'event \'' . $event_name . '\' not found' );
 		}
 		update_option( 'doorbitch_options', $options );
 	}
