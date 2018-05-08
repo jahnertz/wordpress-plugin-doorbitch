@@ -108,8 +108,10 @@ class Doorbitch {
 
 
 		self::add_event( self::$default_event );
-		self::set_current_event( self::$default_event );
+		$options[ 'current_event' ] = self::$default_event;
+		// self::set_current_event( self::$default_event );
 		self::add_data( self::$default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
+
 		// TODO: scan database for events
 		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
         $options[ 'events' ] = array();
