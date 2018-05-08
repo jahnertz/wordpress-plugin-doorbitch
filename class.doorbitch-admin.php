@@ -111,9 +111,9 @@ class Doorbitch_Admin
                     ?>
                     <form method="post" action="options.php">
                         <?php
-                        settings_fields( 'doorbitch_options_group' );
-                        do_settings_sections( 'doorbitch-settings-admin' );
-                        submit_button();
+                            settings_fields( 'doorbitch_options_group' );
+                            do_settings_sections( 'doorbitch-settings-admin' );
+                            submit_button();
                         ?>
                     </form>
                     <?php
