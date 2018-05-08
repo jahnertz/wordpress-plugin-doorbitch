@@ -57,20 +57,25 @@ class Doorbitch_Admin
                             <tr>
                                 <td>
                                     <select name="event">
-                               <?php
-                                $events = $options[ 'events' ];
-                                $current_event = $options[ 'current_event' ];
-                                foreach ( $events as $event) {
-                                    ?>
-                                    <option value="<?php echo $event;?>" <?php if ( $event == $current_event ) { echo 'selected';} ?>"><?php echo $event; ?></option>
-                                    <?php
-                                }
-                               ?> 
-                            </select>
-                        </td>
-                        <td>
-                            <input type="submit" value="export">
-                        </td>
+                                       <?php
+                                        $events = $options[ 'events' ];
+                                        $current_event = $options[ 'current_event' ];
+                                        foreach ( $events as $event) {
+                                            ?>
+                                            <option value="<?php echo $event;?>" <?php if ( $event == $current_event ) { echo 'selected';} ?>"><?php echo $event; ?></option>
+                                            <?php
+                                        }
+                                       ?> 
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="submit" value="view" class="button button-secondary">
+                                    <input type="submit" value="select" class="button button-secondary">
+                                    <input type="submit" value="export" class="button button-secondary">
+                                </td>
+                            </tr>
                         </table>
                     </form>
                     <?php
