@@ -150,16 +150,25 @@ class Doorbitch {
 				)
 		);
 
-		$event_r = ['unknwn-event' => date(DATE_ISO8601), 1, false ];
-		add_option( 'doorbitch_events', $event_r );
+		self::add_event( $welcome_event );
 	}
 
-	public static function add_event() {
-		// Add event to options and save it
+	public static function add_event( $event_name ) {
+		$options = self::get_options();
+		array_push( $options[ 'events' ], $event_name );
+		$options[ 'current_event' ] = $event_name;
+		update_option( 'doorbitch_options', $options );
 	}
 
-	public static function set_current_event() {
-		// Set current event
+	public static function set_current_event( $event_name ) {
+		$options = self::get_options();
+		if ( array_key_exists( '$event_name', $options[ 'events' ] ) ) {
+			$options[ 'current_event' ] = $event_name;
+		}
+		else {
+			self::debug( 'event \'' . $event_name . '\' has no entries' );
+		}
+		update_option( 'doorbitch_options', $options );
 	}
 
 	public static function upgrade_database() {
