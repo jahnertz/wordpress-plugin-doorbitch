@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
 
 class Doorbitch_Admin
 {
-    public static $visible_event;
+    public static $visible_event = '';
     /**
      * Start up
      */
@@ -19,6 +19,7 @@ class Doorbitch_Admin
         switch ( $_POST[ 'action' ] ) {
             case 'view':
                 doorbitch::debug( 'viewing' );
+                $this->visible_event = $_POST[ 'event' ];
                 break;
             
             case 'select':
@@ -80,9 +81,9 @@ class Doorbitch_Admin
                                 <td>
                                     <select name="event">
                                        <?php
-                                        $events = $options[ 'events' ];
+                                        // $events = $options[ 'events' ];
                                         $current_event = $options[ 'current_event' ];
-                                        foreach ( $events as $event) {
+                                        foreach ( $options[ 'events' ] as $event) {
                                             ?>
                                             <option value="<?php echo $event;?>" <?php if ( $event == $current_event ) { echo 'selected';} ?>"><?php echo $event; ?></option>
                                             <?php
@@ -100,8 +101,11 @@ class Doorbitch_Admin
                             </tr>
                         </table>
                     </form>
-                    <?php
-                    $this->display_records( $options[ 'current_event' ] );
+                    <?php 
+                    if ( $visible_event == '' ) {
+                        $visible_event = $options[ 'current_event' ];
+                    }
+                    $this->display_records( $visible_event );
                     break;
                 
                 default:
@@ -201,6 +205,7 @@ class Doorbitch_Admin
         // Todo - seperate this into its own function, move loading database entries into main class - this will make it reusable for exporting.
         global $wpdb;
         // Show data:
+
         $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
         if ( empty( $results ) ) {
             ?>
