@@ -45,7 +45,6 @@ class Doorbitch_Admin
             <?php
             switch ( $active_tab ) {
                 case 'export':
-                    // global $wpdb;
                     ?>
                     <form method="post" action="" id="export">
                         <table>
@@ -58,14 +57,12 @@ class Doorbitch_Admin
                                 <td>
                                     <select name="event">
                                <?php
-                                // $events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
                                 $events = $options[ 'events' ];
                                 foreach ( $events as $event) {
                                     ?>
                                     <option value="<?php echo $event ?>"><?php echo $event?></option>
                                     <?php
                                 }
-                               // TODO: retrieve list of events;
                                ?> 
                             </select>
                         </td>
