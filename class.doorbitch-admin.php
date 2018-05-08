@@ -23,6 +23,7 @@ class Doorbitch_Admin
             
             case 'select':
                 doorbitch::debug( 'selecting' );
+                doorbitch::set_current_event( $_POST[ 'event' ] );
                 break;
             
             case 'export':

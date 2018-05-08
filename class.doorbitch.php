@@ -154,7 +154,7 @@ class Doorbitch {
 
 	public static function set_current_event( $event_name ) {
 		$options = self::get_options();
-		if ( in_array( $event_name, $events ) ) {
+		if ( in_array( $event_name, $options[ 'events' ] ) ) {
 			$options[ 'current_event' ] = $event_name;
 		}
 		else {
