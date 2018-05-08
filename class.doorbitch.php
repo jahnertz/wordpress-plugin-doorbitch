@@ -104,6 +104,10 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
+
+		self::add_event( 'Example' );
+		self::set_current_event( 'Example' );
+		self::add_data( 'Example', 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
 		// TODO: scan database for events
 		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
         $options[ 'events' ] = array();
