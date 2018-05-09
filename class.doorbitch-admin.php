@@ -64,7 +64,7 @@ class Doorbitch_Admin
     {
         global $doorbitch;
 
-        $options = $doorbitch->get_options();
+        $options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
             <?php

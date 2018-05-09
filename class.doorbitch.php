@@ -10,7 +10,7 @@ class Doorbitch {
 	public $options;
 
 	public function __construct() {
-		$options = $this->get_options();
+		$options = get_option( DOORBITCH__OPTIONS );
 
 		// Run the install function if we're not already initiated.
 		// if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
@@ -56,7 +56,7 @@ class Doorbitch {
 
 	public function install() {
 		global $wpdb;
-	    $options = $this->get_options();
+	    $options = get_option( DOORBITCH__OPTIONS );
 
 		$this->debug( 'initiating...' );
 
@@ -126,7 +126,7 @@ class Doorbitch {
 	}
 
 	public function add_event( $event_name ) {
-		$options = $this->get_options();
+		$options = get_option( DOORBITCH__OPTIONS );
 		if ( ! array_key_exists( 'events', $options ) ) {
 			$options[ 'events' ] = array();
 		}
@@ -153,7 +153,7 @@ class Doorbitch {
 
 	public function upgrade_database() {
 		global $wpdb;
-		$options = $this->get_options();
+		$options = get_option( DOORBITCH__OPTIONS );
 
 		$table_name = $wpdb->prefix . $this->table_suffix;
 
@@ -186,7 +186,7 @@ class Doorbitch {
 
 	public function add_data( $event, $data ) {
 		global $wpdb;
-		$options = $this->get_options();
+		$options = get_option( DOORBITCH__OPTIONS );
 
 		$table_name = $wpdb->prefix . $this->table_suffix;
 
@@ -218,7 +218,7 @@ class Doorbitch {
 
 	public function dump_options() {
 		// Show options array in debug area:
-		$options = $this->get_options();
+		$options = get_option( DOORBITCH__OPTIONS );
 		foreach ( $options as $option => $value ) {
 			if (! is_array( $value ) ){
 				$this->debug( $option . ' : ' . $value );
