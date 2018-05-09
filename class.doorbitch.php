@@ -42,18 +42,6 @@ class Doorbitch {
 
 	}
 
-	public function get_options() {
-		// if ( empty( $this->options ) ) {
-			if ( ! $this->options = get_option( 'doorbitch_options' ) ) {
-				// get_option will return false if the option doesn't exist.
-				$this->options = array();
-				update_option( 'doorbitch_options', $this->options );
-			}
-		// }
-		// $this->options = get_option( 'doorbitch_options' );
-		return $this->options;
-	}
-
 	public function install() {
 		global $wpdb;
 	    $options = get_option( DOORBITCH__OPTIONS );
