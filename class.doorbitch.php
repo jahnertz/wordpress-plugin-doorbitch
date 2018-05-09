@@ -7,7 +7,7 @@ class Doorbitch {
 	public static $table_suffix = 'doorbitch';
 	public static $default_event = 'Example Event';
 
-	private static $options = array();
+	public $options;
 
 	public function __construct() {
 		$options = self::get_options();
@@ -67,16 +67,16 @@ class Doorbitch {
 
 	}
 
-	public static function get_options() {
-		// if ( empty( self::$options ) ) {
-			if ( ! self::$options = get_option( 'doorbitch_options' ) ) {
+	public function get_options() {
+		// if ( empty( $this->options ) ) {
+			if ( ! $this->options = get_option( 'doorbitch_options' ) ) {
 				// get_option will return false if the option doesn't exist.
-				self::$options = array();
-				update_option( 'doorbitch_options', self::$options );
+				$this->options = array();
+				update_option( 'doorbitch_options', $this->options );
 			}
 		// }
-		// self::$options = get_option( 'doorbitch_options' );
-		return self::$options;
+		// $this->options = get_option( 'doorbitch_options' );
+		return $this->options;
 	}
 
 	public static function install() {
@@ -108,8 +108,8 @@ class Doorbitch {
 
 
 		self::add_event( self::$default_event );
-		$options[ 'current_event' ] = self::$default_event;
-		// self::set_current_event( self::$default_event );
+		// $options[ 'current_event' ] = self::$default_event;
+		self::set_current_event( self::$default_event );
 		self::add_data( self::$default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
 
 		// TODO: scan database for events
@@ -171,6 +171,7 @@ class Doorbitch {
 		}
 		else {
 			self::debug( 'event \'' . $event_name . '\' not found' );
+			add_event( $event_name );
 		}
 		update_option( 'doorbitch_options', $options );
 	}

@@ -7,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
 class Doorbitch_Admin
 {
     private $options;
-    
+
     public static $visible_event = '';
     /**
      * Start up
@@ -57,7 +57,9 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        $options = doorbitch::get_options();
+        global $doorbitch;
+        
+        $options = $doorbitch->get_options();
         ?>
         <div class="wrap">
             <?php
