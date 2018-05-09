@@ -79,7 +79,7 @@ class Doorbitch {
 		return $this->options;
 	}
 
-	public static function install() {
+	public function install() {
 		global $wpdb;
 	    $options = self::get_options();
 
@@ -150,8 +150,8 @@ class Doorbitch {
 		}
 	}
 
-	public static function add_event( $event_name ) {
-		$options = self::get_options();
+	public function add_event( $event_name ) {
+		$options = $this->get_options();
 		if ( ! array_key_exists( 'events', $options ) ) {
 			$options[ 'events' ] = array();
 		}
@@ -164,8 +164,8 @@ class Doorbitch {
 		update_option( 'doorbitch_options', $options );
 	}
 
-	public static function set_current_event( $event_name ) {
-		$options = self::get_options();
+	public function set_current_event( $event_name ) {
+		$options = $this->get_options();
 		if ( in_array( $event_name, $options[ 'events' ] ) ) {
 			$options[ 'current_event' ] = $event_name;
 		}
@@ -176,9 +176,9 @@ class Doorbitch {
 		update_option( 'doorbitch_options', $options );
 	}
 
-	public static function upgrade_database() {
+	public function upgrade_database() {
 		global $wpdb;
-		$options = self::get_options();
+		$options = $this->get_options();
 
 		$table_name = $wpdb->prefix . self::$table_suffix;
 
@@ -198,20 +198,20 @@ class Doorbitch {
 	}
 
 	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
-	public static function update_db_check( $db_current_version ) {
+	public function update_db_check( $db_current_version ) {
 		// global $db_version;
 		// TODO: Check if database needs upgrading
 		$this_db_version = DOORBITCH__DATABASE_VERSION;
 		if ( $this_db_version > $db_current_version ) {
-			self::debug( "Installing database v." . DOORBITCH__DATABASE_VERSION );
-			self::upgrade_database();
+			$this->debug( "Installing database v." . DOORBITCH__DATABASE_VERSION );
+			$this->upgrade_database();
 		}
 		return $this_db_version;
 	}
 
-	public static function add_data( $event, $data ) {
+	public function add_data( $event, $data ) {
 		global $wpdb;
-		$options = self::get_options();
+		$options = $this->get_options();
 
 		$table_name = $wpdb->prefix . self::$table_suffix;
 
