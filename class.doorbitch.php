@@ -140,12 +140,12 @@ class Doorbitch {
 	}
 
 	public static function set_current_event( $event_name ) {
-		$options = $this->get_options();
+		$options = get_option( 'doorbitch_options' );
 		if ( in_array( $event_name, $options[ 'events' ] ) ) {
 			$options[ 'current_event' ] = $event_name;
 		}
 		else {
-			$this->debug( 'event \'' . $event_name . '\' not found' );
+			// $this->debug( 'event \'' . $event_name . '\' not found' );
 			add_event( $event_name );
 		}
 		update_option( 'doorbitch_options', $options );
