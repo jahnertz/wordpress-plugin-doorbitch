@@ -24,10 +24,10 @@ if ( !empty($_POST) ) {
 	foreach ($_POST as $item => $data ) {
 		$dataset = $dataset . $item . ':' . $data . ', ';
 	}
-	doorbitch::debug( $dataset );
+	$doorbitch->debug( $dataset );
 	$success = $doorbitch->add_data( $options[ 'current_event' ], $dataset );
 } else {
-	doorbitch::debug( 'There is no post data' );
+	$doorbitch->debug( 'There is no post data' );
 }
 // Clear the post data:
 	unset( $_POST );

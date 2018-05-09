@@ -23,4 +23,16 @@ require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 
 $doorbitch = new Doorbitch;
 
-register_activation_hook( __FILE__, array( 'Doorbitch', 'install' ) );
+register_activation_hook( __FILE__, array( 'doorbitch', 'install' ) );
+
+// Add debugger assets if we're in debug mode.
+if ( DOORBITCH__DEBUG_MODE ){
+	function enqueue_debug_styles() { 
+		wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
+	}
+	add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
+	// add_action( 'admin_notices', array( get_called_class(), 'debug_show' ) );
+	// add_action( 'wp_footer', array( get_called_class(), 'debug_show' ) );
+	add_action( 'admin_notices', array( $doorbitch, 'debug_show' ) );
+	add_action( 'wp_footer', array( $doorbitch, 'debug_show' ) );
+}

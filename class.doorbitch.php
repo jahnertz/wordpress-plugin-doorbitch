@@ -2,49 +2,51 @@
 
 class Doorbitch {
 	//TODO: initiated defaults to false, save as an option
-	public static $debug_mode = true;
-	public static $debug_messages = array();
-	public static $table_suffix = 'doorbitch';
-	public static $default_event = 'Example Event';
+	public $debug_mode = true;
+	public $debug_messages = array();
+	public $table_suffix = 'doorbitch';
+	public $default_event = 'Example Event';
 
 	public $options;
 
 	public function __construct() {
-		$options = self::get_options();
+		$options = $this->get_options();
 
 		// Run the install function if we're not already initiated.
 		if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
-			self::install();
+			$this->install();
 		} 
 
 		// Show _POST data:
 		foreach ( $_POST as $key => $value) {
-			self::debug( $key . ':' . $value );
+			$this->debug( $key . ':' . $value );
 		}
 
 		// Show options array in debug area:
 		// foreach ( $options as $option => $value ) {
 		// 	if (! is_array( $value ) ){
-		// 		self::debug( $option . ' : ' . $value );
+		// 		$this->debug( $option . ' : ' . $value );
 		// 	}
 		// 	else {
 		// 		$list = $option . ': ';
 		// 		foreach ($value as $item) {
 		// 			$list .= $item . ', ';
 		// 		}
-		// 		self::debug( $list );
+		// 		$this->debug( $list );
 		// 	}
 		// }
 
-        // Add debugger assets if we're in debug mode.
-		if ( DOORBITCH__DEBUG_MODE ){
-			function enqueue_debug_styles() { 
-				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
-			}
-			add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
-			add_action( 'admin_notices', array( get_called_class(), 'debug_show' ) );
-			add_action( 'wp_footer', array( get_called_class(), 'debug_show' ) );
-		}
+		// // Add debugger assets if we're in debug mode.
+		// if ( DOORBITCH__DEBUG_MODE ){
+		// 	function enqueue_debug_styles() { 
+		// 		wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
+		// 	}
+		// 	add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
+		// 	add_action( 'admin_notices', array( get_called_class(), 'debug_show' ) );
+		// 	add_action( 'wp_footer', array( get_called_class(), 'debug_show' ) );
+		// 	// add_action( 'admin_notices', 'debug_show' );
+		// 	// add_action( 'wp_footer', 'debug_show' );
+		// }
 
 		//Add virtual page for the frontend form:
 		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
@@ -81,17 +83,17 @@ class Doorbitch {
 
 	public function install() {
 		global $wpdb;
-	    $options = self::get_options();
+	    $options = $this->get_options();
 
-		self::debug( 'initiating...' );
+		$this->debug( 'initiating...' );
 
 		$db_current_version = 0.0;
  		if ( array_key_exists( 'db_version' , $options ) ) {
 		    $db_current_version = $options[ 'db_version' ];
 	    }
-	    $db_current_version = self::update_db_check( $db_current_version );
+	    $db_current_version = $this->update_db_check( $db_current_version );
 
-		$table_name = $wpdb->prefix . self::$table_suffix;
+		$table_name = $wpdb->prefix . $this->table_suffix;
 		$charset_collate = $wpdb->get_charset_collate();
 
 		// add the table to store data from the frontend form
@@ -107,16 +109,16 @@ class Doorbitch {
 		dbDelta( $sql );
 
 
-		self::add_event( self::$default_event );
-		// $options[ 'current_event' ] = self::$default_event;
-		self::set_current_event( self::$default_event );
-		self::add_data( self::$default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
+		$this->add_event( $this->default_event );
+		// $options[ 'current_event' ] = $this->default_event;
+		$this->set_current_event( $this->default_event );
+		$this->add_data( $this->default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
 
 		// TODO: scan database for events
 		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
         $options[ 'events' ] = array();
         foreach ($events as $event) {
-        	self::debug( 'adding event: ' . $event->event );
+        	$this->debug( 'adding event: ' . $event->event );
         	array_push( $options[ 'events' ], $event->event );
         }
 
@@ -124,7 +126,7 @@ class Doorbitch {
 		$options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $options );
-		self::debug( 'saving options' );
+		$this->debug( 'saving options' );
 
 		// show error output on plugin activation
 		if ( defined('WP_DEBUG') && true === WP_DEBUG && DOORBITCH__DEBUG_MODE ) { 
@@ -170,7 +172,7 @@ class Doorbitch {
 			$options[ 'current_event' ] = $event_name;
 		}
 		else {
-			self::debug( 'event \'' . $event_name . '\' not found' );
+			$this->debug( 'event \'' . $event_name . '\' not found' );
 			add_event( $event_name );
 		}
 		update_option( 'doorbitch_options', $options );
@@ -180,7 +182,7 @@ class Doorbitch {
 		global $wpdb;
 		$options = $this->get_options();
 
-		$table_name = $wpdb->prefix . self::$table_suffix;
+		$table_name = $wpdb->prefix . $this->table_suffix;
 
 		$sql = "CREATE TABLE $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -213,7 +215,7 @@ class Doorbitch {
 		global $wpdb;
 		$options = $this->get_options();
 
-		$table_name = $wpdb->prefix . self::$table_suffix;
+		$table_name = $wpdb->prefix . $this->table_suffix;
 
 		$wpdb->insert(
 			$table_name,
@@ -226,17 +228,17 @@ class Doorbitch {
 		return true;
 	}
 
-	public static function debug_show() {
+	public function debug_show() {
 		echo "<div class='doorbitch-debug'><h4>Debug</h4>";
-		for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
-			print_r( self::$debug_messages[$i] );
+		for ($i = 0; $i < count( $this->debug_messages ); $i++ ) {
+			print_r( $this->debug_messages[$i] );
 		}
 		echo "</div>";
 	}
 
-	public static function debug( $debug_text ) {
+	public function debug( $debug_text ) {
 		$file = basename( debug_backtrace()[0]['file'] );
-		self::$debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
+		$this->debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
 		//TODO: Print errors from table of common errors.
 
 	}
