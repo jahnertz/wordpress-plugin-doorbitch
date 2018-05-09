@@ -24,6 +24,7 @@ require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 $doorbitch = new Doorbitch;
 
 // register_activation_hook( __FILE__, array( 'doorbitch', 'install' ) );
+add_action( 'plugins_loaded', array( $doorbitch, 'dump_options' ) );
 
 // Add debugger assets if we're in debug mode.
 if ( DOORBITCH__DEBUG_MODE ){

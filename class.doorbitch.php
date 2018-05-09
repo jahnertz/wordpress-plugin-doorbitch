@@ -22,21 +22,6 @@ class Doorbitch {
 			$this->debug( $key . ':' . $value );
 		}
 
-		// Show options array in debug area:
-		// foreach ( $options as $option => $value ) {
-		// 	if (! is_array( $value ) ){
-		// 		$this->debug( $option . ' : ' . $value );
-		// 	}
-		// 	else {
-		// 		$list = $option . ': ';
-		// 		foreach ($value as $item) {
-		// 			$list .= $item . ', ';
-		// 		}
-		// 		$this->debug( $list );
-		// 	}
-		// }
-
-		//Add virtual page for the frontend form:
 		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
 		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
 	
@@ -229,6 +214,23 @@ class Doorbitch {
 		$this->debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
 		//TODO: Print errors from table of common errors.
 
+	}
+
+	public function dump_options() {
+		// Show options array in debug area:
+		$options = $this->get_options();
+		foreach ( $options as $option => $value ) {
+			if (! is_array( $value ) ){
+				$this->debug( $option . ' : ' . $value );
+			}
+			else {
+				$list = $option . ': ';
+				foreach ($value as $item) {
+					$list .= $item . ', ';
+				}
+				$this->debug( $list );
+			}
+		}
 	}
 }
 
