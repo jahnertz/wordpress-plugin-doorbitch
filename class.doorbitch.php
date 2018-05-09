@@ -10,7 +10,7 @@ class Doorbitch {
 	private $options;
 
 	public function __construct() {
-		$options = get_option( DOORBITCH__OPTIONS );
+		$this->options = get_option( DOORBITCH__OPTIONS );
 
 		// Run the install function if we're not already initiated.
 		// if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
@@ -44,13 +44,13 @@ class Doorbitch {
 
 	public function install() {
 		global $wpdb;
-	    $options = get_option( DOORBITCH__OPTIONS );
+	    $this->options = get_option( DOORBITCH__OPTIONS );
 
 		$this->debug( 'initiating...' );
 
 		$db_current_version = 0.0;
- 		if ( array_key_exists( 'db_version' , $options ) ) {
-		    $db_current_version = $options[ 'db_version' ];
+ 		if ( array_key_exists( 'db_version' , $this->options ) ) {
+		    $db_current_version = $this->options[ 'db_version' ];
 	    }
 	    $db_current_version = $this->update_db_check( $db_current_version );
 
@@ -77,16 +77,16 @@ class Doorbitch {
 
 		// TODO: scan database for events
 		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
-        $options[ 'events' ] = array();
+        $this->options[ 'events' ] = array();
         foreach ($events as $event) {
         	$this->debug( 'adding event: ' . $event->event );
-        	array_push( $options[ 'events' ], $event->event );
+        	array_push( $this->options[ 'events' ], $event->event );
         }
 
-		$options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
-		$options[ 'initiated' ] = true;
+		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+		$this->options[ 'initiated' ] = true;
 
-		update_option( 'doorbitch_options', $options );
+		update_option( 'doorbitch_options', $this->options );
 		$this->debug( 'saving options' );
 
 		// show error output on plugin activation
@@ -114,17 +114,17 @@ class Doorbitch {
 	}
 
 	public function add_event( $event_name ) {
-		$options = get_option( DOORBITCH__OPTIONS );
-		if ( ! array_key_exists( 'events', $options ) ) {
-			$options[ 'events' ] = array();
+		$this->options = get_option( DOORBITCH__OPTIONS );
+		if ( ! array_key_exists( 'events', $this->options ) ) {
+			$this->options[ 'events' ] = array();
 		}
 		// $events = $options[ 'events' ];
 		// add the event iff it doesn't already exist
-		if ( ! in_array( $event_name, $options[ 'events' ] ) ) {
-			array_push( $options[ 'events' ], $event_name );
+		if ( ! in_array( $event_name, $this->options[ 'events' ] ) ) {
+			array_push( $this->options[ 'events' ], $event_name );
 		}
-		$options[ 'current_event' ] = $event_name;
-		update_option( 'doorbitch_options', $options );
+		$this->options[ 'current_event' ] = $event_name;
+		update_option( 'doorbitch_options', $this->options );
 	}
 
 	public static function set_current_event( $event_name ) {
@@ -141,7 +141,7 @@ class Doorbitch {
 
 	public function upgrade_database() {
 		global $wpdb;
-		$options = get_option( DOORBITCH__OPTIONS );
+		$this->options = get_option( DOORBITCH__OPTIONS );
 
 		$table_name = $wpdb->prefix . $this->table_suffix;
 
@@ -156,8 +156,8 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-	    $options[ 'db_version' ] = DOORBITCH__DATABASE_VERSION;
-		update_option( 'doorbitch_options', $options );
+	    $this->options[ 'db_version' ] = DOORBITCH__DATABASE_VERSION;
+		update_option( 'doorbitch_options', $this->options );
 	}
 
 	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
@@ -174,7 +174,7 @@ class Doorbitch {
 
 	public function add_data( $event, $data ) {
 		global $wpdb;
-		$options = get_option( DOORBITCH__OPTIONS );
+		$this->options = get_option( DOORBITCH__OPTIONS );
 
 		$table_name = $wpdb->prefix . $this->table_suffix;
 
@@ -206,8 +206,8 @@ class Doorbitch {
 
 	public function dump_options() {
 		// Show options array in debug area:
-		$options = get_option( DOORBITCH__OPTIONS );
-		foreach ( $options as $option => $value ) {
+		$this->options = get_option( DOORBITCH__OPTIONS );
+		foreach ( $this->options as $option => $value ) {
 			if (! is_array( $value ) ){
 				$this->debug( $option . ' : ' . $value );
 			}
