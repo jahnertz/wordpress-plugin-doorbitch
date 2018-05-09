@@ -14,23 +14,24 @@ class Doorbitch_Admin
      */
     public function __construct()
     {
+        // global $doorbitch;
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
         // Deal with _POST data
         if ( array_key_exists( 'action', $_POST ) ) {
         switch ( $_POST[ 'action' ] ) {
             case 'view':
-                doorbitch::debug( 'viewing' );
+                // $doorbitch->debug( 'viewing' );
                 self::$visible_event = $_POST[ 'event' ];
                 break;
             
             case 'select':
-                doorbitch::debug( 'selecting' );
-                doorbitch::set_current_event( $_POST[ 'event' ] );
+                // $doorbitch->debug( 'selecting' );
+                $doorbitch->set_current_event( $_POST[ 'event' ] );
                 break;
             
             case 'export':
-                doorbitch::debug( 'exporting' );
+                // $doorbitch->debug( 'exporting' );
                 break;
 
             default:
@@ -58,7 +59,7 @@ class Doorbitch_Admin
     public function create_admin_page()
     {
         global $doorbitch;
-        
+
         $options = $doorbitch->get_options();
         ?>
         <div class="wrap">
