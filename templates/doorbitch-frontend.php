@@ -18,7 +18,7 @@ get_header();
 
 if ( !empty($_POST) ) {
 	global $doorbitch;
-	$options = $doorbitch->get_options();
+	$options = get_option( DOORBITCH__OPTIONS );
 
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
@@ -49,7 +49,7 @@ if ( !empty($_POST) ) {
 						}?>
 						<form action="" method="post">
 							<?php 
-							$options = get_option( 'doorbitch_options' );
+							$options = get_option( DOORBITCH__OPTIONS );
 							if ( $options == false ) {
 								$options = array();
 							}

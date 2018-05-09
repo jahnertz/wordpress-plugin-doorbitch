@@ -7,7 +7,7 @@ class Doorbitch {
 	public $table_suffix = 'doorbitch';
 	public $default_event = 'Example Event';
 
-	public $options;
+	private $options;
 
 	public function __construct() {
 		$options = get_option( DOORBITCH__OPTIONS );

@@ -17,7 +17,7 @@ class Doorbitch_Admin
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
         // Deal with _POST data
-        $options = get_option( DOORBITCH__OPTIONS );
+        $this->options = get_option( DOORBITCH__OPTIONS );
 
         if ( array_key_exists( 'action', $_POST ) ) {
         switch ( $_POST[ 'action' ] ) {
@@ -61,7 +61,7 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        $options = get_option( DOORBITCH__OPTIONS );
+        $this->$options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
             <?php
