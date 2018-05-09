@@ -34,6 +34,10 @@ class Doorbitch_Admin
                 // $doorbitch->debug( 'exporting' );
                 break;
 
+            case 'new event':
+                // $doorbitch->debug( 'exporting' );
+                break;
+
             default:
                 # code...
                 break;
