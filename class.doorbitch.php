@@ -152,7 +152,10 @@ class Doorbitch {
 
 	public static function add_event( $event_name ) {
 		$options = self::get_options();
-		$events = $options[ 'events' ];
+		if ( ! array_key_exists( 'events', $options ) ) {
+			$options[ 'events' ] = array();
+		}
+		// $events = $options[ 'events' ];
 		// add the event iff it doesn't already exist
 		if ( ! in_array( $event_name, $options[ 'events' ] ) ) {
 			array_push( $options[ 'events' ], $event_name );

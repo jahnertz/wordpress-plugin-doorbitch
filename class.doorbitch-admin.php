@@ -6,6 +6,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
 
 class Doorbitch_Admin
 {
+    private $options;
+    
     public static $visible_event = '';
     /**
      * Start up
@@ -96,6 +98,7 @@ class Doorbitch_Admin
                                     <input type="submit" name="action" value="view" class="button button-secondary">
                                     <input type="submit" name="action" value="select" class="button button-secondary">
                                     <input type="submit" name="action" value="export" class="button button-secondary">
+                                    <input type="submit" name="action" value="new event" class="button button-secondary">
                                 </td>
                             </tr>
                         </table>
