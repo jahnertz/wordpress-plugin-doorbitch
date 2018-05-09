@@ -75,7 +75,7 @@ class Doorbitch_Admin
             switch ( $active_tab ) {
                 case 'export':
                     ?>
-                    <h3>Current Event: <i><?php echo $options[ 'current_event' ] ?></i></h3>
+                    <h3>Current Event: <i><?php echo $this->options[ 'current_event' ] ?></i></h3>
                     <form method="post" action="" id="export">
                         <table>
                             <tr>
@@ -87,8 +87,8 @@ class Doorbitch_Admin
                                 <td>
                                     <select name="event">
                                        <?php
-                                        $current_event = $options[ 'current_event' ];
-                                        foreach ( $options[ 'events' ] as $event) {
+                                        $current_event = $this->options[ 'current_event' ];
+                                        foreach ( $this->options[ 'events' ] as $event) {
                                             ?>
                                             <option value="<?php echo $event;?>" <?php if ( $event == $current_event ) { echo 'selected';} ?>"><?php echo $event; ?></option>
                                             <?php
@@ -109,7 +109,7 @@ class Doorbitch_Admin
                     </form>
                     <?php 
                     if ( self::$visible_event == '' ) {
-                        self::$visible_event = $options[ 'current_event' ];
+                        self::$visible_event = $this->options[ 'current_event' ];
                     }
                     echo "<h3>" . self::$visible_event . "</h3>";
                     $this->display_records( self::$visible_event );

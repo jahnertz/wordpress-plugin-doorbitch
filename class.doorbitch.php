@@ -13,9 +13,9 @@ class Doorbitch {
 		$this->options = get_option( DOORBITCH__OPTIONS );
 
 		// Run the install function if we're not already initiated.
-		// if ( ! isset( $options[ 'initiated' ] ) || $options[ 'initiated' ] == false ) {
-		// 	$this->install();
-		// } 
+		if ( ! isset( $this->options[ 'initiated' ] ) || $this->options[ 'initiated' ] == false ) {
+			$this->install();
+		} 
 
 		// Show _POST data:
 		foreach ( $_POST as $key => $value) {
