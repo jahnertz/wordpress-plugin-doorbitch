@@ -3,7 +3,7 @@
 class Doorbitch {
 	//TODO: initiated defaults to false, save as an option
 	public $debug_mode = true;
-	public $debug_messages = array();
+	public static $debug_messages = array();
 	public $table_suffix = 'doorbitch';
 	public $default_event = 'Example Event';
 
@@ -203,15 +203,15 @@ class Doorbitch {
 
 	public function debug_show() {
 		echo "<div class='doorbitch-debug'><h4>Debug</h4>";
-		for ($i = 0; $i < count( $this->debug_messages ); $i++ ) {
-			print_r( $this->debug_messages[$i] );
+		for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
+			print_r( self::$debug_messages[$i] );
 		}
 		echo "</div>";
 	}
 
-	public function debug( $debug_text ) {
+	public static function debug( $debug_text ) {
 		$file = basename( debug_backtrace()[0]['file'] );
-		$this->debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
+		self::$debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
 		//TODO: Print errors from table of common errors.
 
 	}
