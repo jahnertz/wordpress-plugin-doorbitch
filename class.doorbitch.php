@@ -36,18 +36,6 @@ class Doorbitch {
 		// 	}
 		// }
 
-		// // Add debugger assets if we're in debug mode.
-		// if ( DOORBITCH__DEBUG_MODE ){
-		// 	function enqueue_debug_styles() { 
-		// 		wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
-		// 	}
-		// 	add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
-		// 	add_action( 'admin_notices', array( get_called_class(), 'debug_show' ) );
-		// 	add_action( 'wp_footer', array( get_called_class(), 'debug_show' ) );
-		// 	// add_action( 'admin_notices', 'debug_show' );
-		// 	// add_action( 'wp_footer', 'debug_show' );
-		// }
-
 		//Add virtual page for the frontend form:
 		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
 		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
