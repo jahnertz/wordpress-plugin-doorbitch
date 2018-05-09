@@ -27,15 +27,15 @@ class Doorbitch_Admin
             
             case 'select':
                 // $doorbitch->debug( 'selecting' );
-                $doorbitch->set_current_event( $_POST[ 'event' ] );
+                Doorbitch::set_current_event( $_POST[ 'event' ] );
                 break;
             
             case 'export':
-                // $doorbitch->debug( 'exporting' );
+                Doorbitch::debug( 'exporting' );
                 break;
 
             case 'new event':
-                // $doorbitch->debug( 'exporting' );
+                Doorbitch::debug( 'exporting' );
                 break;
 
             default:

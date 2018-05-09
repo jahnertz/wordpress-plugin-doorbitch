@@ -139,7 +139,7 @@ class Doorbitch {
 		update_option( 'doorbitch_options', $options );
 	}
 
-	public function set_current_event( $event_name ) {
+	public static function set_current_event( $event_name ) {
 		$options = $this->get_options();
 		if ( in_array( $event_name, $options[ 'events' ] ) ) {
 			$options[ 'current_event' ] = $event_name;
