@@ -401,9 +401,7 @@ class Doorbitch_Admin
         $allowed[ 'span' ] = array (
             'id' => array(), 'class' => array(), 'style' => array(),
         );
-        $allowed[ 'br' ] = array (
-            'class' => array(), 'id' => array(),
-        );
+        $allowed[ 'br' ] = array ();
         // form fields:
         $allowed[ 'label' ] = array (
             'for' => array(),
