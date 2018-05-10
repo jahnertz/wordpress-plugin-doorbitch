@@ -88,7 +88,8 @@ class Doorbitch_Admin
                                     <select name="event">
                                        <?php
                                         $current_event = $this->options[ 'current_event' ];
-                                        foreach ( $this->options[ 'events' ] as $event) {
+                                        $event_array = unserialize( $this->options[ 'events' ] );
+                                        foreach ( $event_array as $event) {
                                             ?>
                                             <option value="<?php echo $event;?>" <?php if ( $event == $current_event ) { echo 'selected';} ?>"><?php echo $event; ?></option>
                                             <?php
@@ -151,6 +152,42 @@ class Doorbitch_Admin
         );  
 
         add_settings_field(
+            'initiated',
+            'Initiated',
+            array( $this, 'initiated_callback' ),
+            'doorbitch-settings-admin',
+            'options-section',
+            [ 'class' => 'hidden' ]
+        );
+
+        add_settings_field(
+            'db_version',
+            'DB_Version',
+            array( $this, 'db_version_callback' ),
+            'doorbitch-settings-admin',
+            'options-section',
+            [ 'class' => 'hidden' ]
+        );
+
+        add_settings_field(
+            'events',
+            'Events',
+            array( $this, 'events_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+            // [ 'class' => 'hidden' ]
+        );
+
+        add_settings_field(
+            'current_event',
+            'Current Event',
+            array( $this, 'current_event_callback' ),
+            'doorbitch-settings-admin',
+            'options-section',
+            [ 'class' => 'hidden' ]
+        );
+
+        add_settings_field(
             'title', 
             'Title', 
             array( $this, 'title_callback' ), 
@@ -165,6 +202,7 @@ class Doorbitch_Admin
             'doorbitch-settings-admin', 
             'options-section'
         );      
+
     }
 
     /**
@@ -174,6 +212,18 @@ class Doorbitch_Admin
      */
     public function sanitize( $input )
     {
+        if( isset( $input['initiated'] ) )
+            $new_input['initiated'] = sanitize_text_field( $input['initiated'] );
+
+        if( isset( $input['db_version'] ) )
+            $new_input['db_version'] = sanitize_text_field( $input['db_version'] );
+
+        if( isset( $input['events'] ) )
+            $new_input['events'] = $input['events'];
+
+        if( isset( $input['current_event'] ) )
+            $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
+
         if( isset( $input['title'] ) )
             $new_input['title'] = sanitize_text_field( $input['title'] );
 
@@ -189,6 +239,38 @@ class Doorbitch_Admin
     public function print_section_info()
     {
         print 'Enter your settings below:';
+    }
+
+    public function db_version_callback()
+    {
+        printf(
+            '<input type="text" id="db_version" name="doorbitch_options[db_version]" value="%s" />',
+            isset( $this->options['db_version'] ) ? esc_attr( $this->options['db_version'] ) : ''
+        );
+    }
+
+    public function initiated_callback()
+    {
+        printf(
+            '<input type="text" id="initiated" name="doorbitch_options[initiated]" value="%s" />',
+            isset( $this->options['initiated'] ) ? esc_attr( $this->options['initiated'] ) : ''
+        );
+    }
+
+    public function events_callback()
+    {
+        printf(
+            '<input type="text" id="events" name="doorbitch_options[events]" value="%s" />',
+            isset( $this->options['events'] ) ? esc_attr( serialize( $this->options['events'] ) ) : ''
+        );
+    }
+
+    public function current_event_callback()
+    {
+        printf(
+            '<input type="text" id="current_event" name="doorbitch_options[current_event]" value="%s" />',
+            isset( $this->options['current_event'] ) ? esc_attr( $this->options['current_event'] ) : ''
+        );
     }
 
     public function title_callback()

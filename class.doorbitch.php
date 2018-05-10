@@ -44,10 +44,12 @@ class Doorbitch {
 
 	public function install() {
 		global $wpdb;
-	    $this->options = get_option( DOORBITCH__OPTIONS );
+		// get the options if they're still around or else intialise them.
+	    if ( ! $this->options = get_option( DOORBITCH__OPTIONS ) ){
+	    	$this->options = array();
+	    }
 
 		$this->debug( 'initiating...' );
-
 		$db_current_version = 0.0;
  		if ( array_key_exists( 'db_version' , $this->options ) ) {
 		    $db_current_version = $this->options[ 'db_version' ];
@@ -77,11 +79,12 @@ class Doorbitch {
 
 		// TODO: scan database for events
 		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
-        $this->options[ 'events' ] = array();
+        $event_array = array();
         foreach ($events as $event) {
         	$this->debug( 'adding event: ' . $event->event );
-        	array_push( $this->options[ 'events' ], $event->event );
+        	array_push( $event_array, $event->event );
         }
+		$this->options[ 'events' ] = serialize( $event_array );
 
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
@@ -116,20 +119,25 @@ class Doorbitch {
 	public function add_event( $event_name ) {
 		$this->options = get_option( DOORBITCH__OPTIONS );
 		if ( ! array_key_exists( 'events', $this->options ) ) {
-			$this->options[ 'events' ] = array();
+			$event_array = array();
+		}
+		else {
+			$event_array = unserialize( $this->options[ 'events' ] );
 		}
 		// $events = $options[ 'events' ];
 		// add the event iff it doesn't already exist
-		if ( ! in_array( $event_name, $this->options[ 'events' ] ) ) {
-			array_push( $this->options[ 'events' ], $event_name );
+		if ( ! in_array( $event_name, $event_array ) ) {
+			array_push( $event_array, $event_name );
 		}
 		$this->options[ 'current_event' ] = $event_name;
+		$this->options[ 'events' ] = serialize( $event_array );
 		update_option( 'doorbitch_options', $this->options );
 	}
 
 	public static function set_current_event( $event_name ) {
 		$options = get_option( 'doorbitch_options' );
-		if ( in_array( $event_name, $options[ 'events' ] ) ) {
+		$event_array = unserialize( $options[ 'events' ] );
+		if ( in_array( $event_name, $event_array ) ) {
 			$options[ 'current_event' ] = $event_name;
 		}
 		else {
