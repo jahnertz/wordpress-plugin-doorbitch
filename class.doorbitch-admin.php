@@ -219,7 +219,7 @@ class Doorbitch_Admin
             $new_input['db_version'] = sanitize_text_field( $input['db_version'] );
 
         if( isset( $input['events'] ) )
-            $new_input['events'] = $input['events'];
+            $new_input['events'] = sanitize_text_field( $input['events'] );
 
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
@@ -284,11 +284,17 @@ class Doorbitch_Admin
     public function form_html_callback()
     {
         // TODO: html is not being saved to optoions properly
-        printf(
-            '<textarea id="form-html" rows=20 name="doorbitch_options[form_html]">%s</textarea>',
-            isset( $this->options['form_html'] ) ? esc_attr( htmlspecialchars_decode( $this->options['form_html'] ) ) : ''
+        // printf(
+        //     '<textarea id="form-html" rows=20 name="doorbitch_options[form_html]">%s</textarea>',
+        //     isset( $this->options['form_html'] ) ? esc_attr( htmlspecialchars_decode( $this->options['form_html'] ) ) : ''
+        // );
+        $wp_editor_settings = array(
+            'media_buttons' => false,
+            'textarea_name' => 'doorbitch_options[form_html]'
         );
+        wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
     }
+
 
     private function display_records( $event ) {
         // Todo - seperate this into its own function, move loading database entries into main class - this will make it reusable for exporting.
