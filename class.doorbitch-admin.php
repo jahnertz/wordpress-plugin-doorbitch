@@ -188,9 +188,9 @@ class Doorbitch_Admin
         );
 
         add_settings_field(
-            'title', 
-            'Title', 
-            array( $this, 'title_callback' ), 
+            'form_title', 
+            'Form Title',
+            array( $this, 'form_title_callback' ), 
             'doorbitch-settings-admin', 
             'options-section'
         );      
@@ -224,8 +224,8 @@ class Doorbitch_Admin
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
-        if( isset( $input['title'] ) )
-            $new_input['title'] = sanitize_text_field( $input['title'] );
+        if( isset( $input['form_title'] ) )
+            $new_input['form_title'] = sanitize_text_field( $input['form_title'] );
 
         if( isset( $input['form_html'] ) )
             $new_input['form_html'] = sanitize_text_field( $input['form_html'] );
@@ -273,11 +273,11 @@ class Doorbitch_Admin
         );
     }
 
-    public function title_callback()
+    public function form_title_callback()
     {
         printf(
-            '<input type="text" id="title" name="doorbitch_options[title]" value="%s" />',
-            isset( $this->options['title'] ) ? esc_attr( $this->options['title'] ) : ''
+            '<input type="text" id="form_title" name="doorbitch_options[form_title]" value="%s" />',
+            isset( $this->options['form_title'] ) ? esc_attr( $this->options['form_title'] ) : ''
         );
     }
 

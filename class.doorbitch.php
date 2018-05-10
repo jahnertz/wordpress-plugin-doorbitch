@@ -73,7 +73,6 @@ class Doorbitch {
 
 
 		$this->add_event( $this->default_event );
-		// $options[ 'current_event' ] = $this->default_event;
 		$this->set_current_event( $this->default_event );
 		$this->add_data( $this->default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
 
@@ -84,8 +83,9 @@ class Doorbitch {
         	$this->debug( 'adding event: ' . $event->event );
         	array_push( $event_array, $event->event );
         }
-		$this->options[ 'events' ] = serialize( $event_array );
 
+		$this->options[ 'events' ] = serialize( $event_array );
+		$this->options[ 'form_title ' ] = 'Register';
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
 
