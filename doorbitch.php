@@ -20,7 +20,7 @@ Author URI: https://jhanrahan.com.au
 global $doorbitch;
 
 define( 'DOORBITCH__DATABASE_VERSION', 1.2 );
-define( 'DOORBITCH__DEBUG_MODE', false );
+define( 'DOORBITCH__DEBUG_MODE', true );
 define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DOORBITCH__OPTIONS', 'doorbitch_options' );
 
