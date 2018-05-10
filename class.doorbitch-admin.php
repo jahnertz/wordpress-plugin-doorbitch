@@ -170,8 +170,8 @@ class Doorbitch_Admin
             'Events',
             array( $this, 'events_callback' ),
             'doorbitch-settings-admin',
-            'options-section'
-            // [ 'class' => 'hidden' ]
+            'options-section',
+            [ 'class' => 'hidden' ]
         );
 
         add_settings_field(
