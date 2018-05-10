@@ -215,7 +215,8 @@ class Doorbitch_Admin
             $new_input['db_version'] = sanitize_text_field( $input['db_version'] );
 
         if( isset( $input['events'] ) )
-            $new_input['events'] = sanitize_text_field( $input['events'] );
+            $new_input['events'] = unserialize( $input['events'] );
+        // Probably unsanitary!
 
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
