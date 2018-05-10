@@ -26,8 +26,7 @@ class Doorbitch {
 		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
 	
 		//Add admin options page under 'tools' section:
-		// TODO: make this available to lower privilege users.
-		if( is_admin() ) {
+		if( current_user_can( 'edit_posts' ) ) {
 		    // include PhpSpreadsheet library:
 		    require 'vendor/autoload.php';
 			require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
