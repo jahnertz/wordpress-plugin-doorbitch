@@ -361,23 +361,58 @@ class Doorbitch_Admin
     }
 
     private function expanded_allowed_tags() {
+        // formatting tags:
+        $allowed[ 'h1' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'h2' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'h3' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'h4' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'h5' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'h6' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'p' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'ul' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'ol' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'li' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'i' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'b' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'span' ] = array (
+            'id' => array(), 'class' => array(), 'style' => array(),
+        );
+        $allowed[ 'br' ] = array (
+            'class' => array(), 'id' => array(),
+        );
         // form fields:
         $allowed[ 'label' ] = array (
             'for' => array(),
         );
         $allowed[ 'input' ] = array (
-            'class' => array(),
-            'id' => array(),
-            'name' => array(),
-            'value' => array(),
-            'type' => array(),
+            'class' => array(), 'id' => array(), 'name' => array(), 'value' => array(), 'type' => array(),
         );
         $allowed[ 'select' ] = array (
-            'class' => array(),
-            'id' => array(),
-            'name' => array(),
-            'value' => array(),
-            'type' => array(),
+            'class' => array(), 'id' => array(), 'name' => array(), 'value' => array(), 'type' => array(),
         );
         $allowed[ 'option' ] = array (
             'selected' => array(),
@@ -387,17 +422,13 @@ class Doorbitch_Admin
         );
         // table fields:
         $allowed [ 'table' ] = array (
-            'class' => array(),
-            'id' => array(),
+            'class' => array(), 'id' => array(),
         );
         $allowed [ 'tr' ] = array (
-            'class' => array(),
-            'id' => array(),
+            'class' => array(), 'id' => array(),
         );
         $allowed [ 'td' ] = array (
-            'class' => array(),
-            'id' => array(),
-            'colspan' => array(),
+            'class' => array(), 'id' => array(), 'colspan' => array(),
         );
 
         return $allowed;
