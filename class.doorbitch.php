@@ -76,7 +76,6 @@ class Doorbitch {
 		$this->set_current_event( $this->default_event );
 		$this->add_data( $this->default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
 
-		// TODO: scan database for events
 		$events = $wpdb->get_results ( "SELECT DISTINCT event FROM {$wpdb->prefix}doorbitch" );
         $event_array = array();
         foreach ($events as $event) {
@@ -84,9 +83,10 @@ class Doorbitch {
         	array_push( $event_array, $event->event );
         }
 
-		$this->options[ 'events' ] = serialize( $event_array );
-		$this->options[ 'form_title ' ] = 'Register';
-		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+ 		if ( array_key_exists( 'events' , $this->options ) ) { $this->options[ 'events' ] = serialize( $event_array ); }
+		if ( array_key_exists( 'form_title' , $this->options ) ) { $this->options[ 'form_title ' ] = 'Register'; }
+		if ( array_key_exists( 'form_html' , $this->options ) ) { $this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' ); }
+
 		$this->options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $this->options );
