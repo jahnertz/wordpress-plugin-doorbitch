@@ -36,10 +36,6 @@ class Doorbitch_Admin
             case 'new event':
                 Doorbitch::debug( 'new event' );
                 break;
-
-            default:
-                # code...
-                break;
             }
         }
     }
