@@ -228,7 +228,7 @@ class Doorbitch_Admin
             $new_input['form_title'] = sanitize_text_field( $input['form_title'] );
 
         if( isset( $input['form_html'] ) )
-            $new_input['form_html'] = sanitize_text_field( $input['form_html'] );
+            $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
 
         return $new_input;
     }
@@ -361,5 +361,48 @@ class Doorbitch_Admin
 
         $writer = new Xlsx( $spreadsheet );
         $writer->save( $filename );
+    }
+
+    private function expanded_allowed_tags() {
+        // form fields:
+        $allowed[ 'label' ] = array (
+            'for' => array(),
+        );
+        $allowed[ 'input' ] = array (
+            'class' => array(),
+            'id' => array(),
+            'name' => array(),
+            'value' => array(),
+            'type' => array(),
+        );
+        $allowed[ 'select' ] = array (
+            'class' => array(),
+            'id' => array(),
+            'name' => array(),
+            'value' => array(),
+            'type' => array(),
+        );
+        $allowed[ 'option' ] = array (
+            'selected' => array(),
+        );
+        $allowed[ 'style' ] = array (
+            'types' => array(),
+        );
+        // table fields:
+        $allowed [ 'table' ] = array (
+            'class' => array(),
+            'id' => array(),
+        );
+        $allowed [ 'tr' ] = array (
+            'class' => array(),
+            'id' => array(),
+        );
+        $allowed [ 'td' ] = array (
+            'class' => array(),
+            'id' => array(),
+            'colspan' => array(),
+        );
+
+        return $allowed;
     }
 }
