@@ -9,11 +9,14 @@ class Doorbitch_Admin
     private $options;
 
     public static $visible_event = '';
+    public $new_event;
     /**
      * Start up
      */
     public function __construct()
     {
+        global $doorbitch;
+
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
         // Deal with _POST data
@@ -35,7 +38,19 @@ class Doorbitch_Admin
 
             case 'new event':
                 Doorbitch::debug( 'new event' );
+                $this->new_event = true;
                 break;
+
+            default:
+                if ( isset( $_POST[ 'new_event_name' ] ) ) {
+                    if ( $_POST[ 'new_event_name' ] == '' ) {
+                        $this->new_event = true;
+                        Doorbitch::debug( 'Please enter an event name' );
+                    }
+                    else {
+                        Doorbitch::add_event( $_POST[ 'new_event_name' ] );
+                    }
+                }
             }
         }
     }
@@ -102,6 +117,18 @@ class Doorbitch_Admin
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
                                 </td>
                             </tr>
+                            <?php if ( isset( $this->new_event ) ) {
+                                ?>
+                                <tr>
+                                    <td>
+                                        <label for="new_event" >New Event:</label>
+                                        <input type="text" name="new_event_name" value="" placeholder="New Event Name" >
+                                        <input type="submit" name="action" value="create" class="button button-primary" >
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
                         </table>
                     </form>
                     <?php 

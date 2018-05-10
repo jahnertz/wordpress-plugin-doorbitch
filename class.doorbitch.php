@@ -83,10 +83,12 @@ class Doorbitch {
         	array_push( $event_array, $event->event );
         }
 
- 		if ( array_key_exists( 'events' , $this->options ) ) { $this->options[ 'events' ] = serialize( $event_array ); }
-		if ( array_key_exists( 'form_title' , $this->options ) ) { $this->options[ 'form_title ' ] = 'Register'; }
-		if ( array_key_exists( 'form_html' , $this->options ) ) { $this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' ); }
-
+ 	// 	if ( array_key_exists( 'events' , $this->options ) ) { $this->options[ 'events' ] = serialize( $event_array ); }
+		// if ( array_key_exists( 'form_title' , $this->options ) ) { $this->options[ 'form_title ' ] = 'Register'; }
+		// if ( array_key_exists( 'form_html' , $this->options ) ) { $this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' ); }
+		$this->options[ 'events' ] = serialize( $event_array );
+		$this->options[ 'form_title ' ] = 'Register';
+		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
 
 		update_option( 'doorbitch_options', $this->options );
@@ -116,22 +118,22 @@ class Doorbitch {
 		}
 	}
 
-	public function add_event( $event_name ) {
-		$this->options = get_option( DOORBITCH__OPTIONS );
-		if ( ! array_key_exists( 'events', $this->options ) ) {
+	public static function add_event( $event_name ) {
+		$options = get_option( DOORBITCH__OPTIONS );
+		if ( ! array_key_exists( 'events', $options ) ) {
 			$event_array = array();
 		}
 		else {
-			$event_array = unserialize( $this->options[ 'events' ] );
+			$event_array = unserialize( $options[ 'events' ] );
 		}
 		// $events = $options[ 'events' ];
 		// add the event iff it doesn't already exist
 		if ( ! in_array( $event_name, $event_array ) ) {
 			array_push( $event_array, $event_name );
 		}
-		$this->options[ 'current_event' ] = $event_name;
-		$this->options[ 'events' ] = serialize( $event_array );
-		update_option( 'doorbitch_options', $this->options );
+		$options[ 'current_event' ] = $event_name;
+		$options[ 'events' ] = serialize( $event_array );
+		update_option( 'doorbitch_options', $options );
 	}
 
 	public static function set_current_event( $event_name ) {
