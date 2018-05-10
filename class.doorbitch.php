@@ -216,16 +216,7 @@ class Doorbitch {
 		// Show options array in debug area:
 		$this->options = get_option( DOORBITCH__OPTIONS );
 		foreach ( $this->options as $option => $value ) {
-			if (! is_array( $value ) ){
-				$this->debug( $option . ' : ' . $value );
-			}
-			else {
-				$list = $option . ': ';
-				foreach ($value as $item) {
-					$list .= $item . ', ';
-				}
-				$this->debug( $list );
-			}
+			$this->debug( $option . ' : ' . $value );
 		}
 	}
 }
