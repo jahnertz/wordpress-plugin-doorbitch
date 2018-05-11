@@ -39,7 +39,6 @@ if ( !empty($_POST) ) {
 			<div class="panel-content">
 				<div class="wrap">
 					<header class="entry-header">
-						<h2 class="entry-title"><?php echo $options[ 'form_title' ]?></h2>
 					</header><!-- Page Header -->
 					<div class="entry-content">
 						<?php if ( isset( $success ) && $success == true ) {
