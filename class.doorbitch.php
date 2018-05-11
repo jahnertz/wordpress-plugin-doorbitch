@@ -35,6 +35,11 @@ class Doorbitch {
 				wp_enqueue_style( 'doorbitch-admin', plugins_url( '/css/doorbitch-admin.css', __FILE__ ) );
 			}
 			add_action( 'admin_enqueue_scripts', 'enqueue_admin_styles' );
+		} else {
+			function enqueue_user_styles() {
+				wp_enqueue_style( 'doorbitch-frontend-styles', plugins_url( '/css/doorbitch.css' , __FILE__) );
+			}
+			add_action( 'wp_enqueue_scripts', 'enqueue_user_styles' );
 		}
 
 		//upgrade the database if neccessary:
@@ -87,7 +92,6 @@ class Doorbitch {
 		// if ( array_key_exists( 'form_title' , $this->options ) ) { $this->options[ 'form_title ' ] = 'Register'; }
 		// if ( array_key_exists( 'form_html' , $this->options ) ) { $this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' ); }
 		$this->options[ 'events' ] = serialize( $event_array );
-		$this->options[ 'form_title ' ] = 'Register';
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
 
