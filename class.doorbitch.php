@@ -149,6 +149,7 @@ class Doorbitch {
 		$options = get_option( DOORBITCH__OPTIONS );
 		if ( ! array_key_exists( 'events', $options ) ) {
 			$event_array = array();
+			self::add_event( $default_event );
 		}
 		else {
 			$event_array = unserialize( $options[ 'events' ] );
@@ -164,9 +165,12 @@ class Doorbitch {
 		}
 	}
 
-	public static function set_current_event( $event_name ) {
+	public static function set_current_event( $event_name = NULL ) {
 		$options = get_option( 'doorbitch_options' );
 		$event_array = unserialize( $options[ 'events' ] );
+		if ( $event_name == NULL ) {
+			$event_name = $event_array[ 0 ];
+		}
 		if ( in_array( $event_name, $event_array ) ) {
 			$options[ 'current_event' ] = $event_name;
 		}

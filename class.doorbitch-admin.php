@@ -4,7 +4,7 @@ class Doorbitch_Admin
 {
     private $options;
 
-    public static $visible_event = '';
+    public  $visible_event = '';
     private $new_event;
     private $del_event;
     /**
@@ -22,35 +22,49 @@ class Doorbitch_Admin
         if ( array_key_exists( 'action', $_POST ) ) {
         switch ( $_POST[ 'action' ] ) {
             case 'view':
-                self::$visible_event = $_POST[ 'event' ];
+                $this->visible_event = $_POST[ 'event' ];
                 break;
             
-            case 'select':
+            case 'set as current event':
                 Doorbitch::set_current_event( $_POST[ 'event' ] );
+                $this->visible_event = $_POST[ 'event' ];
                 break;
             
             case 'export':
                 $_POST[ 'exported-file' ] = Doorbitch::export_records( $_POST[ 'event' ] );
+                $this->visible_event = $_POST[ 'event' ];
                 break;
 
             case 'new event':
                 $this->new_event = true;
+                $this->visible_event = $_POST[ 'event' ];
                 break;
 
             case 'delete':
                 $this->del_event = true;
+                $this->visible_event = $_POST[ 'event' ];
                 break;
 
-            default:
+            case 'delete this event':
+                Doorbitch::remove_event( $_POST[ 'event' ] );
+                Doorbitch::set_current_event();
+                $this->visible_event = $this->options[ 'current_event' ];
+                break;
+
+            case 'create':
                 if ( isset( $_POST[ 'new_event_name' ] ) ) {
                     if ( $_POST[ 'new_event_name' ] == '' ) {
                         $this->new_event = true;
                         Doorbitch::debug( 'Please enter an event name' );
+                        $this->visible_event = $_POST[ 'event' ];
                     }
                     else {
                         Doorbitch::add_event( $_POST[ 'new_event_name' ] );
+                        $this->visible_event = $_POST[ 'new_event_name' ];
                     }
                 }
+                break;
+                
             }
         }
     }
@@ -102,7 +116,7 @@ class Doorbitch_Admin
                                         $event_array = unserialize( $this->options[ 'events' ] );
                                         foreach ( $event_array as $event) {
                                             ?>
-                                            <option value="<?php echo $event;?>" <?php if ( isset( $_POST[ 'event' ] ) && $event == $_POST[ 'event' ] ) { echo 'selected="selected"';} elseif ( $event == $current_event ) { echo 'selected="selected"'; } ?>"><?php echo $event; ?></option>
+                                            <option value="<?php echo $event;?>" <?php if ( $event == $this->visible_event ) { echo 'selected="selected"';} ?>"><?php echo $event; ?></option>
                                             <?php
                                         }
                                        ?> 
@@ -112,18 +126,27 @@ class Doorbitch_Admin
                             <tr>
                                 <td>
                                     <input type="submit" name="action" value="view" class="button button-secondary">
-                                    <input type="submit" name="action" value="select" class="button button-secondary">
+                                    <input type="submit" name="action" value="set as current event" class="button button-secondary">
                                     <input type="submit" name="action" value="export" class="button button-secondary">
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
                                     <input type="submit" name="action" value="delete" class="button button-secondary">
                                 </td>
                             </tr>
                             <?php
+                            if ( isset( $this->del_event ) ) {
+                                ?>
+                                <tr>
+                                    <td>
+                                        <input type="submit" name="action" value="delete this event" id="del-confirm" class="button button-primary">
+                                        <input type="submit" name="action" value="Cancel" id="del-confirm" class="button button-secondary">
+                                    </td>
+                                </tr>
+                                <?php
+                            }
                             if ( isset( $this->new_event ) ) {
                                 ?>
                                 <tr>
                                     <td>
-                                        <label for="new_event" >New Event:</label>
                                         <input type="text" name="new_event_name" value="" placeholder="New Event Name" >
                                         <input type="submit" name="action" value="create" class="button button-primary" >
                                     </td>
@@ -158,11 +181,11 @@ class Doorbitch_Admin
                         </table>
                     </form>
                     <?php 
-                    if ( self::$visible_event == '' ) {
-                        self::$visible_event = $this->options[ 'current_event' ];
+                    if ( $this->visible_event == '' ) {
+                        $this->visible_event = $this->options[ 'current_event' ];
                     }
-                    echo "<h3>" . self::$visible_event . "</h3>";
-                    $this->display_records( self::$visible_event );
+                    echo "<h3>" . $this->visible_event . "</h3>";
+                    $this->display_records( $this->visible_event );
                     break;
                 
                 default:
