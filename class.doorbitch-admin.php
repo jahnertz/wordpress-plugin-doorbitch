@@ -315,59 +315,33 @@ class Doorbitch_Admin
 
 
     private function display_records( $event ) {
-        // Todo - seperate this into its own function, move loading database entries into main class - this will make it reusable for exporting.
-        global $wpdb;
-
-        // Show data:
-        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
-        if ( empty( $results ) ) {
+        $entries = $this->unserialize_results( $event );
+        if ( empty( $entries ) ){
             ?>
-            <h4>No registrants yet</h4>
+                <h4>No registrants yet</h4>
             <?php
         }
-        else {
             ?>
-            <table class="doorbitch-records">
-                <?php
-                // Split into 2D array:
-                $entries = array();
-                foreach( $results as $result ) {
-                    $entry = array();
-                    // hide event column
-                    // $entry [ 'event' ] = $result->event;
-                    $entry [ 'time' ] = $result->time;
-                    $data = explode( ',', $result->data );
-                    foreach ( $data as $datum ) {
-                        $keypair = explode( ':', $datum );
-                        if ( array_key_exists( 1, $keypair ) ) {
-                            $entry[ $keypair[0] ] = $keypair[1];
-                        }
-                    }
-                    array_push( $entries, $entry );
+        <table class="doorbitch-records">
+            <tr>
+                <?php foreach ( $entries[0] as $key => $value ) {
+                    echo "<th>" . $key . "</th>";
                 }
-
-                // Create headers:
+                ?>
+            </tr>
+            <?php
+            foreach ( $entries as $entry ) {
                 ?>
                 <tr>
-                    <?php foreach ( $entries[0] as $key => $value ) {
-                        echo "<th>" . $key . "</th>";
-                    }
-                    ?>
+                    <?php foreach ( $entry as $key => $value ) {
+                        echo '<td>' . $value . '</td>';
+                    }?>
                 </tr>
                 <?php
-                foreach ( $entries as $entry ) {
-                    ?>
-                    <tr>
-                        <?php foreach ( $entry as $key => $value ) {
-                            echo '<td>' . $value . '</td>';
-                        }?>
-                    </tr>
-                    <?php
-                }
-                ?>
-            </table>
-            <?php
-        }
+            }
+            ?>
+        </table>
+        <?php
     }
 
     private function export_records( $event ) {
@@ -419,6 +393,33 @@ class Doorbitch_Admin
         // ok its writing to wp_admin, lets work with that for now..
         $writer->save( $filename );
         $_POST[ 'exported-file' ] = $filename;
+    }
+
+    private function unserialize_results( $event ) {
+        global $wpdb;
+
+        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
+        if ( empty( $results ) ){
+            // maybe unnessesary.
+            return array();
+        } else {
+            $entries = array();
+            foreach( $results as $result ) {
+                $entry = array();
+                // hide event column
+                // $entry [ 'event' ] = $result->event;
+                $entry [ 'time' ] = $result->time;
+                $data = explode( ',', $result->data );
+                foreach ( $data as $datum ) {
+                    $keypair = explode( ':', $datum );
+                    if ( array_key_exists( 1, $keypair ) ) {
+                        $entry[ $keypair[0] ] = $keypair[1];
+                    }
+                }
+                array_push( $entries, $entry );
+            }
+            return $entries;
+        }
     }
 
     private function expanded_allowed_tags() {
