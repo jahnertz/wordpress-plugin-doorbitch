@@ -14,11 +14,6 @@ $success = NULL;
 
 if ( ! empty( $_POST ) ) {
 	$submission_errors = array();
-	$dataset = '';
-	foreach ($_POST as $item => $data ) {
-		$dataset = $dataset . $item . ':' . $data . ', ';
-	}
-	$doorbitch->debug( $dataset );
 	// TODO: actually validate the data.
 	// TODO: This is a hard coded last minute fix. validation should be done according to 'required' classes in the form.
 	// Because I hate myself:
@@ -40,6 +35,11 @@ if ( ! empty( $_POST ) ) {
 		array_push( $submission_errors, 'Please provide a valid email address' );
 	}
 	if ( empty( $submission_errors ) ) {
+		// $dataset = '';
+		foreach ($_POST as $item => $data ) {
+			$dataset = $dataset . $item . ':' . $data . ', ';
+		}
+		$doorbitch->debug( $dataset );
 		$success = $doorbitch->add_data( $options[ 'current_event' ], $dataset );
 		if ( $success ){ array_push( $submission_errors, 'The data could not be saved.' ); }
 	}
