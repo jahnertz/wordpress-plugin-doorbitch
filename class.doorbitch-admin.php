@@ -55,20 +55,6 @@ class Doorbitch_Admin
                 }
             }
         }
-
-        // var_dump( $_FILES ); // array is empty!
-        // handle file uploads:
-        if ( isset( $_FILES[ 'header_image' ] ) ) {
-            $header_image = $_FILES[ 'header_image' ];
-            $uploaded = media_handle_upload( 'header_image', 0 );
-            // error checking using wp functions:
-            if ( is_WP_error( $uploaded ) ) {
-                Doorbitch::debug( 'error uploading file' );
-            }
-            else {
-                Doorbitch::debug( 'file uploaded succesfully' );
-            }
-        }
     }
 
     /**
