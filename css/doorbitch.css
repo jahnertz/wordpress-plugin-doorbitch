@@ -1,9 +1,30 @@
+@-webkit-keyframes fadeout {
+	from { opacity: 1; max-height: 300px; padding: 1rem 2rem; }
+	to { opacity: 0; max-height: 0px; padding: 0rem 2rem; }
+}
+
+@keyframes fadeout {
+	from { opacity: 1; max-height: 300px; padding: 1rem 2rem; }
+	to { opacity: 0; max-height: 0px; padding: 0rem 2rem; }
+}
+
 .notification {
 	/*position: absolute;*/
+	max-height: 300px;
 	padding: 1rem 2rem;
 	border-radius: 1rem;
 	overflow: hidden;
-}
+	-webkit-animation-name: fadeout;
+	animation-name: fadeout;
+	-webkit-animation-delay: 4s;
+	animation-delay: 4s;
+	-webkit-animation-duration: 2s;
+	animation-duration: 2s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+/*	-webkit-animation: fadeout 2s;
+	animation: fadeout 2s;
+*/}
 
 .notification.success {
 	background-color: rgba( 0, 255, 100, 0.5 );
