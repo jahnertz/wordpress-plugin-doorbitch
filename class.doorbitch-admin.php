@@ -29,12 +29,10 @@ class Doorbitch_Admin
                 break;
             
             case 'export':
-                Doorbitch::export_records( $_POST[ 'event' ] );
-                Doorbitch::debug( 'exporting ' . $_POST[ 'exported-file' ] );
+                $exported = Doorbitch::export_records( $_POST[ 'event' ] );
                 break;
 
             case 'new event':
-                Doorbitch::debug( 'new event' );
                 $this->new_event = true;
                 break;
 
@@ -122,6 +120,15 @@ class Doorbitch_Admin
                                         <label for="new_event" >New Event:</label>
                                         <input type="text" name="new_event_name" value="" placeholder="New Event Name" >
                                         <input type="submit" name="action" value="create" class="button button-primary" >
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            if ( isset( $exported ) && $exported == false ) {
+                                ?>
+                                <tr>
+                                    <td>
+                                        <p>There was an error exporting the spreadsheet.</p>
                                     </td>
                                 </tr>
                                 <?php
