@@ -225,22 +225,6 @@ class Doorbitch_Admin
         );
 
         add_settings_field(
-            'header_image',
-            'Header Image',
-            array( $this, 'header_image_callback' ),
-            'doorbitch-settings-admin',
-            'options-section'
-        );
-
-        add_settings_field(
-            'form_title', 
-            'Form Title',
-            array( $this, 'form_title_callback' ), 
-            'doorbitch-settings-admin', 
-            'options-section'
-        );      
-
-        add_settings_field(
             'form_html', 
             'Form HTML', 
             array( $this, 'form_html_callback' ), 
@@ -269,9 +253,6 @@ class Doorbitch_Admin
 
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
-
-        if( isset( $input['form_title'] ) )
-            $new_input['form_title'] = sanitize_text_field( $input['form_title'] );
 
         if( isset( $input['form_html'] ) )
             $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
@@ -316,22 +297,6 @@ class Doorbitch_Admin
         printf(
             '<input type="text" id="current_event" name="doorbitch_options[current_event]" value="%s" />',
             isset( $this->options['current_event'] ) ? esc_attr( $this->options['current_event'] ) : ''
-        );
-    }
-
-    public function header_image_callback()
-    {
-        printf(
-            '<input type="file" id="header_image" name="doorbitch_options[header_image]" value="%s" />',
-            '<i>TODO: File Uploader</i>'
-        );
-    }
-
-    public function form_title_callback()
-    {
-        printf(
-            '<input type="text" id="form_title" name="doorbitch_options[form_title]" value="%s" />',
-            isset( $this->options['form_title'] ) ? esc_attr( $this->options['form_title'] ) : ''
         );
     }
 
