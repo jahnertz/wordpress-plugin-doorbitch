@@ -313,8 +313,8 @@ class Doorbitch_Admin
     private function display_records( $event ) {
         // Todo - seperate this into its own function, move loading database entries into main class - this will make it reusable for exporting.
         global $wpdb;
-        // Show data:
 
+        // Show data:
         $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
         if ( empty( $results ) ) {
             ?>
@@ -368,6 +368,24 @@ class Doorbitch_Admin
         global $wpdb;
         $filename = 'Doorbitch-' . $event . current_time( 'Y-m-d_H:i') . 'xlsx';
 
+        // get data:
+        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
+
+        // explode manually serialised data into an array:
+        $entries = array();
+        foreach( $results as $result ) {
+            $entry = array();
+            // hide event column
+            // $entry [ 'event' ] = $result->event;
+            $entry [ 'time' ] = $result->time;
+            $data = explode( ',', $result->data );
+            foreach ( $data as $datum ) {
+                $keypair = explode( ':', $datum );
+                $entry[ $keypair[0] ] = $keypair[1];
+            }
+            array_push( $entries, $entry );
+        }
+
         // TODO: read the data from the database and write it into the spreadsheet. this should be moved to the main class.
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -375,6 +393,7 @@ class Doorbitch_Admin
 
         $writer = new Xlsx( $spreadsheet );
         $writer->save( $filename );
+        $_POST[ 'exported-file' ] = $filename;
     }
 
     private function expanded_allowed_tags() {
