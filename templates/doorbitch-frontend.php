@@ -48,16 +48,7 @@ if ( !empty($_POST) ) {
 						}?>
 						<form action="" method="post">
 							<?php 
-							// $options = get_option( DOORBITCH__OPTIONS );
-							// if ( $options == false ) {
-							// 	$options = array();
-							// }
-							// if ( ! array_key_exists( 'form_html', $options ) || $options[ 'form_html' ] == '' ) {
-							// 	$options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
-							// 	update_option( 'doorbitch_options', $options );
-							// }
-							echo $options[ 'form_html' ];
-
+								echo $options[ 'form_html' ];
 							?>
 						</form>
 					</div>
