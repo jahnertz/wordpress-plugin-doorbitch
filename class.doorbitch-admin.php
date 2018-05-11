@@ -53,6 +53,20 @@ class Doorbitch_Admin
                 }
             }
         }
+
+        // var_dump( $_FILES ); // array is empty!
+        // handle file uploads:
+        if ( isset( $_FILES[ 'header_image' ] ) ) {
+            $header_image = $_FILES[ 'header_image' ];
+            $uploaded = media_handle_upload( 'header_image', 0 );
+            // error checking using wp functions:
+            if ( is_WP_error( $uploaded ) ) {
+                Doorbitch::debug( 'error uploading file' );
+            }
+            else {
+                Doorbitch::debug( 'file uploaded succesfully' );
+            }
+        }
     }
 
     /**
@@ -141,7 +155,7 @@ class Doorbitch_Admin
                 
                 default:
                     ?>
-                    <form method="post" action="options.php">
+                    <form method="post" action="options.php" enctype="multipart/form-data">
                         <?php
                             settings_fields( 'doorbitch_options_group' );
                             do_settings_sections( 'doorbitch-settings-admin' );
@@ -208,6 +222,14 @@ class Doorbitch_Admin
             'doorbitch-settings-admin',
             'options-section',
             [ 'class' => 'hidden' ]
+        );
+
+        add_settings_field(
+            'header_image',
+            'Header Image',
+            array( $this, 'header_image_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
         );
 
         add_settings_field(
@@ -297,6 +319,14 @@ class Doorbitch_Admin
         );
     }
 
+    public function header_image_callback()
+    {
+        printf(
+            '<input type="file" id="header_image" name="doorbitch_options[header_image]" value="%s" />',
+            '<i>TODO: File Uploader</i>'
+        );
+    }
+
     public function form_title_callback()
     {
         printf(
@@ -307,11 +337,6 @@ class Doorbitch_Admin
 
     public function form_html_callback()
     {
-        // TODO: html is not being saved to optoions properly
-        // printf(
-        //     '<textarea id="form-html" rows=20 name="doorbitch_options[form_html]">%s</textarea>',
-        //     isset( $this->options['form_html'] ) ? esc_attr( htmlspecialchars_decode( $this->options['form_html'] ) ) : ''
-        // );
         $wp_editor_settings = array(
             'media_buttons' => false,
             'textarea_name' => 'doorbitch_options[form_html]'
