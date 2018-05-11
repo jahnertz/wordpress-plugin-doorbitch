@@ -339,7 +339,9 @@ class Doorbitch_Admin
                     $data = explode( ',', $result->data );
                     foreach ( $data as $datum ) {
                         $keypair = explode( ':', $datum );
-                        $entry[ $keypair[0] ] = $keypair[1];
+                        if ( array_key_exists( 1, $keypair ) ) {
+                            $entry[ $keypair[0] ] = $keypair[1];
+                        }
                     }
                     array_push( $entries, $entry );
                 }
@@ -380,8 +382,6 @@ class Doorbitch_Admin
         $entries = array();
         foreach( $results as $result ) {
             $entry = array();
-            // hide event column
-            // $entry [ 'event' ] = $result->event;
             $entry [ 'time' ] = $result->time;
             $data = explode( ',', $result->data );
             foreach ( $data as $datum ) {
