@@ -17,9 +17,9 @@ get_header();
 // }
 global $doorbitch;
 $options = get_option( DOORBITCH__OPTIONS );
+$success = NULL;
 
-if ( !empty($_POST) ) {
-	// TODO: add validation!
+if ( ! empty( $_POST ) ) {
 	$submission_errors = array();
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
@@ -60,27 +60,30 @@ if ( !empty($_POST) ) {
 		<div class="page-content">
 			<div class="panel-content">
 				<div class="wrap">
-					<?php if ( empty( $submission_errors ) && $success == true ) {
-						?>
-						<div class='notification submission_errors'>
-							<h3>Success!</h3>
-						</div>
-						<?php
-						}
-						elseif ( ! empty( $submission_errors ) ) {
+					<?php
+					if ( empty( $submission_errors ) ) {
+						if ( $success == true ) {	
 							?>
-							<div class='notification failure'>
-								<h3>Sorry!</h3>
-								<ul>
-									<?php
-									foreach ( $submission_errors as $error ) {
-										echo( '<li>' . $error . '</li>' );
-									}
-									?>
-								</ul>
+							<div class='notification submission_errors'>
+								<h3>Success!</h3>
 							</div>
 							<?php
 						}
+					}
+					else {
+						?>
+						<div class='notification failure'>
+							<h3>Sorry!</h3>
+							<ul>
+								<?php
+								foreach ( $submission_errors as $error ) {
+									echo( '<li>' . $error . '</li>' );
+								}
+								?>
+							</ul>
+						</div>
+						<?php
+					}
 					?>
 					<header class="entry-header">
 					</header><!-- Page Header -->
