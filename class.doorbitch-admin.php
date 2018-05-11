@@ -64,7 +64,7 @@ class Doorbitch_Admin
                     }
                 }
                 break;
-                
+
             }
         }
     }
@@ -126,8 +126,8 @@ class Doorbitch_Admin
                             <tr>
                                 <td>
                                     <input type="submit" name="action" value="view" class="button button-secondary">
-                                    <input type="submit" name="action" value="set as current event" class="button button-secondary">
                                     <input type="submit" name="action" value="export" class="button button-secondary">
+                                    <input type="submit" name="action" value="set as current event" class="button button-secondary">
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
                                     <input type="submit" name="action" value="delete" class="button button-secondary">
                                 </td>
