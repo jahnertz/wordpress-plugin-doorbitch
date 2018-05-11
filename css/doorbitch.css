@@ -1,0 +1,14 @@
+.notification {
+	/*position: absolute;*/
+	padding: 1rem 2rem;
+	border-radius: 1rem;
+	overflow: hidden;
+}
+
+.notification.success {
+	background-color: rgba( 0, 255, 100, 0.5 );
+}
+
+.notification.failure {
+	background-color: rgba( 255, 100, 0, 0.5 );
+}
