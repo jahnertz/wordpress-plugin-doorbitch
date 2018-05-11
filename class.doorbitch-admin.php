@@ -419,6 +419,7 @@ class Doorbitch_Admin
             'id' => array(), 'class' => array(), 'style' => array(),
         );
         $allowed[ 'br' ] = array ();
+        
         // form fields:
         $allowed[ 'label' ] = array (
             'for' => array(),
