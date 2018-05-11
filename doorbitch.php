@@ -15,6 +15,7 @@ global $doorbitch;
 
 define( 'DOORBITCH__DATABASE_VERSION', 1.2 );
 define( 'DOORBITCH__DEBUG_MODE', true );
+// todo: make this an option!
 define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DOORBITCH__OPTIONS', 'doorbitch_options' );
 
