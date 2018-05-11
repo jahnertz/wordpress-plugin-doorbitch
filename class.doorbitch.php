@@ -1,4 +1,9 @@
 <?php
+// include PhpSpreadsheet library:
+require_once 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Doorbitch {
 	//TODO: initiated defaults to false, save as an option
@@ -202,6 +207,72 @@ class Doorbitch {
 		);
 		return true;
 	}
+
+    public static function export_records( $event ) {
+        // todo: move this to main class.
+        $filename = 'Doorbitch_' . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+        $entries = self::get_registrants( $event );
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        // write the title on row 1:
+        $row = 1;
+        $col = 1;
+        $sheet->setCellValueByColumnAndRow( $col, $row, 'Event:' );
+        $sheet->setCellValueByColumnAndRow( $col + 1, $row, $event );
+
+        // write the headers on row 2:
+        $row = 2;
+        $col = 1;
+        foreach ( $entries[0] as $header => $value ) {
+            $sheet->setCellValueByColumnAndRow( $col, $row, $header );
+            $col++;
+        }
+
+        // write the entries, starting on row 3:
+        $row = 3;
+        foreach ( $entries as $entry ) {
+            $col = 1;
+            foreach ( $entry as $key => $value) {
+                $sheet->setCellValueByColumnAndRow( $col, $row, $value );
+                $col++;
+            }
+            $row++;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        // this needs to be done using wp_filesystem for security reasons:
+        // ok its writing to wp_admin, lets work with that for now..
+        $writer->save( $filename );
+        $_POST[ 'exported-file' ] = $filename;
+    }
+
+    public static function get_registrants( $event ) {
+        global $wpdb;
+
+        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
+        if ( empty( $results ) ){
+            // maybe unnessesary.
+            return array();
+        } else {
+            $entries = array();
+            foreach( $results as $result ) {
+                $entry = array();
+                // hide event column
+                // $entry [ 'event' ] = $result->event;
+                $entry [ 'time' ] = $result->time;
+                $data = explode( ',', $result->data );
+                foreach ( $data as $datum ) {
+                    $keypair = explode( ':', $datum );
+                    if ( array_key_exists( 1, $keypair ) ) {
+                        $entry[ $keypair[0] ] = $keypair[1];
+                    }
+                }
+                array_push( $entries, $entry );
+            }
+            return $entries;
+        }
+    }
+
 
 	public function debug_show() {
 		echo "<div class='doorbitch-debug'><h4>Debug</h4>";
