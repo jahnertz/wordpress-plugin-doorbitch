@@ -212,7 +212,7 @@ class Doorbitch {
         $filename = 'Doorbitch_' . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
         $entries = self::get_registrants( $event );
         if ( empty( $entries ) ) {
-        	return NULL;
+        	return false;
         }
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -245,9 +245,7 @@ class Doorbitch {
         // this needs to be done using wp_filesystem for security reasons:
         // ok its writing to wp_admin, lets work with that for now..
         $saved = $writer->save( $filename );
-        $_POST[ 'exported-file' ] = $filename;
-
-        return $saved;
+        return $filename;
     }
 
     public static function get_registrants( $event ) {

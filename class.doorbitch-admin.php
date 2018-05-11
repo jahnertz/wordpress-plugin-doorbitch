@@ -29,7 +29,7 @@ class Doorbitch_Admin
                 break;
             
             case 'export':
-                $exported = Doorbitch::export_records( $_POST[ 'event' ] );
+                $_POST[ 'exported-file' ] = Doorbitch::export_records( $_POST[ 'event' ] );
                 break;
 
             case 'new event':
@@ -124,7 +124,7 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if ( isset( $exported ) && $exported == false ) {
+                            if ( isset( $_POST[ 'exported-file' ] ) && $_POST[ 'exported-file' ] == false ) {
                                 ?>
                                 <tr>
                                     <td>

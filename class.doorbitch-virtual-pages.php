@@ -48,6 +48,10 @@ Class Doorbitch_Virtual_Pages
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-frontend.php';
 						// Hide the admin bar:
 						add_filter( 'show_admin_bar', '__return_false' );
+						function set_title() {
+							return "Registration";
+						}
+						add_filter( 'wp_title', 'set_title' );
 						break;
 				}
 
