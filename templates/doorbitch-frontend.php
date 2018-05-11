@@ -20,12 +20,20 @@ $options = get_option( DOORBITCH__OPTIONS );
 
 if ( !empty($_POST) ) {
 	// TODO: add validation!
+	$submission_errors = array();
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
 		$dataset = $dataset . $item . ':' . $data . ', ';
 	}
 	$doorbitch->debug( $dataset );
-	$success = $doorbitch->add_data( $options[ 'current_event' ], $dataset );
+	// validate the data:
+	if ( ! isset( $_POST[ 'disclaimer' ] ) || $_POST[ 'disclaimer' ] != 'on' ) {
+		array_push( $submission_errors, 'You must agree to the disclaimer to register.' );
+	}
+	if ( empty( $submission_errors ) ) {
+		$success = $doorbitch->add_data( $options[ 'current_event' ], $dataset );
+		if ( $success ){ array_push( $submission_errors, 'The data could not be saved.' ); }
+	}
 } else {
 	$doorbitch->debug( 'There is no post data' );
 }
@@ -36,18 +44,22 @@ if ( !empty($_POST) ) {
 		<div class="page-content">
 			<div class="panel-content">
 				<div class="wrap">
-					<?php if ( isset( $success ) && $success == true ) {
+					<?php if ( empty( $submission_errors ) && $success == true ) {
 						?>
-						<div class='notification success'>
+						<div class='notification submission_errors'>
 							<h3>Success!</h3>
 						</div>
 						<?php
 						}
-						elseif ( $success == false ) {
+						elseif ( ! empty( $submission_errors ) ) {
 							?>
 							<div class='notification failure'>
 								<h3>Sorry!</h3>
-								<p>The data could not be saved.</p>
+								<?php
+									foreach ( $submission_errors as $error ) {
+										echo( $error );
+									}
+								?>
 							</div>
 							<?php
 						}
