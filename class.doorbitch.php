@@ -209,7 +209,7 @@ class Doorbitch {
 	}
 
     public static function export_records( $event ) {
-        $filename = 'Doorbitch_' . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+        $filename = preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
         $entries = self::get_registrants( $event );
         if ( empty( $entries ) ) {
         	return false;
