@@ -33,7 +33,8 @@ class Doorbitch_Admin
                 break;
             
             case 'export':
-                Doorbitch::debug( 'exporting' );
+                $this->export_records( $_POST[ 'event' ] );
+                Doorbitch::debug( 'exporting ' . $_POST[ 'exported-file' ] );
                 break;
 
             case 'new event':
@@ -131,13 +132,28 @@ class Doorbitch_Admin
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
                                 </td>
                             </tr>
-                            <?php if ( isset( $this->new_event ) ) {
+                            <?php
+                            if ( isset( $this->new_event ) ) {
                                 ?>
                                 <tr>
                                     <td>
                                         <label for="new_event" >New Event:</label>
                                         <input type="text" name="new_event_name" value="" placeholder="New Event Name" >
                                         <input type="submit" name="action" value="create" class="button button-primary" >
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            if ( isset( $_POST[ 'export-file' ] ) ) {
+                                ?>
+                                <tr>
+                                    <td>
+                                        <?php
+                                        printf(
+                                            '<a href=%s alt="exported file">%s</a>',
+                                            $_POST[ 'filename' ]
+                                        );
+                                        ?>
                                     </td>
                                 </tr>
                                 <?php
@@ -366,7 +382,7 @@ class Doorbitch_Admin
 
     private function export_records( $event ) {
         global $wpdb;
-        $filename = 'Doorbitch-' . $event . current_time( 'Y-m-d_H:i') . 'xlsx';
+        $filename = 'Doorbitch_' . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
 
         // get data:
         $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
@@ -391,8 +407,8 @@ class Doorbitch_Admin
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue( 'A1', 'Hello World!' );
 
-        $writer = new Xlsx( $spreadsheet );
-        $writer->save( $filename );
+        // $writer = new Xlsx( $spreadsheet );
+        // $writer->save( $filename );
         $_POST[ 'exported-file' ] = $filename;
     }
 
