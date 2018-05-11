@@ -311,28 +311,32 @@ class Doorbitch_Admin
 
     private function display_records( $event ) {
         $entries = Doorbitch::get_registrants( $event );
-        if ( empty( $entries ) ){
-            ?>
-                <h4>No registrants yet</h4>
-            <?php
-        }
-            ?>
+        ?>
         <table class="doorbitch-records">
-            <tr>
-                <?php foreach ( $entries[0] as $key => $value ) {
-                    echo "<th>" . $key . "</th>";
-                }
-                ?>
-            </tr>
             <?php
-            foreach ( $entries as $entry ) {
+            if ( empty( $entries ) ){
+                ?>
+                <h4>No registrants yet.</h4>
+                <?php
+            }
+            else {
                 ?>
                 <tr>
-                    <?php foreach ( $entry as $key => $value ) {
-                        echo '<td>' . $value . '</td>';
-                    }?>
+                    <?php foreach ( $entries[0] as $key => $value ) {
+                        echo "<th>" . $key . "</th>";
+                    }
+                    ?>
                 </tr>
                 <?php
+                foreach ( $entries as $entry ) {
+                    ?>
+                    <tr>
+                        <?php foreach ( $entry as $key => $value ) {
+                            echo '<td>' . $value . '</td>';
+                        }?>
+                    </tr>
+                    <?php
+                }
             }
             ?>
         </table>
