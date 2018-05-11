@@ -142,7 +142,26 @@ class Doorbitch {
 		}
 		$options[ 'current_event' ] = $event_name;
 		$options[ 'events' ] = serialize( $event_array );
-		update_option( 'doorbitch_options', $options );
+		update_option( DOORBITCH__OPTIONS, $options );
+	}
+
+	public static function remove_event( $event_name ) {
+		$options = get_option( DOORBITCH__OPTIONS );
+		if ( ! array_key_exists( 'events', $options ) ) {
+			$event_array = array();
+		}
+		else {
+			$event_array = unserialize( $options[ 'events' ] );
+		}
+		if ( $key = array_search( $event_name, $event_array ) !== false ) {
+			unset( $event_array[ $key ] );
+			$new_event_array = array_values( $event_array );
+			$options[ 'events' ] = serialize( $new_event_array );
+			update_option( DOORBITCH__OPTIONS, $options );
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public static function set_current_event( $event_name ) {
