@@ -338,7 +338,7 @@ class Doorbitch_Admin
     public function form_html_callback()
     {
         $wp_editor_settings = array(
-            'media_buttons' => false,
+            'media_buttons' => true,
             'textarea_name' => 'doorbitch_options[form_html]'
         );
         wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
@@ -470,6 +470,7 @@ class Doorbitch_Admin
         $allowed[ 'style' ] = array (
             'types' => array(),
         );
+
         // table fields:
         $allowed [ 'table' ] = array (
             'class' => array(), 'id' => array(),
@@ -479,6 +480,11 @@ class Doorbitch_Admin
         );
         $allowed [ 'td' ] = array (
             'class' => array(), 'id' => array(), 'colspan' => array(),
+        );
+
+        // Image fields:
+        $allowed [ 'img' ] = array (
+            'class' => array(), 'id' => array(), 'src' => array(), 'title' => array(), 'width' => array(), 'height' => array(), 'alt' => array(),
         );
 
         return $allowed;
