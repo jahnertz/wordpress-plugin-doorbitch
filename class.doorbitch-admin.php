@@ -315,7 +315,7 @@ class Doorbitch_Admin
 
 
     private function display_records( $event ) {
-        $entries = $this->unserialize_results( $event );
+        $entries = $this->get_registrants( $event );
         if ( empty( $entries ) ){
             ?>
                 <h4>No registrants yet</h4>
@@ -347,7 +347,7 @@ class Doorbitch_Admin
     private function export_records( $event ) {
         // todo: move this to main class.
         $filename = 'Doorbitch_' . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
-        $entries = $this->unserialize_results( $event );
+        $entries = $this->get_registrants( $event );
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         // write the title on row 1:
@@ -382,7 +382,7 @@ class Doorbitch_Admin
         $_POST[ 'exported-file' ] = $filename;
     }
 
-    private function unserialize_results( $event ) {
+    private function get_registrants( $event ) {
         global $wpdb;
 
         $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
