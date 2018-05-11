@@ -26,9 +26,24 @@ if ( !empty($_POST) ) {
 		$dataset = $dataset . $item . ':' . $data . ', ';
 	}
 	$doorbitch->debug( $dataset );
-	// validate the data:
+	// TODO: actually validate the data.
+	// TODO: This is a hard coded last minute fix. validation should be done according to 'required' classes in the form.
 	if ( ! isset( $_POST[ 'disclaimer' ] ) || $_POST[ 'disclaimer' ] != 'on' ) {
 		array_push( $submission_errors, 'You must agree to the disclaimer to register.' );
+	}
+	if ( ! isset( $_POST[ 'name' ] ) || $_POST[ 'name' ] == '' ) {
+		array_push( $submission_errors, 'Please provide your name' );
+	}
+	if ( ! isset( $_POST[ 'age' ] ) ) {
+		array_push( $submission_errors, 'Please provide your age' );
+	}
+	if ( ! isset( $_POST[ 'city' ] ) ) {
+		array_push( $submission_errors, 'Please provide your city' );
+	}
+	if ( ! isset( $_POST[ 'email' ] ) ) {
+		array_push( $submission_errors, 'Please provide your email' );
+	} elseif ( ! is_email( $_POST[ 'email' ] ) ) {
+		array_push( $submission_errors, 'Please provide a valid email address' );
 	}
 	if ( empty( $submission_errors ) ) {
 		$success = $doorbitch->add_data( $options[ 'current_event' ], $dataset );
@@ -55,11 +70,13 @@ if ( !empty($_POST) ) {
 							?>
 							<div class='notification failure'>
 								<h3>Sorry!</h3>
-								<?php
+								<ul>
+									<?php
 									foreach ( $submission_errors as $error ) {
-										echo( $error );
+										echo( '<li>' . $error . '</li>' );
 									}
-								?>
+									?>
+								</ul>
 							</div>
 							<?php
 						}
