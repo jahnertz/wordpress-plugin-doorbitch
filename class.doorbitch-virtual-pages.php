@@ -46,6 +46,8 @@ Class Doorbitch_Virtual_Pages
 						// check the required privileges for the page and redirect if necessary:
 						if ( !current_user_can( 'edit_posts' ) ){ auth_redirect(); }
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-frontend.php';
+						// Hide the admin bar:
+						add_filter( 'show_admin_bar', '__return_false' );
 						break;
 				}
 
