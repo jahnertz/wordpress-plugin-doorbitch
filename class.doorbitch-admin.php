@@ -97,7 +97,7 @@ class Doorbitch_Admin
                                         $event_array = unserialize( $this->options[ 'events' ] );
                                         foreach ( $event_array as $event) {
                                             ?>
-                                            <option value="<?php echo $event;?>" <?php if ( $event == $current_event ) { echo 'selected="selected"';} ?>"><?php echo $event; ?></option>
+                                            <option value="<?php echo $event;?>" <?php if ( isset( $_POST[ 'event' ] ) && $event == $_POST[ 'event' ] ) { echo 'selected="selected"';} elseif ( $event == $current_event ) { echo 'selected="selected"'; } ?>"><?php echo $event; ?></option>
                                             <?php
                                         }
                                        ?> 
