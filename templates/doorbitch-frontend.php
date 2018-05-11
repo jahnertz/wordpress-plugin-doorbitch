@@ -36,6 +36,7 @@ if ( ! empty( $_POST ) ) {
 	}
 	if ( empty( $submission_errors ) ) {
 		// $dataset = '';
+		// TODO: use serialize( $_POST ); - need to change add_data method too.
 		foreach ($_POST as $item => $data ) {
 			$dataset = $dataset . $item . ':' . $data . ', ';
 		}
