@@ -38,14 +38,25 @@ if ( !empty($_POST) ) {
 		<div class="page-content">
 			<div class="panel-content">
 				<div class="wrap">
+					<?php if ( isset( $success ) && $success == true ) {
+						?>
+						<div class='notification success'>
+							<h3>Success!</h3>
+						</div>
+						<?php
+						}
+						elseif ( $success == false ) {
+							?>
+							<div class='notification failure'>
+								<h3>Sorry!</h3>
+								<p>The data could not be saved.</p>
+							</div>
+							<?php
+						}
+					?>
 					<header class="entry-header">
 					</header><!-- Page Header -->
 					<div class="entry-content">
-						<?php if ( isset( $success ) && $success == true ) {
-							?>
-							<h3>Success!</h3>
-							<?php
-						}?>
 						<form action="" method="post">
 							<?php 
 								echo $options[ 'form_html' ];
