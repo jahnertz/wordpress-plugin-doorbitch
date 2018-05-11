@@ -346,39 +346,26 @@ class Doorbitch_Admin
 
     private function export_records( $event ) {
         // todo: move this to main class.
-        global $wpdb;
         $filename = 'Doorbitch_' . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
-
-        // get data:
-        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
-
-        // explode manually serialised data into an array:
-        $entries = array();
-        foreach( $results as $result ) {
-            $entry = array();
-            $entry [ 'time' ] = $result->time;
-            $data = explode( ',', $result->data );
-            foreach ( $data as $datum ) {
-                $keypair = explode( ':', $datum );
-                $entry[ $keypair[0] ] = $keypair[1];
-            }
-            array_push( $entries, $entry );
-        }
-
-        // TODO: read the data from the database and write it into the spreadsheet. this should be moved to the main class.
-        // $spreadsheet = new Spreadsheet();
+        $entries = $this->unserialize_results( $event );
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+        // write the title on row 1:
+        $row = 1;
+        $col = 1;
+        $sheet->setCellValueByColumnAndRow( $col, $row, 'Event:' );
+        $sheet->setCellValueByColumnAndRow( $col + 1, $row, $event );
 
-        // write the headers:
+        // write the headers on row 2:
+        $row = 2;
         $col = 1;
         foreach ( $entries[0] as $header => $value ) {
-            $sheet->setCellValueByColumnAndRow( $col, 1, $header );
+            $sheet->setCellValueByColumnAndRow( $col, $row, $header );
             $col++;
         }
 
-        // write the entries, starting on the second row.
-        $row = 2;
+        // write the entries, starting on row 3:
+        $row = 3;
         foreach ( $entries as $entry ) {
             $col = 1;
             foreach ( $entry as $key => $value) {
