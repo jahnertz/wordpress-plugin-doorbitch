@@ -16,8 +16,8 @@
 	overflow: hidden;
 	-webkit-animation-name: fadeout;
 	animation-name: fadeout;
-	-webkit-animation-delay: 4s;
-	animation-delay: 4s;
+	-webkit-animation-delay: 2s;
+	animation-delay: 2s;
 	-webkit-animation-duration: 2s;
 	animation-duration: 2s;
 	-webkit-animation-fill-mode: forwards;

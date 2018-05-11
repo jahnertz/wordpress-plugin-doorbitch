@@ -19,7 +19,7 @@ global $doorbitch;
 $options = get_option( DOORBITCH__OPTIONS );
 
 if ( !empty($_POST) ) {
-
+	// TODO: add validation!
 	$dataset = '';
 	foreach ($_POST as $item => $data ) {
 		$dataset = $dataset . $item . ':' . $data . ', ';
