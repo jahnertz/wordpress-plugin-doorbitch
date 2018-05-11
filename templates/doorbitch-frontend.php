@@ -8,13 +8,6 @@
  */
 
 get_header(); 
-// TODO: redirect user if they are not logged in.
-// if ( current_user_can( 'edit_posts' ) )
-// {
-// 	echo 'user is logged in';
-// } else {
-// 	auth_redirect();
-// }
 global $doorbitch;
 $options = get_option( DOORBITCH__OPTIONS );
 $success = NULL;

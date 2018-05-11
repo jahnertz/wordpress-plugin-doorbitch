@@ -1,9 +1,4 @@
 <?php
-// include PhpSpreadsheet library:
-require_once 'vendor/autoload.php';
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Doorbitch_Admin
 {
@@ -252,7 +247,7 @@ class Doorbitch_Admin
             $new_input['db_version'] = sanitize_text_field( $input['db_version'] );
 
         if( isset( $input['events'] ) )
-            $new_input['events'] = unserialize( $input['events'] );
+            $new_input['events'] = sanitize_text_field( unserialize( $input['events'] ) );
         // Probably unsanitary!
 
         if( isset( $input['current_event'] ) )
