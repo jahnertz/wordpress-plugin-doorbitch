@@ -28,6 +28,7 @@ if ( !empty($_POST) ) {
 	$doorbitch->debug( $dataset );
 	// TODO: actually validate the data.
 	// TODO: This is a hard coded last minute fix. validation should be done according to 'required' classes in the form.
+	// Because I hate myself:
 	if ( ! isset( $_POST[ 'disclaimer' ] ) || $_POST[ 'disclaimer' ] != 'on' ) {
 		array_push( $submission_errors, 'You must agree to the disclaimer to register.' );
 	}
