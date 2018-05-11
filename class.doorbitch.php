@@ -242,10 +242,14 @@ class Doorbitch {
         }
 
         $writer = new Xlsx($spreadsheet);
+        // var_dump( $writer );
         // this needs to be done using wp_filesystem for security reasons:
         // ok its writing to wp_admin, lets work with that for now..
-        $saved = $writer->save( $filename );
-        return $filename;
+        $upload_dir = wp_upload_dir();
+        $file_path = $upload_dir[ 'path' ] . '/' . $filename;
+        $file_url = $upload_dir[ 'url' ] . '/' . $filename;
+        $saved = $writer->save( $file_path );
+        return $file_url;
     }
 
     public static function get_registrants( $event ) {
