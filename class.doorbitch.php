@@ -28,7 +28,7 @@ class Doorbitch {
 		//Add admin options page under 'tools' section:
 		if( is_admin() ) {
 		    // include PhpSpreadsheet library:
-		    require 'vendor/autoload.php';
+		    // require 'vendor/autoload.php';
 			require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
 			$doorbitch_admin = new Doorbitch_Admin();
 			function enqueue_admin_styles() {

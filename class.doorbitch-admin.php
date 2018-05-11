@@ -1,8 +1,9 @@
 <?php
 // include PhpSpreadsheet library:
 require_once 'vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsl;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Doorbitch_Admin
 {
@@ -144,14 +145,15 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if ( isset( $_POST[ 'export-file' ] ) ) {
+                            if ( isset( $_POST[ 'exported-file' ] ) ) {
                                 ?>
                                 <tr>
                                     <td>
                                         <?php
                                         printf(
                                             '<a href=%s alt="exported file">%s</a>',
-                                            $_POST[ 'filename' ]
+                                            $_POST[ 'exported-file' ],
+                                            $_POST[ 'exported-file' ]
                                         );
                                         ?>
                                     </td>
@@ -381,6 +383,7 @@ class Doorbitch_Admin
     }
 
     private function export_records( $event ) {
+        // todo: move this to main class.
         global $wpdb;
         $filename = 'Doorbitch_' . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
 
@@ -403,12 +406,14 @@ class Doorbitch_Admin
         }
 
         // TODO: read the data from the database and write it into the spreadsheet. this should be moved to the main class.
+        // $spreadsheet = new Spreadsheet();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue( 'A1', 'Hello World!' );
+        $sheet->setCellValue('A1', 'Hello World !');
 
-        // $writer = new Xlsx( $spreadsheet );
-        // $writer->save( $filename );
+        $writer = new Xlsx($spreadsheet);
+        $writer->save( $filename );
+
         $_POST[ 'exported-file' ] = $filename;
     }
 
