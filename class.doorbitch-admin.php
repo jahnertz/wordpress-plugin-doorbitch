@@ -5,7 +5,8 @@ class Doorbitch_Admin
     private $options;
 
     public static $visible_event = '';
-    public $new_event;
+    private $new_event;
+    private $del_event;
     /**
      * Start up
      */
@@ -34,6 +35,10 @@ class Doorbitch_Admin
 
             case 'new event':
                 $this->new_event = true;
+                break;
+
+            case 'delete':
+                $this->del_event = true;
                 break;
 
             default:
@@ -110,6 +115,7 @@ class Doorbitch_Admin
                                     <input type="submit" name="action" value="select" class="button button-secondary">
                                     <input type="submit" name="action" value="export" class="button button-secondary">
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
+                                    <input type="submit" name="action" value="delete" class="button button-secondary">
                                 </td>
                             </tr>
                             <?php
