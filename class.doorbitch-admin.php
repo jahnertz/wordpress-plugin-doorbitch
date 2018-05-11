@@ -395,11 +395,29 @@ class Doorbitch_Admin
         // $spreadsheet = new Spreadsheet();
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setCellValue('A1', 'Hello World !');
+
+        // write the headers:
+        $col = 1;
+        foreach ( $entries[0] as $header => $value ) {
+            $sheet->setCellValueByColumnAndRow( $col, 1, $header );
+            $col++;
+        }
+
+        // write the entries, starting on the second row.
+        $row = 2;
+        foreach ( $entries as $entry ) {
+            $col = 1;
+            foreach ( $entry as $key => $value) {
+                $sheet->setCellValueByColumnAndRow( $col, $row, $value );
+                $col++;
+            }
+            $row++;
+        }
 
         $writer = new Xlsx($spreadsheet);
+        // this needs to be done using wp_filesystem for security reasons:
+        // ok its writing to wp_admin, lets work with that for now..
         $writer->save( $filename );
-
         $_POST[ 'exported-file' ] = $filename;
     }
 
