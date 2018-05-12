@@ -272,7 +272,14 @@ class Doorbitch {
 			if (false === ($creds = request_filesystem_credentials($url, $method, false, false, '') ) ) {
         		return false;
         	}
+        // fire up wp_filesystem:
+        if ( ! WP_Filesystem( $creds ) ) {
+        	request_filesystem_credentials( $url, $method, true, false, '' );
+        	return false;
+        }
 
+        global $wp_filesystem;
+        
         $writer = new Xlsx($spreadsheet);
         $upload_dir = wp_upload_dir();
         $file_path = '/tmp/' . $filename;
