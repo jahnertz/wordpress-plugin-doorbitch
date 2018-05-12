@@ -20,6 +20,7 @@ class Doorbitch_Admin
         $this->options = get_option( DOORBITCH__OPTIONS );
 
         if ( array_key_exists( 'action', $_POST ) ) {
+        // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
             case 'view':
                 $this->visible_event = $_POST[ 'event' ];
@@ -32,6 +33,7 @@ class Doorbitch_Admin
             
             case 'export':
                 $_POST[ 'exported-file' ] = Doorbitch::export_records( $_POST[ 'event' ] );
+                // check_admin_referer( 'export', 'export-nonce' );
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
@@ -127,6 +129,7 @@ class Doorbitch_Admin
                                 <td>
                                     <input type="submit" name="action" value="view" class="button button-secondary">
                                     <input type="submit" name="action" value="export" class="button button-secondary">
+                                    <?php wp_nonce_field( 'export', 'export_nonce' ); ?>
                                     <input type="submit" name="action" value="set as current event" class="button button-secondary">
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
                                     <input type="submit" name="action" value="delete" class="button button-secondary">

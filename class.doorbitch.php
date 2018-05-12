@@ -264,18 +264,8 @@ class Doorbitch {
             $row++;
         }
 
-        function write_exported_spreadsheet() {
-        	global $wp;
-	        $url = wp_nonce_url( home_url( add_query_arg( array(), $wp->request ) ) );
-	        // self::debug( $url );
-        }
-        add_action( 'plugins_loaded', 'write_exported_spreadsheet' );
+        $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin', 'export' );
         $writer = new Xlsx($spreadsheet);
-        // var_dump( $writer );
-        // $url = wp_nonce_url( home_url( add_query_arg( array(), $wp->request ) ) );
-        // if ( false === ( $creds = request_filesystem_credentials( $url, '', false, false, null ) ) ) {
-        // 	return false;
-        // }
         $upload_dir = wp_upload_dir();
         $file_path = '/tmp/' . $filename;
         $file_url = '/tmp/' . $filename;
