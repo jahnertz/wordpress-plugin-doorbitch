@@ -14,7 +14,7 @@ class Doorbitch {
 
 	private $options;
 
-	public function __construct() {
+	public function init () {
 		$this->options = get_option( DOORBITCH__OPTIONS );
 
 		// Run the install function if we're not already initiated.

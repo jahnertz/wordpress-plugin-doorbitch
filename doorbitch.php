@@ -23,6 +23,8 @@ require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );
 
 $doorbitch = new Doorbitch;
 
+add_action( 'init', array( &$doorbitch, 'init' ), 1 );
+
 register_activation_hook( __FILE__, array( $doorbitch, 'install' ) );
 // add_action( 'plugins_loaded', array( $doorbitch, 'dump_options' ) );
 
