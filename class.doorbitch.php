@@ -265,15 +265,19 @@ class Doorbitch {
             }
             $row++;
         }
+
+        // Fields that need to be persist:
+        $persist = array ( 'event', 'action' );
+
         // Get credentials:
         $method = ''; //ftp or empty.
         $url = wp_nonce_url('tools.php?page=doorbitch-settings-admin', 'doorbitch_view_export_nonce' );
-			if (false === ($creds = request_filesystem_credentials($url, $method, false, false, '') ) ) {
+			if (false === ($creds = request_filesystem_credentials($url, $method, false, false, $persist ) ) ) {
         		return false;
         	}
         // fire up wp_filesystem:
         if ( ! WP_Filesystem( $creds ) ) {
-        	request_filesystem_credentials( $url, $method, true, false, '' );
+        	request_filesystem_credentials( $url, $method, true, false, $persist );
         	return false;
         }
 
@@ -282,7 +286,6 @@ class Doorbitch {
         // create the export directory
         $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
         $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
-        echo $filename;
 
         if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
 		add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
@@ -291,17 +294,18 @@ class Doorbitch {
 
         // create the file
         // todo: create an empty file so we can write to it with a pointer.
-		if ( ! $wp_filesystem->put_contents( $filename, 'hello world', FS_CHMOD_FILE) ) {
+		if ( ! $wp_filesystem->put_contents( $filename, '', FS_CHMOD_FILE) ) {
 			add_settings_error( 'pluginception', 'create_file', esc_html__('Unable to create the plugin file.', 'pluginception'), 'error' );
 		}
 
         $writer = new Xlsx($spreadsheet);
         $upload_dir = wp_upload_dir();
         $file_path = '/tmp/' . $filename;
-        $file_url = '/tmp/' . $filename;
         // this should be writing to a pointer to our empty file.
-        $saved = $writer->save( $file_path );
-        return $file_url;
+        // $test_filename = trailingslashit( $export_dir ) . 'test.xlsx';
+        $saved = $writer->save( $filename );
+        echo $saved;
+        return $filename;
     }
 
     public static function get_registrants( $event ) {
