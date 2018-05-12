@@ -267,11 +267,11 @@ class Doorbitch {
             $row++;
         }
         // Get credentials:
-        $url = wp_nonce_url('tools.php?page=doorbitch-settings-admin', 'export_nonce' );
-        if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, '') ) )
-        	{
+        $method = ''; //ftp or empty.
+        $url = wp_nonce_url('tools.php?page=doorbitch-settings-admin', 'doorbitch_view_export_nonce' );
+			if (false === ($creds = request_filesystem_credentials($url, $method, false, false, '') ) ) {
         		return false;
-        	};
+        	}
 
         $writer = new Xlsx($spreadsheet);
         $upload_dir = wp_upload_dir();

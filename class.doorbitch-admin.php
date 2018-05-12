@@ -33,7 +33,12 @@ class Doorbitch_Admin
                 break;
             
             case 'export':
-                $_POST[ 'exported-file' ] = Doorbitch::export_records( $_POST[ 'event' ] );
+                // $_POST[ 'exported-file' ] = Doorbitch::export_records( $_POST[ 'event' ] );
+                function export_this_event () {
+                    Doorbitch::export_records( $_POST[ 'event' ] );
+                }
+                add_action( 'admin_menu', 'export_this_event' );
+                $_POST[ 'exported-file' ] = 'testing';
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
