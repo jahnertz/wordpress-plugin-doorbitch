@@ -235,7 +235,6 @@ class Doorbitch {
 	}
 
     public static function export_records( $event ) {
-        $filename = preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
         $entries = self::get_registrants( $event );
         if ( empty( $entries ) ) {
         	return false;
@@ -282,6 +281,8 @@ class Doorbitch {
 
         // create the export directory
         $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+        $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+        echo $filename;
 
         if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
 		add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
