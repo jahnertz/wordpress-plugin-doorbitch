@@ -10,7 +10,7 @@ class Doorbitch_Admin
     /**
      * Start up
      */
-    public function __construct()
+    public function init ()
     {
         global $doorbitch;
 

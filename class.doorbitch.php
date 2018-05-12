@@ -35,7 +35,10 @@ class Doorbitch {
 		    // include PhpSpreadsheet library:
 		    // require 'vendor/autoload.php';
 			require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
+
 			$doorbitch_admin = new Doorbitch_Admin();
+			add_action( 'init', array( &$doorbitch_admin, 'init' ) );
+
 			function enqueue_admin_styles() {
 				wp_enqueue_style( 'doorbitch-admin', plugins_url( '/css/doorbitch-admin.css', __FILE__ ) );
 			}
