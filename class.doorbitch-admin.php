@@ -23,37 +23,44 @@ class Doorbitch_Admin
         // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
             case 'view':
+                check_admin_referer( 'view_nonce' );
                 $this->visible_event = $_POST[ 'event' ];
                 break;
             
             case 'set as current event':
+                check_admin_referer( 'set_as_current_event_nonce' );
                 Doorbitch::set_current_event( $_POST[ 'event' ] );
                 $this->visible_event = $_POST[ 'event' ];
                 break;
             
             case 'export':
+                check_admin_referer( 'export_nonce' );
                 $_POST[ 'exported-file' ] = Doorbitch::export_records( $_POST[ 'event' ] );
                 // check_admin_referer( 'export', 'export-nonce' );
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
             case 'new event':
+                check_admin_referer( 'new_event_nonce' );
                 $this->new_event = true;
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
             case 'delete':
+                check_admin_referer( 'delete_nonce' );
                 $this->del_event = true;
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
             case 'delete this event':
+                check_admin_referer( 'delete_this_event_nonce' );
                 Doorbitch::remove_event( $_POST[ 'event' ] );
                 Doorbitch::set_current_event();
                 $this->visible_event = $this->options[ 'current_event' ];
                 break;
 
             case 'create':
+                check_admin_referer( 'create_nonce' );
                 if ( isset( $_POST[ 'new_event_name' ] ) ) {
                     if ( $_POST[ 'new_event_name' ] == '' ) {
                         $this->new_event = true;
@@ -128,11 +135,15 @@ class Doorbitch_Admin
                             <tr>
                                 <td>
                                     <input type="submit" name="action" value="view" class="button button-secondary">
+                                    <?php wp_nonce_field( 'view_nonce' ); ?>
                                     <input type="submit" name="action" value="export" class="button button-secondary">
                                     <?php wp_nonce_field( 'export_nonce' ); ?>
                                     <input type="submit" name="action" value="set as current event" class="button button-secondary">
+                                    <?php wp_nonce_field( 'set_as_current_event_nonce' ); ?>
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
+                                    <?php wp_nonce_field( 'new_event_nonce' ); ?>
                                     <input type="submit" name="action" value="delete" class="button button-secondary">
+                                    <?php wp_nonce_field( 'delete_nonce' ); ?>
                                 </td>
                             </tr>
                             <?php
@@ -141,7 +152,9 @@ class Doorbitch_Admin
                                 <tr>
                                     <td>
                                         <input type="submit" name="action" value="delete this event" id="del-confirm" class="button button-primary">
+                                        <?php wp_nonce_field( 'delete_this_event_nonce' ); ?>
                                         <input type="submit" name="action" value="cancel" id="del-confirm" class="button button-secondary">
+                                        <?php wp_nonce_field( 'cancel_nonce' ); ?>
                                     </td>
                                 </tr>
                                 <?php
@@ -152,6 +165,7 @@ class Doorbitch_Admin
                                     <td>
                                         <input type="text" name="new_event_name" value="" placeholder="New Event Name" >
                                         <input type="submit" name="action" value="create" class="button button-primary" >
+                                        <?php wp_nonce_field( 'create_nonce' ); ?>
                                     </td>
                                 </tr>
                                 <?php

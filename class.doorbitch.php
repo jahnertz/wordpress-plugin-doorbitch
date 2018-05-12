@@ -235,9 +235,6 @@ class Doorbitch {
 	}
 
     public static function export_records( $event ) {
-    	// Make sure we're coming from a valid page:
-        check_admin_referer( 'export_nonce' );
-
         $filename = preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
         $entries = self::get_registrants( $event );
         if ( empty( $entries ) ) {
