@@ -264,7 +264,6 @@ class Doorbitch {
             $row++;
         }
 
-        $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin', 'export' );
         $writer = new Xlsx($spreadsheet);
         $upload_dir = wp_upload_dir();
         $file_path = '/tmp/' . $filename;
