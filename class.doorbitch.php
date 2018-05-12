@@ -279,7 +279,19 @@ class Doorbitch {
         }
 
         global $wp_filesystem;
-        
+
+        // create the export directory
+        $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+
+        if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
+		add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
+		return $_POST;
+        }
+
+		if ( ! $wp_filesystem->put_contents( $filename, 'hello world', FS_CHMOD_FILE) ) {
+			add_settings_error( 'pluginception', 'create_file', esc_html__('Unable to create the plugin file.', 'pluginception'), 'error' );
+		}
+
         $writer = new Xlsx($spreadsheet);
         $upload_dir = wp_upload_dir();
         $file_path = '/tmp/' . $filename;
