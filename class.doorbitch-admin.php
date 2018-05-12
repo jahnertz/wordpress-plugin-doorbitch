@@ -129,7 +129,7 @@ class Doorbitch_Admin
                                 <td>
                                     <input type="submit" name="action" value="view" class="button button-secondary">
                                     <input type="submit" name="action" value="export" class="button button-secondary">
-                                    <?php wp_nonce_field( 'export', 'export_nonce' ); ?>
+                                    <?php wp_nonce_field( 'export_nonce' ); ?>
                                     <input type="submit" name="action" value="set as current event" class="button button-secondary">
                                     <input type="submit" name="action" value="new event" class="button button-secondary">
                                     <input type="submit" name="action" value="delete" class="button button-secondary">
@@ -141,7 +141,7 @@ class Doorbitch_Admin
                                 <tr>
                                     <td>
                                         <input type="submit" name="action" value="delete this event" id="del-confirm" class="button button-primary">
-                                        <input type="submit" name="action" value="Cancel" id="del-confirm" class="button button-secondary">
+                                        <input type="submit" name="action" value="cancel" id="del-confirm" class="button button-secondary">
                                     </td>
                                 </tr>
                                 <?php
