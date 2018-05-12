@@ -288,6 +288,8 @@ class Doorbitch {
 		return $_POST;
         }
 
+        // create the file
+        // todo: create an empty file so we can write to it with a pointer.
 		if ( ! $wp_filesystem->put_contents( $filename, 'hello world', FS_CHMOD_FILE) ) {
 			add_settings_error( 'pluginception', 'create_file', esc_html__('Unable to create the plugin file.', 'pluginception'), 'error' );
 		}
@@ -296,6 +298,7 @@ class Doorbitch {
         $upload_dir = wp_upload_dir();
         $file_path = '/tmp/' . $filename;
         $file_url = '/tmp/' . $filename;
+        // this should be writing to a pointer to our empty file.
         $saved = $writer->save( $file_path );
         return $file_url;
     }
