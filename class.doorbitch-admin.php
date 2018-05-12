@@ -170,7 +170,7 @@ class Doorbitch_Admin
                                         printf(
                                             '<a href=%s alt="exported file">%s</a>',
                                             $_POST[ 'exported-file' ],
-                                            basename( $_POST[ 'exported-file' ] )
+                                            $_POST[ 'exported-file' ]
                                         );
                                         ?>
                                     </td>
