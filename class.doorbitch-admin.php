@@ -17,7 +17,7 @@ class Doorbitch_Admin
 
         // if ( isset( $_POST[ 'action' ] ) ) { Doorbitch::debug( 'Action:' . $_POST[ 'action' ] ); }
 
-        Doorbitch::debug( $_POST[ 'action' ] );
+        // Doorbitch::debug( $_POST[ 'action' ] );
 
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
@@ -227,6 +227,7 @@ class Doorbitch_Admin
 
     public function check_buttons () {
         // TODO: move this to doorbitch class.
+        Doorbitch::debug( 'checking buttons' );
         if ( ! isset( $_POST[ 'action' ] ) || $_POST[ 'action' ] != 'export' ) return false;
 
         // check_admin_referer( 'doorbitch_view_export_nonce' );
@@ -249,7 +250,8 @@ class Doorbitch_Admin
             $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
 
             global $wp_filesystem;
-            if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
+            // if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
+            if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', 0664 ) ) {
                 echo "error saving file!";
             }
         }
