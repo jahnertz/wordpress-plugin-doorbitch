@@ -246,7 +246,7 @@ class Doorbitch_Admin
             }
 
             $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
-            $filename = trailingslashit( $export_dir ) . 'test.txt';
+            $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
 
             global $wp_filesystem;
             if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
