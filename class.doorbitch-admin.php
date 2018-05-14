@@ -20,7 +20,7 @@ class Doorbitch_Admin
         $this->options = get_option( DOORBITCH__OPTIONS );
 
         if ( array_key_exists( 'action', $_POST ) ) {
-        check_admin_referer( 'doorbitch_view_export_nonce' );
+        // check_admin_referer( 'doorbitch_view_export_nonce' );
         // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
             case 'view':
