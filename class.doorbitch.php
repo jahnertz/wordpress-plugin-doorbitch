@@ -348,6 +348,12 @@ class Doorbitch {
 	public static function debug( $debug_text ) {
 		$file = basename( debug_backtrace()[0]['file'] );
 		self::$debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
+		if ( is_array( $debug_text ) || is_object( $debug_text ) ) {
+		 error_log( print_r( $debug_text, true ) );
+		} else {
+		 error_log( $debug_text );
+		}
+
 		//TODO: Print errors from table of common errors.
 
 	}

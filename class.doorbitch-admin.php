@@ -15,6 +15,10 @@ class Doorbitch_Admin
     {
         global $doorbitch;
 
+        // if ( isset( $_POST[ 'action' ] ) ) { Doorbitch::debug( 'Action:' . $_POST[ 'action' ] ); }
+
+        Doorbitch::debug( $_POST[ 'action' ] );
+
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
         // Deal with _POST data
@@ -222,11 +226,12 @@ class Doorbitch_Admin
     }
 
     public function check_buttons () {
+        // TODO: move this to doorbitch class.
         if ( ! isset( $_POST[ 'action' ] ) || $_POST[ 'action' ] != 'export' ) return false;
 
-        check_admin_referer( 'doorbitch_view_export_nonce' );
+        // check_admin_referer( 'doorbitch_view_export_nonce' );
 
-        $form_fields = array( 'event' );
+        $form_fields = array( 'event', 'action' );
         $method = '';
 
         if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
