@@ -104,8 +104,7 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        // if ( Doorbitch::check_buttons() ) return;
-        if ( $this->check_export() ) return;
+        if ( $this->check_fs_creds() ) return;
         $this->options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
@@ -226,7 +225,7 @@ class Doorbitch_Admin
         <?php
     }
 
-    public function check_export () {
+    public function check_fs_creds () {
         if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
             $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
             $method = '';
