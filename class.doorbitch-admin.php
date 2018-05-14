@@ -20,20 +20,21 @@ class Doorbitch_Admin
         $this->options = get_option( DOORBITCH__OPTIONS );
 
         if ( array_key_exists( 'action', $_POST ) ) {
-        // check_admin_referer( 'doorbitch_view_export_nonce' );
         // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
             case 'view':
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 $this->visible_event = $_POST[ 'event' ];
                 break;
             
             case 'set as current event':
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 Doorbitch::set_current_event( $_POST[ 'event' ] );
                 $this->visible_event = $_POST[ 'event' ];
                 break;
             
             case 'export':
-                // $_POST[ 'exported-file' ] = Doorbitch::export_records( $_POST[ 'event' ] );
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 $exported_file = '';
                 function export_this_event () {
                     $exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
@@ -44,22 +45,26 @@ class Doorbitch_Admin
                 break;
 
             case 'new event':
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 $this->new_event = true;
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
             case 'delete':
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 $this->del_event = true;
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
             case 'delete this event':
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 Doorbitch::remove_event( $_POST[ 'event' ] );
                 Doorbitch::set_current_event();
                 $this->visible_event = $this->options[ 'current_event' ];
                 break;
 
             case 'create':
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 if ( isset( $_POST[ 'new_event_name' ] ) ) {
                     if ( $_POST[ 'new_event_name' ] == '' ) {
                         $this->new_event = true;
