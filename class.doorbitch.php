@@ -272,13 +272,13 @@ class Doorbitch {
         // Get credentials:
         $method = ''; //ftp or empty.
         $url = wp_nonce_url('tools.php?page=doorbitch-settings-admin', 'doorbitch_view_export_nonce' );
-			if (false === ($creds = request_filesystem_credentials($url, $method, false, false, $persist ) ) ) {
-        		return false;
+			if (false === ($creds = request_filesystem_credentials( $url, $method, false, false, $persist ) ) ) {
+        		return true;
         	}
         // fire up wp_filesystem:
         if ( ! WP_Filesystem( $creds ) ) {
         	request_filesystem_credentials( $url, $method, true, false, $persist );
-        	return false;
+        	return true;
         }
 
         global $wp_filesystem;
@@ -300,10 +300,9 @@ class Doorbitch {
 
         $writer = new Xlsx($spreadsheet);
         $upload_dir = wp_upload_dir();
-        $file_path = '/tmp/' . $filename;
         // this should be writing to a pointer to our empty file.
         // $test_filename = trailingslashit( $export_dir ) . 'test.xlsx';
-        $saved = $writer->save( $filename );
+        // $saved = $writer->save( $filename );
         echo $saved;
         return $filename;
     }
