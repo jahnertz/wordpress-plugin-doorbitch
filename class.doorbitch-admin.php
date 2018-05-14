@@ -7,6 +7,7 @@ class Doorbitch_Admin
     public  $visible_event = '';
     private $new_event;
     private $del_event;
+    private $export;
     /**
      * Start up
      */
@@ -34,13 +35,13 @@ class Doorbitch_Admin
                 break;
             
             case 'export':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
-                $exported_file = '';
-                function export_this_event () {
-                    $exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
-                }
-                add_action( 'admin_menu', 'export_this_event' );
-                $_POST[ 'exported-file' ] = $exported_file;
+                // check_admin_referer( 'doorbitch_view_export_nonce' );
+                // $exported_file = '';
+                // function export_this_event () {
+                //     $exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
+                // }
+                // add_action( 'admin_menu', 'export_this_event' );
+                // $_POST[ 'exported-file' ] = $exported_file;
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
@@ -99,6 +100,7 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
+        if ( $this->check_buttons() ) return;
         $this->options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
@@ -217,6 +219,37 @@ class Doorbitch_Admin
             ?>
         </div>
         <?php
+    }
+
+    public function check_buttons () {
+        if ( ! isset( $_POST[ 'action' ] ) || $_POST[ 'action' ] != 'export' ) return false;
+
+        check_admin_referer( 'doorbitch_view_export_nonce' );
+
+        $form_fields = array( 'event' );
+        $method = '';
+
+        if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
+            $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
+            if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
+                return true;
+            }
+
+            if ( ! WP_Filesystem( $creds ) ) {
+                request_filesystem_credentials( $url, $method, true, false, $form_fields );
+                return true;
+            }
+
+            $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+            $filename = trailingslashit( $export_dir ) . 'test.txt';
+
+            global $wp_filesystem;
+            if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
+                echo "error saving file!";
+            }
+        }
+
+        return true;
     }
 
     /**
