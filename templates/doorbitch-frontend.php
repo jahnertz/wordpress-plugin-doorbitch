@@ -59,7 +59,7 @@ if ( ! empty( $_POST ) ) {
 					if ( empty( $submission_errors ) ) {
 						if ( $success == true ) {	
 							?>
-							<div class='notification submission_errors'>
+							<div class='notification success'>
 								<h3>Success!</h3>
 							</div>
 							<?php
