@@ -33,3 +33,10 @@
 .notification.failure {
 	background-color: rgba( 255, 100, 0, 0.5 );
 }
+
+.required:after {
+	/* Nonbreaking space, Bullet: */
+	content: '\00a0\2022';
+	display: inline;
+	color:red;
+}

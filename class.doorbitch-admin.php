@@ -439,7 +439,7 @@ class Doorbitch_Admin
         
         // form fields:
         $allowed[ 'label' ] = array (
-            'for' => array(),
+            'for' => array(), 'class' => array(),
         );
         $allowed[ 'input' ] = array (
             'class' => array(), 'id' => array(), 'name' => array(), 'value' => array(), 'type' => array(),
