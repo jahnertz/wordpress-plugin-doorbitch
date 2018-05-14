@@ -1,14 +1,14 @@
 <?php
 /**
  * @package Doorbitch
- * @version 0.0.15
+ * @version 0.0.16
 /*
 Plugin Name: Doorbitch
 Plugin URI: https://github.com/jahnertz/wordpress-plugin-doorbitch/tree/master
 Description: A wordpress plugin to used to collect and export patrons' basic information. Use the 'Doorbitch' admin page (under Tools) to configure the plugin.
 Login to the collection page via http://yoursite.com/doorbitch
 Author: Jordan Han
-Version: 0.0.15
+Version: 0.0.16
 Author URI: https://jhanrahan.com.au
 */
 global $doorbitch;
