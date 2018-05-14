@@ -37,6 +37,5 @@
 .required:after {
 	/* Nonbreaking space, Bullet: */
 	content: '\00a0\2022';
-	display: inline;
 	color:red;
 }

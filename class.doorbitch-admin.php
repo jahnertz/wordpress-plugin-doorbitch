@@ -298,13 +298,13 @@ class Doorbitch_Admin
 
         if( isset( $input['events'] ) )
             $new_input['events'] = sanitize_text_field( unserialize( $input['events'] ) );
-        // Probably unsanitary!
 
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
         if( isset( $input['form_html'] ) )
             $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
+        // TODO: create list of required fields and save it to options.
 
         return $new_input;
     }
