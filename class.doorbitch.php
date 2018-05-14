@@ -267,44 +267,47 @@ class Doorbitch {
         }
 
         // Fields that need to be persist:
-        $persist = array ( 'event', 'action' );
+        // $persist = array ( 'event', 'action' );
 
         // Get credentials:
-        $method = ''; //ftp or empty.
-        $url = wp_nonce_url('tools.php?page=doorbitch-settings-admin', 'doorbitch_view_export_nonce' );
-			if (false === ($creds = request_filesystem_credentials( $url, $method, false, false, $persist ) ) ) {
-        		return true;
-        	}
-        // fire up wp_filesystem:
-        if ( ! WP_Filesystem( $creds ) ) {
-        	request_filesystem_credentials( $url, $method, true, false, $persist );
-        	return true;
-        }
+   //      $method = ''; //ftp or empty.
+   //      $url = wp_nonce_url('tools.php?page=doorbitch-settings-admin', 'doorbitch_view_export_nonce' );
+			// if (false === ($creds = request_filesystem_credentials( $url, $method, false, false, $persist ) ) ) {
+   //      		return true;
+   //      	}
+   //      // fire up wp_filesystem:
+        // if ( ! WP_Filesystem( $creds ) ) {
+        // 	request_filesystem_credentials( $url, $method, true, false, $persist );
+        // 	return true;
+        // }
 
-        global $wp_filesystem;
+        // global $wp_filesystem;
 
         // create the export directory
-        $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
-        $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+        // $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+        // $export_dir = '/var/tmp';
+        // $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+        $filename = tempnam( "/tmp" , preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx' );
 
-        if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
-		add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
-		return $_POST;
-        }
+        // if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
+		// add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
+		// return $_POST;
+        // }
 
         // create the file
         // todo: create an empty file so we can write to it with a pointer.
-		if ( ! $wp_filesystem->put_contents( $filename, '', FS_CHMOD_FILE) ) {
-			add_settings_error( 'pluginception', 'create_file', esc_html__('Unable to create the plugin file.', 'pluginception'), 'error' );
-		}
+		// if ( ! $wp_filesystem->put_contents( $filename, '', FS_CHMOD_FILE) ) {
+			// add_settings_error( 'pluginception', 'create_file', esc_html__('Unable to create the plugin file.', 'pluginception'), 'error' );
+		// }
 
         $writer = new Xlsx($spreadsheet);
-        $upload_dir = wp_upload_dir();
+        // $upload_dir = wp_upload_dir();
         // this should be writing to a pointer to our empty file.
         // $test_filename = trailingslashit( $export_dir ) . 'test.xlsx';
-        // $saved = $writer->save( $filename );
+        $saved = $writer->save( $filename );
         echo $saved;
         return $filename;
+        // return 'hello spread';
     }
 
 
@@ -328,12 +331,19 @@ class Doorbitch {
             }
 
             $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+
             $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $_POST[ 'event' ] ) . '_' . current_time( 'Y-m-d_Hi') . '.csv';
             $csv = self::create_csv( $_POST[ 'event' ] );
 
             global $wp_filesystem;
-            // if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
+
+	        if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
+			add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
+			return $_POST;
+	        }
+
             if ( ! $wp_filesystem->put_contents( $filename, $csv, FS_CHMOD_FILE ) ) {
+            // if ( ! $wp_filesystem->put_contents( $filename, '', FS_CHMOD_FILE ) ) {
                 echo "error saving file!";
                 return false;
             }

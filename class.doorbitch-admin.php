@@ -5,6 +5,7 @@ class Doorbitch_Admin
     private $options;
 
     public  $visible_event = '';
+    public  $exported_file = '';
     private $new_event;
     private $del_event;
     private $export;
@@ -39,13 +40,12 @@ class Doorbitch_Admin
                 break;
             
             case 'export':
-                // check_admin_referer( 'doorbitch_view_export_nonce' );
-                // $exported_file = '';
+                check_admin_referer( 'doorbitch_view_export_nonce' );
                 // function export_this_event () {
-                //     $exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
+                $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
                 // }
                 // add_action( 'admin_menu', 'export_this_event' );
-                // $_POST[ 'exported-file' ] = $exported_file;
+                // $_POST[ 'exported-file' ] = $this->exported_file;
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
@@ -104,7 +104,7 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        if ( Doorbitch::check_buttons() ) return;
+        // if ( Doorbitch::check_buttons() ) return;
         $this->options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
@@ -173,7 +173,7 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if ( isset( $_POST[ 'exported-file' ] ) && $_POST[ 'exported-file' ] == false ) {
+                            if ( isset( $this->exported_file ) && $this->exported_file == false ) {
                                 ?>
                                 <tr>
                                     <td>
@@ -182,15 +182,15 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if ( isset( $_POST[ 'exported-file' ] ) ) {
+                            if ( isset( $this->exported_file ) ) {
                                 ?>
                                 <tr>
                                     <td>
                                         <?php
                                         printf(
                                             '<a href=%s alt="exported file">%s</a>',
-                                            $_POST[ 'exported-file' ],
-                                            $_POST[ 'exported-file' ]
+                                            $this->exported_file,
+                                            $this->exported_file
                                         );
                                         ?>
                                     </td>
