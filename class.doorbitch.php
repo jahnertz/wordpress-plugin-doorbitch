@@ -332,13 +332,51 @@ class Doorbitch {
 
             global $wp_filesystem;
             // if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
-            if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', 0664 ) ) {
+            if ( ! $wp_filesystem->put_contents( $filename, '', 0664 ) ) {
                 echo "error saving file!";
                 return false;
             }
         }
 
+        $writer = new Xlsx( create_spreadsheet( $_POST[ 'event' ] ) );
+        $saved = $writer->save( $filename );
+
         return true;
+    }
+
+    public static function create_spreadsheet ( $event ) {
+        $entries = self::get_registrants( $event );
+        if ( empty( $entries ) ) {
+        	return false;
+        }
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        // write the title on row 1:
+        $row = 1;
+        $col = 1;
+        $sheet->setCellValueByColumnAndRow( $col, $row, 'Event:' );
+        $sheet->setCellValueByColumnAndRow( $col + 1, $row, $event );
+
+        // write the headers on row 2:
+        $row = 2;
+        $col = 1;
+        foreach ( $entries[0] as $header => $value ) {
+            $sheet->setCellValueByColumnAndRow( $col, $row, $header );
+            $col++;
+        }
+
+        // write the entries, starting on row 3:
+        $row = 3;
+        foreach ( $entries as $entry ) {
+            $col = 1;
+            foreach ( $entry as $key => $value) {
+                $sheet->setCellValueByColumnAndRow( $col, $row, $value );
+                $col++;
+            }
+            $row++;
+        }
+
+        return $spreadsheet;
     }
 
     public static function get_registrants( $event ) {
@@ -367,7 +405,6 @@ class Doorbitch {
             return $entries;
         }
     }
-
 
 	public function debug_show() {
 		if ( ! empty( $debug_messages ) ) {
