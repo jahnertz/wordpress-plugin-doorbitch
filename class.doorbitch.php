@@ -236,29 +236,8 @@ class Doorbitch {
 
     public static function export_records( $event ) {
     	$spreadsheet = self::create_spreadsheet( $event );
-
-        // Fields that need to be persist:
-        // $persist = array ( 'event', 'action' );
-
-        // // Get credentials:
-        // $method = ''; //ftp or empty.
-        
-        // $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
-        // if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
-        //     return true;
-        // }
-
-        // if ( ! WP_Filesystem( $creds ) ) {
-        //     request_filesystem_credentials( $url, $method, true, false, $form_fields );
-        //     return true;
-        // }
-
-
-        // create the export directory
         $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
-        // $export_dir = '/var/tmp';
-        // $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
-        // $filename = tempnam( trailingslashit( $export_dir ), preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx' );
+        // $upload_dir = wp_upload_dir();
         $temp_filename = tempnam( sys_get_temp_dir(), preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx' );
 
         global $wp_filesystem;
@@ -268,67 +247,37 @@ class Doorbitch {
 		return $_POST;
         }
 
-        // create the file
-		// if ( ! $wp_filesystem->put_contents( $filename, '', FS_CHMOD_FILE) ) {
-		// 	add_settings_error( 'pluginception', 'create_file', esc_html__('Unable to create the plugin file.', 'pluginception'), 'error' );
-		// }
-
         $writer = new Xlsx($spreadsheet);
-        // $upload_dir = wp_upload_dir();
-        // this should be writing to a pointer to our empty file.
-        // $test_filename = trailingslashit( $export_dir ) . 'test.xlsx';
-        $saved = $writer->save( $temp_filename );
-
+        $writer->save( $temp_filename );
         $wp_filesystem->move( $temp_filename, trailingslashit( $export_dir ) . $filename );
-
-        echo $saved;
         return $filename;
-        // return 'hello spread';
     }
 
+    public static function get_registrants( $event ) {
+        global $wpdb;
 
-    public static function check_buttons () {
-        if ( ! isset( $_POST[ 'action' ] ) || $_POST[ 'action' ] != 'export' ) return false;
-
-        // check_admin_referer( 'doorbitch_view_export_nonce' );
-
-        $form_fields = array( 'event', 'action' );
-        $method = '';
-
-        if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
-            $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
-            if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
-                return true;
+        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
+        if ( empty( $results ) ){
+            // maybe unnessesary.
+            return array();
+        } else {
+            $entries = array();
+            foreach( $results as $result ) {
+                $entry = array();
+                // hide event column
+                // $entry [ 'event' ] = $result->event;
+                $entry [ 'time' ] = $result->time;
+                $data = explode( ',', $result->data );
+                foreach ( $data as $datum ) {
+                    $keypair = explode( ':', $datum );
+                    if ( array_key_exists( 1, $keypair ) ) {
+                        $entry[ $keypair[0] ] = $keypair[1];
+                    }
+                }
+                array_push( $entries, $entry );
             }
-
-            if ( ! WP_Filesystem( $creds ) ) {
-                request_filesystem_credentials( $url, $method, true, false, $form_fields );
-                return true;
-            }
-
-            $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
-
-            $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $_POST[ 'event' ] ) . '_' . current_time( 'Y-m-d_Hi') . '.csv';
-            $csv = self::create_csv( $_POST[ 'event' ] );
-
-            global $wp_filesystem;
-
-	        if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
-			add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
-			return $_POST;
-	        }
-
-            if ( ! $wp_filesystem->put_contents( $filename, $csv, FS_CHMOD_FILE ) ) {
-            // if ( ! $wp_filesystem->put_contents( $filename, '', FS_CHMOD_FILE ) ) {
-                echo "error saving file!";
-                return false;
-            }
+            return $entries;
         }
-
-        // $writer = new Xlsx( create_spreadsheet( $_POST[ 'event' ] ) );
-        // $saved = $writer->save( $filename );
-
-        return true;
     }
 
     public static function create_csv ( $event ) {
@@ -385,33 +334,6 @@ class Doorbitch {
         }
 
         return $spreadsheet;
-    }
-
-    public static function get_registrants( $event ) {
-        global $wpdb;
-
-        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
-        if ( empty( $results ) ){
-            // maybe unnessesary.
-            return array();
-        } else {
-            $entries = array();
-            foreach( $results as $result ) {
-                $entry = array();
-                // hide event column
-                // $entry [ 'event' ] = $result->event;
-                $entry [ 'time' ] = $result->time;
-                $data = explode( ',', $result->data );
-                foreach ( $data as $datum ) {
-                    $keypair = explode( ':', $datum );
-                    if ( array_key_exists( 1, $keypair ) ) {
-                        $entry[ $keypair[0] ] = $keypair[1];
-                    }
-                }
-                array_push( $entries, $entry );
-            }
-            return $entries;
-        }
     }
 
 	public function debug_show() {
