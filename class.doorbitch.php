@@ -328,20 +328,42 @@ class Doorbitch {
             }
 
             $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
-            $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $_POST[ 'event' ] ) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+            $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $_POST[ 'event' ] ) . '_' . current_time( 'Y-m-d_Hi') . '.csv';
+            $csv = self::create_csv( $_POST[ 'event' ] );
 
             global $wp_filesystem;
             // if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
-            if ( ! $wp_filesystem->put_contents( $filename, '', 0664 ) ) {
+            if ( ! $wp_filesystem->put_contents( $filename, $csv, FS_CHMOD_FILE ) ) {
                 echo "error saving file!";
                 return false;
             }
         }
 
-        $writer = new Xlsx( create_spreadsheet( $_POST[ 'event' ] ) );
-        $saved = $writer->save( $filename );
+        // $writer = new Xlsx( create_spreadsheet( $_POST[ 'event' ] ) );
+        // $saved = $writer->save( $filename );
 
         return true;
+    }
+
+    public static function create_csv ( $event ) {
+    	$entries = self::get_registrants ( $event );
+    	$csv = '';
+
+    	// Add headers:
+    	foreach ( $entries[0] as $header => $value ) {
+    		$csv .= $header . ',' ;
+    	}
+    	$csv .= '\n';
+
+    	// Add entries:
+    	foreach ( $entries as $entry ) {
+    		foreach ( $entry as $field => $value ) {
+    			$csv .= $value . ',' ;
+    		}
+    		$csv .= '\n';
+    	}
+
+    	return $csv;
     }
 
     public static function create_spreadsheet ( $event ) {
