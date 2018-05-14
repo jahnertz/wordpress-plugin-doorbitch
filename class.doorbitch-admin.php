@@ -16,10 +16,6 @@ class Doorbitch_Admin
     {
         global $doorbitch;
 
-        // if ( isset( $_POST[ 'action' ] ) ) { Doorbitch::debug( 'Action:' . $_POST[ 'action' ] ); }
-
-        // Doorbitch::debug( $_POST[ 'action' ] );
-
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
         // Deal with _POST data
@@ -28,6 +24,7 @@ class Doorbitch_Admin
         if ( array_key_exists( 'action', $_POST ) ) {
         // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
+            //TODO: clean this up.
             case 'view':
                 check_admin_referer( 'doorbitch_view_export_nonce' );
                 $this->visible_event = $_POST[ 'event' ];
@@ -41,11 +38,6 @@ class Doorbitch_Admin
             
             case 'export':
                 check_admin_referer( 'doorbitch_view_export_nonce' );
-                // function export_this_event () {
-                // $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
-                // }
-                // add_action( 'admin_menu', 'export_this_event' );
-                // $_POST[ 'exported-file' ] = $this->exported_file;
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
