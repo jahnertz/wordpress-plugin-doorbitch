@@ -11,6 +11,7 @@ get_header();
 global $doorbitch;
 $options = get_option( DOORBITCH__OPTIONS );
 $success = NULL;
+$dataset = '';
 
 if ( ! empty( $_POST ) ) {
 	$submission_errors = array();
@@ -42,7 +43,7 @@ if ( ! empty( $_POST ) ) {
 		}
 		$doorbitch->debug( $dataset );
 		$success = $doorbitch->add_data( $options[ 'current_event' ], $dataset );
-		if ( $success ){ array_push( $submission_errors, 'The data could not be saved.' ); }
+		if ( ! $success ){ array_push( $submission_errors, 'The data could not be saved.' ); }
 	}
 } else {
 	$doorbitch->debug( 'There is no post data' );
