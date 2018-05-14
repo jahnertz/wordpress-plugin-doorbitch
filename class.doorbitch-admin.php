@@ -42,7 +42,7 @@ class Doorbitch_Admin
             case 'export':
                 check_admin_referer( 'doorbitch_view_export_nonce' );
                 // function export_this_event () {
-                $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
+                // $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
                 // }
                 // add_action( 'admin_menu', 'export_this_event' );
                 // $_POST[ 'exported-file' ] = $this->exported_file;
@@ -105,6 +105,7 @@ class Doorbitch_Admin
     public function create_admin_page()
     {
         // if ( Doorbitch::check_buttons() ) return;
+        if ( $this->check_export() ) return;
         $this->options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
@@ -223,6 +224,25 @@ class Doorbitch_Admin
             ?>
         </div>
         <?php
+    }
+
+    public function check_export () {
+        if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
+            $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
+            $method = '';
+            $form_fields = array ( 'event', 'action' );
+
+            if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
+                return true;
+            }
+
+            if ( ! WP_Filesystem( $creds ) ) {
+                request_filesystem_credentials( $url, $method, true, false, $form_fields );
+                return true;
+            }
+            $this->exported_file = Doorbitch::export_event( $_POST[ 'event' ] );
+        }
+
     }
 
     public function check_buttons () {

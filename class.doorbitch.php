@@ -238,19 +238,20 @@ class Doorbitch {
     	$spreadsheet = self::create_spreadsheet( $event );
 
         // Fields that need to be persist:
-        $persist = array ( 'event', 'action' );
+        // $persist = array ( 'event', 'action' );
 
-        // Get credentials:
-        $method = ''; //ftp or empty.
-        $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
-        if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
-            return true;
-        }
+        // // Get credentials:
+        // $method = ''; //ftp or empty.
+        
+        // $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
+        // if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
+        //     return true;
+        // }
 
-        if ( ! WP_Filesystem( $creds ) ) {
-            request_filesystem_credentials( $url, $method, true, false, $form_fields );
-            return true;
-        }
+        // if ( ! WP_Filesystem( $creds ) ) {
+        //     request_filesystem_credentials( $url, $method, true, false, $form_fields );
+        //     return true;
+        // }
 
 
         // create the export directory
