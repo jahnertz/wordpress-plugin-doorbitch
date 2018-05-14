@@ -307,6 +307,40 @@ class Doorbitch {
         return $filename;
     }
 
+
+    public static function check_buttons () {
+        if ( ! isset( $_POST[ 'action' ] ) || $_POST[ 'action' ] != 'export' ) return false;
+
+        // check_admin_referer( 'doorbitch_view_export_nonce' );
+
+        $form_fields = array( 'event', 'action' );
+        $method = '';
+
+        if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
+            $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
+            if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
+                return true;
+            }
+
+            if ( ! WP_Filesystem( $creds ) ) {
+                request_filesystem_credentials( $url, $method, true, false, $form_fields );
+                return true;
+            }
+
+            $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+            $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $_POST[ 'event' ] ) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+
+            global $wp_filesystem;
+            // if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
+            if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', 0664 ) ) {
+                echo "error saving file!";
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public static function get_registrants( $event ) {
         global $wpdb;
 

@@ -104,7 +104,7 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        if ( $this->check_buttons() ) return;
+        if ( Doorbitch::check_buttons() ) return;
         $this->options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
@@ -227,7 +227,6 @@ class Doorbitch_Admin
 
     public function check_buttons () {
         // TODO: move this to doorbitch class.
-        Doorbitch::debug( 'checking buttons' );
         if ( ! isset( $_POST[ 'action' ] ) || $_POST[ 'action' ] != 'export' ) return false;
 
         // check_admin_referer( 'doorbitch_view_export_nonce' );
@@ -247,12 +246,13 @@ class Doorbitch_Admin
             }
 
             $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
-            $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+            $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $_POST[ 'event' ] ) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
 
             global $wp_filesystem;
             // if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', FS_CHMOD_FILE ) ) {
             if ( ! $wp_filesystem->put_contents( $filename, 'Test file contents', 0664 ) ) {
                 echo "error saving file!";
+                return false;
             }
         }
 
