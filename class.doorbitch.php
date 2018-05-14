@@ -284,10 +284,10 @@ class Doorbitch {
         // global $wp_filesystem;
 
         // create the export directory
-        // $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+        $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
         // $export_dir = '/var/tmp';
         // $filename = trailingslashit( $export_dir ) . preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
-        $filename = tempnam( "/tmp" , preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx' );
+        $filename = tempnam( trailingslashit( $export_dir ), preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx' );
 
         // if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
 		// add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
