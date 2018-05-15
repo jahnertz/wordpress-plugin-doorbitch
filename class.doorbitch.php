@@ -23,9 +23,9 @@ class Doorbitch {
 		} 
 
 		// Show _POST data:
-		foreach ( $_POST as $key => $value) {
-			$this->debug( $key . ':' . $value );
-		}
+		// foreach ( $_POST as $key => $value) {
+		// 	$this->debug( $key . ':' . $value );
+		// }
 
 		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
 		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
@@ -369,8 +369,8 @@ class Doorbitch {
     }
 
 	public static function debug_show() {
+		echo "<h4>DOORBITCH DEBUG:</h4>";
 		if ( ! empty( self::$debug_messages ) ) {
-			echo "<h4>DOORBITCH DEBUG:</h4>";
 			echo "<div class='doorbitch-debug'>";
 			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
 				print_r( self::$debug_messages[$i] );
