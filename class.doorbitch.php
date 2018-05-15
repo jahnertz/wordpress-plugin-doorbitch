@@ -245,7 +245,7 @@ class Doorbitch {
 	}
 
     public static function export_records( $event ) {
-    	$spreadsheet = self::create_spreadsheet( $event );
+    	if ( ! $spreadsheet = self::create_spreadsheet( $event ) ) return false;
         $export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
         $export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
         $temp_dir = trailingslashit( sys_get_temp_dir() );
