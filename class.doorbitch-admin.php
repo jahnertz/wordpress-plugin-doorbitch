@@ -300,6 +300,14 @@ class Doorbitch_Admin
             'options-section'
         );      
 
+        add_settings_field(
+            'debug_mode', 
+            'Debug Mode', 
+            array( $this, 'debug_mode_callback' ), 
+            'doorbitch-settings-admin', 
+            'options-section'
+        );      
+
     }
 
     /**
@@ -323,6 +331,12 @@ class Doorbitch_Admin
 
         if( isset( $input['form_html'] ) )
             $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
+
+        if( isset( $input[ 'debug_mode' ] ) ) {
+            $new_input[ 'debug_mode' ] = $input[ 'debug_mode' ];
+        } else {
+            $new_input[ 'debug_mode' ] = 0;
+        }
         // TODO: create list of required fields and save it to options.
 
         return $new_input;
@@ -375,6 +389,14 @@ class Doorbitch_Admin
             'textarea_name' => 'doorbitch_options[form_html]'
         );
         wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
+    }
+
+    public function debug_mode_callback()
+    {
+        printf(
+            '<input type="checkbox" id="debug_mode" name="doorbitch_options[debug_mode]" value=1 checked="%s" />',
+            isset( $this->options[ 'debug_mode' ] ) ? esc_attr( $this->options[ 'debug_mode' ] ) : ''
+        );
     }
 
 

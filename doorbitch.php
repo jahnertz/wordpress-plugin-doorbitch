@@ -14,7 +14,7 @@ Author URI: https://jhanrahan.com.au
 global $doorbitch;
 
 define( 'DOORBITCH__DATABASE_VERSION', 1.2 );
-define( 'DOORBITCH__DEBUG_MODE', true );
+// define( 'DOORBITCH__DEBUG_MODE', true );
 // todo: make this an option!
 define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'DOORBITCH__PLUGIN_DIR_URL', plugin_dir_url( __FILE__) );
@@ -27,14 +27,3 @@ $doorbitch = new Doorbitch;
 add_action( 'init', array( &$doorbitch, 'init' ), 1 );
 
 register_activation_hook( __FILE__, array( $doorbitch, 'install' ) );
-// add_action( 'plugins_loaded', array( $doorbitch, 'dump_options' ) );
-
-// Add debugger assets if we're in debug mode.
-if ( DOORBITCH__DEBUG_MODE ){
-	function enqueue_debug_styles() { 
-		wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
-	}
-	add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
-	add_action( 'admin_notices', array( $doorbitch, 'debug_show' ) );
-	add_action( 'wp_footer', array( $doorbitch, 'debug_show' ) );
-}

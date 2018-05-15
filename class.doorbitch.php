@@ -53,6 +53,15 @@ class Doorbitch {
 		//upgrade the database if neccessary:
 		// add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
 
+		// Add debug mode hooks if it's activated:
+		if ( $this->options[ 'debug_mode' ] == true ) {
+			function enqueue_debug_styles() { 
+				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
+			}
+			add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
+			add_action( 'admin_notices', array( get_called_class(), 'debug_show' ) );
+			add_action( 'wp_footer', array( get_called_class(), 'debug_show' ) );
+		}
 	}
 
 	public function install() {
@@ -102,12 +111,13 @@ class Doorbitch {
 		$this->options[ 'events' ] = serialize( $event_array );
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
+		$this->options[ 'debug_mode' ] = false;
 
 		update_option( 'doorbitch_options', $this->options );
 		$this->debug( 'saving options' );
 
 		// show error output on plugin activation
-		if ( defined('WP_DEBUG') && true === WP_DEBUG && DOORBITCH__DEBUG_MODE ) { 
+		if ( defined('WP_DEBUG') && true === WP_DEBUG ) { 
 		    function doorbitch_activated_plugin_error() {
 		        update_option( 'doorbitch_error',  ob_get_contents() );
 		    }
@@ -338,12 +348,13 @@ class Doorbitch {
         return $spreadsheet;
     }
 
-	public function debug_show() {
-		if ( ! empty( $debug_messages ) ) {
+	public static function debug_show() {
+		if ( ! empty( self::$debug_messages ) ) {
 			echo "<div class='doorbitch-debug'>";
+			echo "<h4>DEBUG:</h4>";
 			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
 				print_r( self::$debug_messages[$i] );
-				error_log( $debug_messages[$i] );
+				// error_log( self::$debug_messages[$i] );
 			}
 			echo "</div>";
 		}
