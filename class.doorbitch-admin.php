@@ -236,7 +236,7 @@ class Doorbitch_Admin
                 request_filesystem_credentials( $url, $method, true, false, $form_fields );
                 return true;
             }
-            $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
+            $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ], 'csv' );
         }
 
     }

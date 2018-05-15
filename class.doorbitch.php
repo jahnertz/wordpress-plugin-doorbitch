@@ -244,25 +244,46 @@ class Doorbitch {
 		return true;
 	}
 
-    public static function export_records( $event ) {
-    	if ( ! $spreadsheet = self::create_spreadsheet( $event ) ) return false;
-        $export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
-        $export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
-        $temp_dir = trailingslashit( sys_get_temp_dir() );
-        $filename = preg_replace( '/\s/', '-', $event ) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
-        $filepath = $export_dir . $filename;
-        $temp_filepath = $temp_dir . $filename;
+    public static function export_records( $event, $format ) {
+		$export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
+		$export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
+		$temp_dir = trailingslashit( sys_get_temp_dir() );
+		$filename = preg_replace( '/\s/', '-', $event ) . '_' . current_time( 'Y-m-d_Hi') . '.' . $format;
+		$filepath = $export_dir . $filename;
+		$temp_filepath = $temp_dir . $filename;
 
-        $writer = new Xlsx( $spreadsheet );
-        $writer->save( $temp_filepath );
+    	switch ( $format ) {
+    		case 'xlsx':
+		    	if ( ! $spreadsheet = self::create_spreadsheet( $event ) ) return false;
 
-        global $wp_filesystem;
+		        $writer = new Xlsx( $spreadsheet );
+		        $writer->save( $temp_filepath );
 
-        //create the export directory if it doesn't already exist:
-        if ( ! file_exists( $export_dir ) ) { $wp_filesystem->mkdir( $export_dir ); }
-        $wp_filesystem->move( $temp_filepath, $filepath );
+		        global $wp_filesystem;
 
-        return $export_dir_url . $filename;
+		        //create the export directory if it doesn't already exist:
+		        if ( ! file_exists( $export_dir ) ) { $wp_filesystem->mkdir( $export_dir ); }
+		        $wp_filesystem->move( $temp_filepath, $filepath );
+
+		        return $export_dir_url . $filename;
+    			break;
+
+    		case 'csv':
+    			$csv_data = self::create_csv ( $event );
+
+    			global $wp_filesystem;
+    			
+    			if (! $wp_filesystem->put_contents( $filepath, $csv_data, FS_CHMOD_FILE ) ) {
+    				echo "error saving csv file.";
+    			}
+    			return $export_dir_url . $filename;
+    			break;
+
+    		
+    		default:
+    			# code...
+    			break;
+    	}
     }
 
     public static function get_registrants( $event ) {
@@ -300,14 +321,14 @@ class Doorbitch {
     	foreach ( $entries[0] as $header => $value ) {
     		$csv .= $header . ',' ;
     	}
-    	$csv .= '\n';
+    	$csv .= "\n";
 
     	// Add entries:
     	foreach ( $entries as $entry ) {
     		foreach ( $entry as $field => $value ) {
     			$csv .= $value . ',' ;
     		}
-    		$csv .= '\n';
+    		$csv .= "\n";
     	}
 
     	return $csv;
