@@ -18,10 +18,10 @@ class Doorbitch_Admin
 
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
-        // Deal with _POST data
         $this->options = get_option( DOORBITCH__OPTIONS );
 
-        if ( array_key_exists( 'action', $_POST ) ) {
+        // Deal with _POST data
+        if ( $_POST ) {
         // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
             //TODO: clean this up.
@@ -76,6 +76,8 @@ class Doorbitch_Admin
                 break;
 
             }
+        } else {
+            $this->visible_event = $this->options[ 'current_event' ];
         }
     }
 
