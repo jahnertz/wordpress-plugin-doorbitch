@@ -22,6 +22,9 @@ class Doorbitch_Admin
 
         // Deal with _POST data
         if ( $_POST ) {
+            foreach ( $_POST as $key => $value) {
+                Doorbitch::debug( $key . ': ' . $value );
+            }
         // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
             //TODO: clean this up.
@@ -222,7 +225,7 @@ class Doorbitch_Admin
     public function check_fs_creds () {
         if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
             $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
-            $method = 'ftp';
+            $method = '';
             $form_fields = array ( 'event', 'action' );
 
             if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
