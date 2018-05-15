@@ -251,10 +251,6 @@ class Doorbitch {
 
         //create the export directory if it doesn't already exist:
         if ( ! file_exists( $export_dir ) ) { $wp_filesystem->mkdir( $export_dir ); }
-		// if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
-		// 	add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
-		// 	return $_POST;
-		// }
         $wp_filesystem->move( $temp_filepath, $filepath );
 
         return $export_dir_url . $filename;
