@@ -248,6 +248,8 @@ class Doorbitch {
         $writer->save( $temp_filepath );
 
         global $wp_filesystem;
+
+        $wp_filesystem->mkdir( $export_dir );
 		// if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
 		// 	add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
 		// 	return $_POST;
