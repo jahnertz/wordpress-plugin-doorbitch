@@ -5,7 +5,7 @@ class Doorbitch_Admin
     private $options;
 
     public  $visible_event = '';
-    public  $exported_file = '';
+    public  $exported_file;
     private $new_event;
     private $del_event;
     private $export;

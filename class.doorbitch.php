@@ -239,7 +239,6 @@ class Doorbitch {
         $export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
         $export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
         $temp_dir = trailingslashit( sys_get_temp_dir() );
-        // $upload_dir = wp_upload_dir();
         $filename = preg_replace( '/\s/', '-', $event ) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
         $filepath = $export_dir . $filename;
         $temp_filepath = $temp_dir . $filename;
