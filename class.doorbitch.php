@@ -269,7 +269,9 @@ class Doorbitch {
     			break;
 
     		case 'csv':
-    			$csv_data = self::create_csv ( $event );
+    			if ( ! $csv_data = self::create_csv ( $event ) ) {
+    				return false;
+    			}
 
     			global $wp_filesystem;
 
@@ -277,11 +279,6 @@ class Doorbitch {
     				echo "error saving csv file.";
     			}
     			return $export_dir_url . $filename;
-    			break;
-
-    		
-    		default:
-    			# code...
     			break;
     	}
     }
@@ -314,7 +311,9 @@ class Doorbitch {
     }
 
     public static function create_csv ( $event ) {
-    	$entries = self::get_registrants ( $event );
+    	if ( ! $entries = self::get_registrants ( $event ) ) {
+    		return false;
+    	}
     	$csv = 'Event:,' . $event . "\n";
 
     	// Add headers:
