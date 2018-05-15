@@ -17,6 +17,7 @@ define( 'DOORBITCH__DATABASE_VERSION', 1.2 );
 define( 'DOORBITCH__DEBUG_MODE', true );
 // todo: make this an option!
 define( 'DOORBITCH__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+define( 'DOORBITCH__PLUGIN_DIR_URL', plugin_dir_url( __FILE__) );
 define( 'DOORBITCH__OPTIONS', 'doorbitch_options' );
 
 require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch.php' );

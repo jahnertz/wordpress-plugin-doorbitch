@@ -236,21 +236,25 @@ class Doorbitch {
 
     public static function export_records( $event ) {
     	$spreadsheet = self::create_spreadsheet( $event );
-        $export_dir = DOORBITCH__PLUGIN_DIR . 'export';
+        $export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
+        $export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
+        $temp_dir = trailingslashit( sys_get_temp_dir() );
         // $upload_dir = wp_upload_dir();
-        $temp_filename = tempnam( sys_get_temp_dir(), preg_replace('/\s/', '-', $event) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx' );
+        $filename = preg_replace( '/\s/', '-', $event ) . '_' . current_time( 'Y-m-d_Hi') . '.xlsx';
+        $filepath = $export_dir . $filename;
+        $temp_filepath = $temp_dir . $filename;
+
+        $writer = new Xlsx( $spreadsheet );
+        $writer->save( $temp_filepath );
 
         global $wp_filesystem;
+		// if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
+		// 	add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
+		// 	return $_POST;
+		// }
+        $wp_filesystem->move( $temp_filepath, $filepath );
 
-        if ( ! $wp_filesystem->mkdir( $export_dir ) ) {
-		add_settings_error( 'doorbitch', 'create_directory', esc_html__('Unable to create the export directory.', 'doortbitch'), 'error' );
-		return $_POST;
-        }
-
-        $writer = new Xlsx($spreadsheet);
-        $writer->save( $temp_filename );
-        $wp_filesystem->move( $temp_filename, trailingslashit( $export_dir ) . $filename );
-        return $filename;
+        return $export_dir_url . $filename;
     }
 
     public static function get_registrants( $event ) {

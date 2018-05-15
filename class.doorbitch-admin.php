@@ -37,7 +37,7 @@ class Doorbitch_Admin
                 break;
             
             case 'export':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
+                // check_admin_referer( 'doorbitch_view_export_nonce' );
                 $this->visible_event = $_POST[ 'event' ];
                 break;
 
@@ -182,7 +182,7 @@ class Doorbitch_Admin
                                         printf(
                                             '<a href=%s alt="exported file">%s</a>',
                                             $this->exported_file,
-                                            $this->exported_file
+                                            basename( $this->exported_file )
                                         );
                                         ?>
                                     </td>
@@ -231,7 +231,7 @@ class Doorbitch_Admin
                 request_filesystem_credentials( $url, $method, true, false, $form_fields );
                 return true;
             }
-            $this->exported_file = Doorbitch::export_event( $_POST[ 'event' ] );
+            $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ] );
         }
 
     }
