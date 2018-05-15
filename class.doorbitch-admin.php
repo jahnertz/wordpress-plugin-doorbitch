@@ -396,9 +396,10 @@ class Doorbitch_Admin
 
     public function debug_mode_callback()
     {
+        if ( $this->options[ 'debug_mode' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
         printf(
-            '<input type="checkbox" id="debug_mode" name="doorbitch_options[debug_mode]" value=1 checked="%s" />',
-            isset( $this->options[ 'debug_mode' ] ) ? esc_attr( $this->options[ 'debug_mode' ] ) : ''
+            '<input type="checkbox" id="debug_mode" name="doorbitch_options[debug_mode]" %s />',
+            $checked
         );
     }
 

@@ -23,9 +23,9 @@ class Doorbitch {
 		} 
 
 		// Show _POST data:
-		// foreach ( $_POST as $key => $value) {
-		// 	$this->debug( $key . ':' . $value );
-		// }
+		foreach ( $_POST as $key => $value) {
+			$this->debug( $key . ':' . $value );
+		}
 
 		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
 		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
@@ -272,7 +272,7 @@ class Doorbitch {
     			$csv_data = self::create_csv ( $event );
 
     			global $wp_filesystem;
-    			
+
     			if (! $wp_filesystem->put_contents( $filepath, $csv_data, FS_CHMOD_FILE ) ) {
     				echo "error saving csv file.";
     			}
@@ -315,7 +315,7 @@ class Doorbitch {
 
     public static function create_csv ( $event ) {
     	$entries = self::get_registrants ( $event );
-    	$csv = '';
+    	$csv = 'Event:,' . $event . "\n";
 
     	// Add headers:
     	foreach ( $entries[0] as $header => $value ) {
@@ -371,8 +371,8 @@ class Doorbitch {
 
 	public static function debug_show() {
 		if ( ! empty( self::$debug_messages ) ) {
+			echo "<h4>DOORBITCH DEBUG:</h4>";
 			echo "<div class='doorbitch-debug'>";
-			echo "<h4>DEBUG:</h4>";
 			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
 				print_r( self::$debug_messages[$i] );
 				// error_log( self::$debug_messages[$i] );
