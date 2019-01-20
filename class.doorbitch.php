@@ -27,8 +27,8 @@ class Doorbitch {
 		// 	$this->debug( $key . ':' . $value );
 		// }
 
-		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
-		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
+		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-router.php' );
+		$doorbitch_router = new Doorbitch_Router();
 	
 		//Add admin options page under 'tools' section:
 		if( is_admin() ) {

@@ -1,16 +1,16 @@
 <?php
 
-Class Doorbitch_Virtual_Pages
+Class Doorbitch_Router
 {
 	public function __construct()
 	{
 
-		// doorbitch::debug( 'Initializing VPages' );
-		function virtualpage_query_vars ( $vars ) {
+		doorbitch::debug( 'Initializing Router' );
+		function doorbitch_router_query_vars ( $vars ) {
 			$vars[] = 'virtualpage';
 			return $vars;
 		}
-		add_filter( 'query_vars', 'virtualpage_query_vars' );
+		add_filter( 'query_vars', 'doorbitch_router_query_vars' );
 
 		// Add redirects for virtual page urls to index.php?virtualpage=name
 		// permalink settings in admin inteface must be saved. This can be done with flush_rewrite_rules() on theme activation.
