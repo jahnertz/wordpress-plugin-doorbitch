@@ -295,13 +295,9 @@ class Doorbitch_Admin
             [ 'class' => 'hidden' ]
         );
 
-        add_settings_field(
-            'form_html', 
-            'Form HTML', 
-            array( $this, 'form_html_callback' ), 
-            'doorbitch-settings-admin', 
-            'options-section'
-        );      
+        /*/
+        /* Settings tab:
+        /*/
 
         add_settings_field(
             'require_auth',
@@ -310,6 +306,22 @@ class Doorbitch_Admin
             'doorbitch-settings-admin',
             'options-section'
         );
+
+        add_settings_field(
+            'require_auth',
+            'Require Login',
+            array( $this, 'require_auth_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
+        add_settings_field(
+            'form_html', 
+            'Form HTML', 
+            array( $this, 'form_html_callback' ), 
+            'doorbitch-settings-admin', 
+            'options-section'
+        );      
 
         add_settings_field(
             'debug_mode', 
@@ -340,14 +352,14 @@ class Doorbitch_Admin
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
-        if( isset( $input['form_html'] ) )
-            $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
-
         if( isset( $input[ 'require_auth' ] ) ) {
             $new_input[ 'require_auth' ] = $input[ 'require_auth' ];
         } else {
             $new_input[ 'require_auth' ] = 1;
         }
+
+        if( isset( $input['form_html'] ) )
+            $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
 
         if( isset( $input[ 'debug_mode' ] ) ) {
             $new_input[ 'debug_mode' ] = $input[ 'debug_mode' ];
@@ -399,15 +411,6 @@ class Doorbitch_Admin
         );
     }
 
-    public function form_html_callback()
-    {
-        $wp_editor_settings = array(
-            'media_buttons' => true,
-            'textarea_name' => 'doorbitch_options[form_html]'
-        );
-        wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
-    }
-
     public function require_auth_callback()
     {
         if ( $this->options[ 'require_auth' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
@@ -415,6 +418,15 @@ class Doorbitch_Admin
             '<input type="checkbox" id="require_auth" name="doorbitch_options[require_auth]" %s />',
             $checked
         );
+    }
+
+    public function form_html_callback()
+    {
+        $wp_editor_settings = array(
+            'media_buttons' => true,
+            'textarea_name' => 'doorbitch_options[form_html]'
+        );
+        wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
     }
 
     public function debug_mode_callback()
