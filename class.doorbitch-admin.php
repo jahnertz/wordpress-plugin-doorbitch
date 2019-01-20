@@ -22,9 +22,11 @@ class Doorbitch_Admin
 
         // Deal with _POST data
         if ( $_POST ) {
-            foreach ( $_POST as $key => $value) {
-                Doorbitch::debug( $key . ': ' . $value );
-            }
+            // show all _POST data in debug area:
+            // TODO: this breaks because it's trying to convert an array to a string.
+            // foreach ( $_POST as $key => $value) {
+            //     Doorbitch::debug( $key . ': ' . $value );
+            // }
         // check_admin_referer( 'doorbitch-settings-admin' );
         switch ( $_POST[ 'action' ] ) {
             //TODO: clean this up.
@@ -353,7 +355,7 @@ class Doorbitch_Admin
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
         if( isset( $input['form_url'] ) )
-            $new_input['form_url'] = sanitize_text_field( $input[' form_url' ] );
+            $new_input['form_url'] = sanitize_text_field( $input[ 'form_url' ] );
 
         if( isset( $input[ 'require_auth' ] ) ) {
             $new_input[ 'require_auth' ] = $input[ 'require_auth' ];
