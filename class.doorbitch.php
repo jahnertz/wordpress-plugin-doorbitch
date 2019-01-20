@@ -6,7 +6,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Doorbitch {
-	//TODO: initiated defaults to false, save as an option
 	public $debug_mode = true;
 	public static $debug_messages = array();
 	public $table_suffix = 'doorbitch';
@@ -105,13 +104,10 @@ class Doorbitch {
         	array_push( $event_array, $event->event );
         }
 
- 	// 	if ( array_key_exists( 'events' , $this->options ) ) { $this->options[ 'events' ] = serialize( $event_array ); }
-		// if ( array_key_exists( 'form_title' , $this->options ) ) { $this->options[ 'form_title ' ] = 'Register'; }
-		// if ( array_key_exists( 'form_html' , $this->options ) ) { $this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' ); }
 		$this->options[ 'events' ] = serialize( $event_array );
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
-        $this->options[ 'private' ] = false;
+        $this->options[ 'require_auth' ] = true;
 		$this->options[ 'debug_mode' ] = false;
 
 		update_option( 'doorbitch_options', $this->options );

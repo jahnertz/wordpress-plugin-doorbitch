@@ -304,9 +304,9 @@ class Doorbitch_Admin
         );      
 
         add_settings_field(
-            'private',
-            'Private',
-            array( $this, 'private_callback' ),
+            'require_auth',
+            'Require Login',
+            array( $this, 'require_auth_callback' ),
             'doorbitch-settings-admin',
             'options-section'
         );
@@ -343,10 +343,10 @@ class Doorbitch_Admin
         if( isset( $input['form_html'] ) )
             $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
 
-        if( isset( $input[ 'private' ] ) ) {
-            $new_input[ 'private' ] = $input[ 'private' ];
+        if( isset( $input[ 'require_auth' ] ) ) {
+            $new_input[ 'require_auth' ] = $input[ 'require_auth' ];
         } else {
-            $new_input[ 'private' ] = 0;
+            $new_input[ 'require_auth' ] = 1;
         }
 
         if( isset( $input[ 'debug_mode' ] ) ) {
@@ -408,11 +408,11 @@ class Doorbitch_Admin
         wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
     }
 
-    public function private_callback()
+    public function require_auth_callback()
     {
-        if ( $this->options[ 'private' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
+        if ( $this->options[ 'require_auth' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
         printf(
-            '<input type="checkbox" id="private" name="doorbitch_options[private]" %s />',
+            '<input type="checkbox" id="require_auth" name="doorbitch_options[require_auth]" %s />',
             $checked
         );
     }
