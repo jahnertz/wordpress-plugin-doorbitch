@@ -300,9 +300,9 @@ class Doorbitch_Admin
         /*/
 
         add_settings_field(
-            'require_auth',
-            'Require Login',
-            array( $this, 'require_auth_callback' ),
+            'form_url',
+            'Form URL',
+            array( $this, 'form_url_callback'),
             'doorbitch-settings-admin',
             'options-section'
         );
@@ -408,6 +408,17 @@ class Doorbitch_Admin
         printf(
             '<input type="text" id="current_event" name="doorbitch_options[current_event]" value="%s" />',
             isset( $this->options['current_event'] ) ? esc_attr( $this->options['current_event'] ) : ''
+        );
+    }
+
+    public function form_url_callback()
+    {
+        global $doorbitch;
+        $default_form_url = Doorbitch::default_form_url;
+        printf(
+            '%s/<input type="text" id="form_url" name="doorbitch_options[form_url]" value="%s" />',
+            get_site_url(),
+            isset( $this->options['form_url'] ) ? esc_attr( $this->options['form_url'] ) : $default_form_url
         );
     }
 

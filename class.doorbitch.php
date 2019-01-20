@@ -6,6 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Doorbitch {
+    const default_form_url = 'register';
 	public $debug_mode = true;
 	public static $debug_messages = array();
 	public $table_suffix = 'doorbitch';
