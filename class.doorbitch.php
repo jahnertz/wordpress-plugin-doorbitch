@@ -110,6 +110,7 @@ class Doorbitch {
 		$this->options[ 'initiated' ] = true;
         $this->options[ 'require_auth' ] = true;
 		$this->options[ 'debug_mode' ] = false;
+        $this->options[ 'form_url' ] = self::default_form_url;
 
 		update_option( 'doorbitch_options', $this->options );
 		$this->debug( 'saving options' );
