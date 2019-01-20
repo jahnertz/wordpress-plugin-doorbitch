@@ -114,6 +114,9 @@ class Doorbitch {
 		update_option( 'doorbitch_options', $this->options );
 		$this->debug( 'saving options' );
 
+        // reset rewrite rules - required by the router
+        flush_rewrite_rules();
+
 		// show error output on plugin activation
 		if ( defined('WP_DEBUG') && true === WP_DEBUG ) { 
 		    function doorbitch_activated_plugin_error() {
