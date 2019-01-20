@@ -111,6 +111,7 @@ class Doorbitch {
 		$this->options[ 'events' ] = serialize( $event_array );
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
+        $this->options[ 'private' ] = false;
 		$this->options[ 'debug_mode' ] = false;
 
 		update_option( 'doorbitch_options', $this->options );

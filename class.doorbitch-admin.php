@@ -304,6 +304,14 @@ class Doorbitch_Admin
         );      
 
         add_settings_field(
+            'private',
+            'Private',
+            array( $this, 'private_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
+        add_settings_field(
             'debug_mode', 
             'Debug Mode', 
             array( $this, 'debug_mode_callback' ), 
@@ -334,6 +342,12 @@ class Doorbitch_Admin
 
         if( isset( $input['form_html'] ) )
             $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
+
+        if( isset( $input[ 'private' ] ) ) {
+            $new_input[ 'private' ] = $input[ 'private' ];
+        } else {
+            $new_input[ 'private' ] = 0;
+        }
 
         if( isset( $input[ 'debug_mode' ] ) ) {
             $new_input[ 'debug_mode' ] = $input[ 'debug_mode' ];
@@ -392,6 +406,15 @@ class Doorbitch_Admin
             'textarea_name' => 'doorbitch_options[form_html]'
         );
         wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
+    }
+
+    public function private_callback()
+    {
+        if ( $this->options[ 'private' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
+        printf(
+            '<input type="checkbox" id="private" name="doorbitch_options[private]" %s />',
+            $checked
+        );
     }
 
     public function debug_mode_callback()
