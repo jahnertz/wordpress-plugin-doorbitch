@@ -352,6 +352,9 @@ class Doorbitch_Admin
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
+        if( isset( $input['form_url'] ) )
+            $new_input['form_url'] = sanitize_text_field( $input[' form_url' ] );
+
         if( isset( $input[ 'require_auth' ] ) ) {
             $new_input[ 'require_auth' ] = $input[ 'require_auth' ];
         } else {
