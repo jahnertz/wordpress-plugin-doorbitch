@@ -5,8 +5,6 @@ Class Doorbitch_Router
 
 	public function __construct()
 	{
-		doorbitch::debug( 'Initializing Router' );
-
 		function doorbitch_router_query_vars ( $vars ) {
 			$vars[] = 'virtualpage';
 			return $vars;
@@ -44,8 +42,12 @@ Class Doorbitch_Router
 			if ( array_key_exists( 'virtualpage', $wp_query->query_vars ) ) {
 				switch ( $wp_query->query_vars['virtualpage'] ) {
 					case $route:
-						// check the required privileges for the page and redirect if necessary:
-						if ( !current_user_can( 'edit_posts' ) ){ auth_redirect(); }
+						// check if requiring auth is set and redirect if necessary.
+						if ( $options[ 'require_auth' ] && !current_user_can( 'edit_posts' )) {
+							auth_redirect();
+							break;
+						}
+
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-frontend.php';
 						// Hide the admin bar:
 						add_filter( 'show_admin_bar', '__return_false' );

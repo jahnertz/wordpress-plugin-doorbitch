@@ -254,7 +254,7 @@ class Doorbitch_Admin
         register_setting(
             'doorbitch_options_group', // Option group
             'doorbitch_options', // Option name
-            array( $this, 'sanitize' ) // Sanitize
+            array( $this, 'sanitize_callback' ) // Sanitize
         );
 
         add_settings_section(
@@ -343,7 +343,7 @@ class Doorbitch_Admin
      *
      * @param array $input Contains all settings fields as array keys
      */
-    public function sanitize( $input )
+    public function sanitize_callback( $input )
     {
         if( isset( $input['initiated'] ) )
             $new_input['initiated'] = sanitize_text_field( $input['initiated'] );
@@ -363,7 +363,7 @@ class Doorbitch_Admin
         if( isset( $input[ 'require_auth' ] ) ) {
             $new_input[ 'require_auth' ] = $input[ 'require_auth' ];
         } else {
-            $new_input[ 'require_auth' ] = 1;
+            $new_input[ 'require_auth' ] = 0;
         }
 
         if( isset( $input['form_html'] ) )
