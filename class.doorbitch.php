@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Doorbitch {
-	//TODO: initiated defaults to false, save as an option
+    const default_form_url = 'register';
 	public $debug_mode = true;
 	public static $debug_messages = array();
 	public $table_suffix = 'doorbitch';
@@ -27,8 +27,11 @@ class Doorbitch {
 		// 	$this->debug( $key . ':' . $value );
 		// }
 
-		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-virtual-pages.php' );
-		$doorbitch_virtual_pages = new Doorbitch_Virtual_Pages();
+        if ( ! is_admin() ) {
+            // add routing class for virtual pages etc.
+    		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-router.php' );
+    		$doorbitch_router = new Doorbitch_Router();
+        }
 	
 		//Add admin options page under 'tools' section:
 		if( is_admin() ) {
@@ -105,16 +108,18 @@ class Doorbitch {
         	array_push( $event_array, $event->event );
         }
 
- 	// 	if ( array_key_exists( 'events' , $this->options ) ) { $this->options[ 'events' ] = serialize( $event_array ); }
-		// if ( array_key_exists( 'form_title' , $this->options ) ) { $this->options[ 'form_title ' ] = 'Register'; }
-		// if ( array_key_exists( 'form_html' , $this->options ) ) { $this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' ); }
 		$this->options[ 'events' ] = serialize( $event_array );
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
 		$this->options[ 'initiated' ] = true;
+        $this->options[ 'require_auth' ] = true;
 		$this->options[ 'debug_mode' ] = false;
+        $this->options[ 'form_url' ] = self::default_form_url;
 
 		update_option( 'doorbitch_options', $this->options );
 		$this->debug( 'saving options' );
+
+        // reset rewrite rules - required by the router
+        flush_rewrite_rules();
 
 		// show error output on plugin activation
 		if ( defined('WP_DEBUG') && true === WP_DEBUG ) { 
@@ -277,6 +282,7 @@ class Doorbitch {
 
     			if (! $wp_filesystem->put_contents( $filepath, $csv_data, FS_CHMOD_FILE ) ) {
     				echo "error saving csv file.";
+                    break;
     			}
     			return $export_dir_url . $filename;
     			break;
@@ -369,22 +375,34 @@ class Doorbitch {
     }
 
 	public static function debug_show() {
-		echo "<h4>DOORBITCH DEBUG:</h4>";
-		if ( ! empty( self::$debug_messages ) ) {
-			echo "<div class='doorbitch-debug'>";
-			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
-				print_r( self::$debug_messages[$i] );
-				// error_log( self::$debug_messages[$i] );
-			}
-			echo "</div>";
-		}
+        if ( ! is_admin() ) {
+    		echo "<h4>DOORBITCH DEBUG:</h4>";
+    		if ( ! empty( self::$debug_messages ) ) {
+    			echo "<div class='doorbitch-debug'>";
+    			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
+    				print_r( '<p>' . self::$debug_messages[$i] . '<p>' );
+    				error_log( self::$debug_messages[$i] );
+    			}
+    			echo "</div>";
+    		}
+        }
+        else {
+            for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
+                error_log( self::$debug_messages[$i] );
+            }
+        }
 	}
 
-	public static function debug( $debug_text ) {
+	public static function debug( $object ) {
+        //collect debug messages and their origins:
 		$file = basename( debug_backtrace()[0]['file'] );
-		self::$debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
-
-		//TODO: Print errors from table of common errors.
+        if (is_array($object)) {
+            self::$debug_messages[] = htmlspecialchars( var_export( $object ) ) . ' -> ' . $file;
+        } elseif (is_string( $object )) {
+            self::$debug_messages[] = htmlspecialchars( $object ) . ' -> ' . $file;
+        } else {
+            self::$debug_messages[] =  'ERROR -> ' . $file;
+        }
 	}
 
 	public function dump_options() {

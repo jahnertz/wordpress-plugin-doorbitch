@@ -22,65 +22,70 @@ class Doorbitch_Admin
 
         // Deal with _POST data
         if ( $_POST ) {
-            foreach ( $_POST as $key => $value) {
-                Doorbitch::debug( $key . ': ' . $value );
-            }
+            // show all _POST data in debug area:
+            // TODO: this breaks because it's trying to convert an array to a string.
+            // foreach ( $_POST as $key => $value) {
+            //     Doorbitch::debug( $key . ': ' . $value );
+            // }
         // check_admin_referer( 'doorbitch-settings-admin' );
-        switch ( $_POST[ 'action' ] ) {
-            //TODO: clean this up.
-            case 'view':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
-                $this->visible_event = $_POST[ 'event' ];
-                break;
-            
-            case 'set as current event':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
-                Doorbitch::set_current_event( $_POST[ 'event' ] );
-                $this->visible_event = $_POST[ 'event' ];
-                break;
-            
-            case 'export':
-                // check_admin_referer( 'doorbitch_view_export_nonce' );
-                $this->visible_event = $_POST[ 'event' ];
-                break;
+        if ( array_key_exists( 'action', $_POST ) )
+        {
+            switch ( $_POST[ 'action' ] ) {
+                //TODO: clean this up.
+                case 'view':
+                    check_admin_referer( 'doorbitch_view_export_nonce' );
+                    $this->visible_event = $_POST[ 'event' ];
+                    break;
+                
+                case 'set as current event':
+                    check_admin_referer( 'doorbitch_view_export_nonce' );
+                    Doorbitch::set_current_event( $_POST[ 'event' ] );
+                    $this->visible_event = $_POST[ 'event' ];
+                    break;
+                
+                case 'export':
+                    // check_admin_referer( 'doorbitch_view_export_nonce' );
+                    $this->visible_event = $_POST[ 'event' ];
+                    break;
 
-            case 'new event':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
-                $this->new_event = true;
-                $this->visible_event = $_POST[ 'event' ];
-                break;
+                case 'new event':
+                    check_admin_referer( 'doorbitch_view_export_nonce' );
+                    $this->new_event = true;
+                    $this->visible_event = $_POST[ 'event' ];
+                    break;
 
-            case 'delete':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
-                $this->del_event = true;
-                $this->visible_event = $_POST[ 'event' ];
-                break;
+                case 'delete':
+                    check_admin_referer( 'doorbitch_view_export_nonce' );
+                    $this->del_event = true;
+                    $this->visible_event = $_POST[ 'event' ];
+                    break;
 
-            case 'delete this event':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
-                Doorbitch::remove_event( $_POST[ 'event' ] );
-                Doorbitch::set_current_event();
-                $this->visible_event = $this->options[ 'current_event' ];
-                break;
+                case 'delete this event':
+                    check_admin_referer( 'doorbitch_view_export_nonce' );
+                    Doorbitch::remove_event( $_POST[ 'event' ] );
+                    Doorbitch::set_current_event();
+                    $this->visible_event = $this->options[ 'current_event' ];
+                    break;
 
-            case 'create':
-                check_admin_referer( 'doorbitch_view_export_nonce' );
-                if ( isset( $_POST[ 'new_event_name' ] ) ) {
-                    if ( $_POST[ 'new_event_name' ] == '' ) {
-                        $this->new_event = true;
-                        Doorbitch::debug( 'Please enter an event name' );
-                        $this->visible_event = $_POST[ 'event' ];
+                case 'create':
+                    check_admin_referer( 'doorbitch_view_export_nonce' );
+                    if ( isset( $_POST[ 'new_event_name' ] ) ) {
+                        if ( $_POST[ 'new_event_name' ] == '' ) {
+                            $this->new_event = true;
+                            Doorbitch::debug( 'Please enter an event name' );
+                            $this->visible_event = $_POST[ 'event' ];
+                        }
+                        else {
+                            Doorbitch::add_event( $_POST[ 'new_event_name' ] );
+                            $this->visible_event = $_POST[ 'new_event_name' ];
+                        }
                     }
-                    else {
-                        Doorbitch::add_event( $_POST[ 'new_event_name' ] );
-                        $this->visible_event = $_POST[ 'new_event_name' ];
-                    }
+                    break;
+
                 }
-                break;
-
+            } else {
+                $this->visible_event = $this->options[ 'current_event' ];
             }
-        } else {
-            $this->visible_event = $this->options[ 'current_event' ];
         }
     }
 
@@ -249,7 +254,7 @@ class Doorbitch_Admin
         register_setting(
             'doorbitch_options_group', // Option group
             'doorbitch_options', // Option name
-            array( $this, 'sanitize' ) // Sanitize
+            array( $this, 'sanitize_callback' ) // Sanitize
         );
 
         add_settings_section(
@@ -295,6 +300,26 @@ class Doorbitch_Admin
             [ 'class' => 'hidden' ]
         );
 
+        /*/
+        /* Settings tab:
+        /*/
+
+        add_settings_field(
+            'form_url',
+            'Form URL',
+            array( $this, 'form_url_callback'),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
+        add_settings_field(
+            'require_auth',
+            'Require Login',
+            array( $this, 'require_auth_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
         add_settings_field(
             'form_html', 
             'Form HTML', 
@@ -318,7 +343,7 @@ class Doorbitch_Admin
      *
      * @param array $input Contains all settings fields as array keys
      */
-    public function sanitize( $input )
+    public function sanitize_callback( $input )
     {
         if( isset( $input['initiated'] ) )
             $new_input['initiated'] = sanitize_text_field( $input['initiated'] );
@@ -331,6 +356,15 @@ class Doorbitch_Admin
 
         if( isset( $input['current_event'] ) )
             $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
+
+        if( isset( $input['form_url'] ) )
+            $new_input['form_url'] = sanitize_text_field( $input[ 'form_url' ] );
+
+        if( isset( $input[ 'require_auth' ] ) ) {
+            $new_input[ 'require_auth' ] = $input[ 'require_auth' ];
+        } else {
+            $new_input[ 'require_auth' ] = 0;
+        }
 
         if( isset( $input['form_html'] ) )
             $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
@@ -382,6 +416,26 @@ class Doorbitch_Admin
         printf(
             '<input type="text" id="current_event" name="doorbitch_options[current_event]" value="%s" />',
             isset( $this->options['current_event'] ) ? esc_attr( $this->options['current_event'] ) : ''
+        );
+    }
+
+    public function form_url_callback()
+    {
+        global $doorbitch;
+        $default_form_url = Doorbitch::default_form_url;
+        printf(
+            '%s/<input type="text" id="form_url" name="doorbitch_options[form_url]" value="%s" />',
+            get_site_url(),
+            isset( $this->options['form_url'] ) ? esc_attr( $this->options['form_url'] ) : $default_form_url
+        );
+    }
+
+    public function require_auth_callback()
+    {
+        if ( $this->options[ 'require_auth' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
+        printf(
+            '<input type="checkbox" id="require_auth" name="doorbitch_options[require_auth]" %s />',
+            $checked
         );
     }
 
