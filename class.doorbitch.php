@@ -375,22 +375,35 @@ class Doorbitch {
     }
 
 	public static function debug_show() {
-		echo "<h4>DOORBITCH DEBUG:</h4>";
-		if ( ! empty( self::$debug_messages ) ) {
-			echo "<div class='doorbitch-debug'>";
-			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
-				print_r( self::$debug_messages[$i] );
-				// error_log( self::$debug_messages[$i] );
-			}
-			echo "</div>";
-		}
+        //display the debug messages in their special area.
+        if ( ! is_admin() ) {
+    		echo "<h4>DOORBITCH DEBUG:</h4>";
+    		if ( ! empty( self::$debug_messages ) ) {
+    			echo "<div class='doorbitch-debug'>";
+    			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
+    				print_r( self::$debug_messages[$i] );
+    				error_log( self::$debug_messages[$i] );
+    			}
+    			echo "</div>";
+    		}
+        }
+        else {
+            for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
+                error_log( self::$debug_messages[$i] );
+            }
+        }
 	}
 
-	public static function debug( $debug_text ) {
+	public static function debug( $object ) {
+        //collect debug messages and their origins:
 		$file = basename( debug_backtrace()[0]['file'] );
-		self::$debug_messages[] = '<p><i>' . htmlspecialchars( $debug_text ) . '</i> -> ' . $file . '</p>';
-
-		//TODO: Print errors from table of common errors.
+        if (is_array($object)) {
+            self::$debug_messages[] = htmlspecialchars( var_export( $object ) ) . ' -> ' . $file;
+        } elseif (is_string( $object )) {
+            self::$debug_messages[] = htmlspecialchars( $object ) . ' -> ' . $file;
+        } else {
+            self::$debug_messages[] =  'ERROR -> ' . $file;
+        }
 	}
 
 	public function dump_options() {
