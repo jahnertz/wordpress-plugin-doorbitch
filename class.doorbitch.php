@@ -279,6 +279,7 @@ class Doorbitch {
 
     			if (! $wp_filesystem->put_contents( $filepath, $csv_data, FS_CHMOD_FILE ) ) {
     				echo "error saving csv file.";
+                    break;
     			}
     			return $export_dir_url . $filename;
     			break;
