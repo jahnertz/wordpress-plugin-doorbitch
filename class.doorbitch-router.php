@@ -5,6 +5,7 @@ Class Doorbitch_Router
 
 	public function __construct()
 	{
+		Doorbitch::debug('Initializing router...');
 		function doorbitch_router_query_vars ( $vars ) {
 			$vars[] = 'virtualpage';
 			return $vars;
@@ -15,7 +16,7 @@ Class Doorbitch_Router
 		// permalink settings in admin inteface must be saved. This can be done with flush_rewrite_rules() on theme activation.
 		function add_rewrite_rules ()
 		{
-			// doorbitch::debug( 'Adding rewrite rules.' );
+			doorbitch::debug( 'Adding rewrite rules.' );
 			add_rewrite_tag( '%virtualpage%', '([^&])' );
 			add_rewrite_rule(
 				'([^/]*)/?$',
@@ -32,7 +33,7 @@ Class Doorbitch_Router
 		// Assign Templates to the virtual pages:
 		function virtualpage_template_include ( $template )
 		{
-			// doorbitch::debug( 'Adding virtual page templates' );
+			doorbitch::debug( 'Adding virtual page templates' );
 			global $wp_query;
 			$new_template = '';
 
