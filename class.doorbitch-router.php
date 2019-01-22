@@ -39,8 +39,10 @@ Class Doorbitch_Router
 
 			$options = get_option( DOORBITCH__OPTIONS );
 			$route = $options[ 'form_url' ];
+			doorbitch::debug( 'Route: ' . get_site_url() . '/' . $route );
 
 			if ( array_key_exists( 'virtualpage', $wp_query->query_vars ) ) {
+				doorbitch::debug( 'virtualpage key exists in $wp_query->query_vars' );
 				switch ( $wp_query->query_vars['virtualpage'] ) {
 					case $route:
 						// check if requiring auth is set and redirect if necessary.
@@ -63,6 +65,7 @@ Class Doorbitch_Router
 					return $new_template;
 				}
 				else {
+					doorbitch::debug( 'Not a valid route, redirecting to 404');
 					// This is not a valid virtual page: set header and template to 404 page.
 					$wp_query->set_404();
 					status_header( 404 );
