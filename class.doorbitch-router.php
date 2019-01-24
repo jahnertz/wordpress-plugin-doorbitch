@@ -5,15 +5,16 @@ Class Doorbitch_Router
 
 	public function __construct()
 	{
-		Doorbitch::debug('Initializing router...');
+		Doorbitch::debug('***Initializing router***');
 		function doorbitch_router_query_vars ( $vars ) {
+			doorbitch::debug( 'adding query vars' );
 			$vars[] = 'virtualpage';
-			return $vars;
+			return $vars
 		}
 		add_filter( 'query_vars', 'doorbitch_router_query_vars' );
 
 		// Add redirects for virtual page urls to index.php?virtualpage=name
-		// permalink settings in admin inteface must be saved. This can be done with flush_rewrite_rules() on theme activation.
+		// permalink settings in admin inteface must be saved. this is done by calling flush_rewrite_rules() on theme activation.
 		function add_rewrite_rules ()
 		{
 			doorbitch::debug( 'Adding rewrite rules.' );
@@ -22,10 +23,6 @@ Class Doorbitch_Router
 				'([^/]*)/?$',
 				'index.php?virtualpage=$matches[1]',
 				'top'
-				// an alternative approach.
-				// 'doorbitch/?$',
-				// 'index.php?virtualpage=doorbitch',
-				// 'top'
 			);
 		}
 		add_action( 'init', 'add_rewrite_rules' );
@@ -53,8 +50,10 @@ Class Doorbitch_Router
 
 						$new_template = plugin_dir_path( __FILE__ ) . 'templates/doorbitch-frontend.php';
 						// Hide the admin bar:
+						// TODO: get this from options.
 						add_filter( 'show_admin_bar', '__return_false' );
 						function set_title() {
+							// TODO: get this from options.
 							return "Registration";
 						}
 						add_filter( 'wp_title', 'set_title' );
@@ -72,7 +71,6 @@ Class Doorbitch_Router
 					return get_404_template();
 				}
 			}
-
 			return $template;
 		}
 		add_filter( 'template_include', 'virtualpage_template_include' );
