@@ -23,17 +23,17 @@ if ( ! empty( $_POST ) ) {
 	if ( ! isset( $_POST[ 'age' ] ) ) {
 		array_push( $submission_errors, 'Please provide your age' );
 	}
-	// if ( ! isset( $_POST[ 'city' ] ) ) {
-	// 	array_push( $submission_errors, 'Please provide your city' );
-	// }
+	if ( ! isset( $_POST[ 'city' ] ) ) {
+		array_push( $submission_errors, 'Please provide your city' );
+	}
 	if ( ! isset( $_POST[ 'email' ] ) ) {
 		array_push( $submission_errors, 'Please provide your email' );
 	} elseif ( ! is_email( $_POST[ 'email' ] ) ) {
 		array_push( $submission_errors, 'Please provide a valid email address' );
 	}
-	// if ( ! isset( $_POST[ 'disclaimer' ] ) || $_POST[ 'disclaimer' ] != 'on' ) {
-	// 	array_push( $submission_errors, 'You must agree to the disclaimer to register.' );
-	// }
+	if ( ! isset( $_POST[ 'disclaimer' ] ) || $_POST[ 'disclaimer' ] != 'on' ) {
+		array_push( $submission_errors, 'You must agree to the disclaimer to register.' );
+	}
 
 	if ( empty( $submission_errors ) ) {
 		// TODO: use serialize( $_POST ); - need to change add_data method too.
