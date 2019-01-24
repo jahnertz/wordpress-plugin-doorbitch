@@ -110,6 +110,9 @@ class Doorbitch {
 
 		$this->options[ 'events' ] = serialize( $event_array );
 		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+        if ( !isset( $this->options[ 'confirmation_email_html' ] ) ) {
+            $this->options[ 'confirmation_email_html' ] = file_get_contents(DOORBITCH__PLUGIN_DIR . '/email_templates/default.html' );
+        }
 		$this->options[ 'initiated' ] = true;
         $this->options[ 'require_auth' ] = true;
 		$this->options[ 'debug_mode' ] = false;

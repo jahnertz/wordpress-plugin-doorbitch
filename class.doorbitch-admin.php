@@ -25,7 +25,7 @@ class Doorbitch_Admin
             // show all _POST data in debug area:
             // TODO: this breaks because it's trying to convert an array to a string.
             // foreach ( $_POST as $key => $value) {
-            //     Doorbitch::debug( $key . ': ' . $value );
+            //     doorbitch::debug( $key . ': ' . $value );
             // }
         // check_admin_referer( 'doorbitch-settings-admin' );
         if ( array_key_exists( 'action', $_POST ) )
@@ -39,7 +39,7 @@ class Doorbitch_Admin
                 
                 case 'set as current event':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
-                    Doorbitch::set_current_event( $_POST[ 'event' ] );
+                    doorbitch::set_current_event( $_POST[ 'event' ] );
                     $this->visible_event = $_POST[ 'event' ];
                     break;
                 
@@ -62,8 +62,8 @@ class Doorbitch_Admin
 
                 case 'delete this event':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
-                    Doorbitch::remove_event( $_POST[ 'event' ] );
-                    Doorbitch::set_current_event();
+                    doorbitch::remove_event( $_POST[ 'event' ] );
+                    doorbitch::set_current_event();
                     $this->visible_event = $this->options[ 'current_event' ];
                     break;
 
@@ -72,11 +72,11 @@ class Doorbitch_Admin
                     if ( isset( $_POST[ 'new_event_name' ] ) ) {
                         if ( $_POST[ 'new_event_name' ] == '' ) {
                             $this->new_event = true;
-                            Doorbitch::debug( 'Please enter an event name' );
+                            doorbitch::debug( 'Please enter an event name' );
                             $this->visible_event = $_POST[ 'event' ];
                         }
                         else {
-                            Doorbitch::add_event( $_POST[ 'new_event_name' ] );
+                            doorbitch::add_event( $_POST[ 'new_event_name' ] );
                             $this->visible_event = $_POST[ 'new_event_name' ];
                         }
                     }
@@ -241,7 +241,7 @@ class Doorbitch_Admin
                 request_filesystem_credentials( $url, $method, true, false, $form_fields );
                 return true;
             }
-            $this->exported_file = Doorbitch::export_records( $_POST[ 'event' ], 'csv' );
+            $this->exported_file = doorbitch::export_records( $_POST[ 'event' ], 'csv' );
         }
 
     }
@@ -321,12 +321,36 @@ class Doorbitch_Admin
         );
 
         add_settings_field(
+            'confirmation_email',
+            'Send Confirmation Email to Registrant',
+            array ( $this, 'confirmation_email_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
+        add_settings_field(
+            'confirmation_email_from',
+            'Confimation Email From Address',
+            array ( $this, 'confirmation_email_from_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
+        add_settings_field(
             'form_html', 
             'Form HTML', 
             array( $this, 'form_html_callback' ), 
             'doorbitch-settings-admin', 
             'options-section'
         );      
+
+        add_settings_field (
+            'confirmation_email_html',
+            'Confirmation Email HTML',
+            array ( $this, 'confirmation_email_html_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
 
         add_settings_field(
             'debug_mode', 
@@ -346,37 +370,49 @@ class Doorbitch_Admin
     public function sanitize_callback( $input )
     {
         if( isset( $input['initiated'] ) )
-            $new_input['initiated'] = sanitize_text_field( $input['initiated'] );
+            $sanitized_input['initiated'] = sanitize_text_field( $input['initiated'] );
 
         if( isset( $input['db_version'] ) )
-            $new_input['db_version'] = sanitize_text_field( $input['db_version'] );
+            $sanitized_input['db_version'] = sanitize_text_field( $input['db_version'] );
 
         if( isset( $input['events'] ) )
-            $new_input['events'] = sanitize_text_field( unserialize( $input['events'] ) );
+            $sanitized_input['events'] = sanitize_text_field( unserialize( $input['events'] ) );
 
         if( isset( $input['current_event'] ) )
-            $new_input['current_event'] = sanitize_text_field( $input['current_event'] );
+            $sanitized_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
         if( isset( $input['form_url'] ) )
-            $new_input['form_url'] = sanitize_text_field( $input[ 'form_url' ] );
+            $sanitized_input['form_url'] = sanitize_text_field( $input[ 'form_url' ] );
 
         if( isset( $input[ 'require_auth' ] ) ) {
-            $new_input[ 'require_auth' ] = $input[ 'require_auth' ];
+            $sanitized_input[ 'require_auth' ] = $input[ 'require_auth' ];
         } else {
-            $new_input[ 'require_auth' ] = 0;
+            $sanitized_input[ 'require_auth' ] = 0;
         }
 
+        if( isset( $input[ 'confirmation_email' ] ) ) {
+            $sanitized_input[ 'confirmation_email' ] = $input[ 'confirmation_email' ];
+        } else {
+            $sanitized_input[ 'confirmation_email' ] = 0;
+        }
+
+        if( isset( $input[ 'confirmation_email_from' ] ) ) $sanitized_input[ 'confirmation_email_from' ] = sanitize_text_field( $input[ 'confirmation_email_from' ] 
+                );
+
         if( isset( $input['form_html'] ) )
-            $new_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
+            $sanitized_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
+
+        if( isset( $input['confirmation_email_html'] ) )
+            $sanitized_input['confirmation_email_html'] = wp_kses( $input['confirmation_email_html'], $this->expanded_allowed_tags() );
 
         if( isset( $input[ 'debug_mode' ] ) ) {
-            $new_input[ 'debug_mode' ] = $input[ 'debug_mode' ];
+            $sanitized_input[ 'debug_mode' ] = $input[ 'debug_mode' ];
         } else {
-            $new_input[ 'debug_mode' ] = 0;
+            $sanitized_input[ 'debug_mode' ] = 0;
         }
         // TODO: create list of required fields and save it to options.
 
-        return $new_input;
+        return $sanitized_input;
     }
 
     /** 
@@ -422,7 +458,7 @@ class Doorbitch_Admin
     public function form_url_callback()
     {
         global $doorbitch;
-        $default_form_url = Doorbitch::default_form_url;
+        $default_form_url = doorbitch::default_form_url;
         printf(
             '%s/<input type="text" id="form_url" name="doorbitch_options[form_url]" value="%s" />',
             get_site_url(),
@@ -439,6 +475,28 @@ class Doorbitch_Admin
         );
     }
 
+    public function confirmation_email_callback ()
+    {
+        if ( isset ( $this->options [ 'confirmation_email' ] ) ) {
+            if ( $this->options[ 'confirmation_email'] ) { $checked = 'checked="checked"'; } else { $checked= ''; }
+        } else { 
+            $checked = '';
+        }
+        printf(
+            '<input type="checkbox" id="confirmation_email" name="doorbitch_options[confirmation_email]" %s />',
+            $checked
+        );
+    }
+
+    public function confirmation_email_from_callback ()
+    {
+        $default = "no-reply@" . preg_replace( "/^https*\:\/\/(www)*/", "", get_home_url());
+        printf(
+            '<input type="text" id="confirmation_email_from" name="doorbitch_options[confirmation_email_from]" value="%s" />',
+            isset( $this->options['confirmation_email_from'] ) ? esc_attr( $this->options['confirmation_email_from'] ) : $default
+            );
+    }
+
     public function form_html_callback()
     {
         $wp_editor_settings = array(
@@ -446,6 +504,16 @@ class Doorbitch_Admin
             'textarea_name' => 'doorbitch_options[form_html]'
         );
         wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
+    }
+
+    public function confirmation_email_html_callback ()
+    {
+        $content = isset( $this->options[ 'confirmation_email_html' ] ) ? $this->options[ 'confirmation_email_html' ] : file_get_contents(DOORBITCH__PLUGIN_DIR . '/email_templates/default.html' );
+        $wp_editor_settings = array(
+            'media_buttons' => true,
+            'textarea_name' => 'doorbitch_options[confirmation_email_html]'
+        );
+        wp_editor( $content, 'confirmation_email_html', $wp_editor_settings );
     }
 
     public function debug_mode_callback()
@@ -459,7 +527,7 @@ class Doorbitch_Admin
 
 
     private function display_records( $event ) {
-        $entries = Doorbitch::get_registrants( $event );
+        $entries = doorbitch::get_registrants( $event );
         ?>
         <table class="doorbitch-records">
             <?php
