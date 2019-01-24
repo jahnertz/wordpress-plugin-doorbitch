@@ -51,14 +51,15 @@ if ( ! empty( $_POST ) ) {
 				doorbitch::debug( 'Sending confirmation email' );
 				$to = $_POST[ 'email' ];
 				$subject = $options[ 'confirmation_email_subject' ];
-				$headers = "From: " . $options[ 'confirmation_email_from' ];
+				$headers = "From: " . $options[ 'confirmation_email_from' ] . "\r\n";
 				$content = $options[ 'confirmation_email_content' ];
 				// Replace names:
 				foreach ($_POST as $field => $data) {
 				 	$content = str_replace( "%" . $field . "%", $data, $content );
 				} 
 				if ( $options[ 'confirmation_email_use_html' ] ) {
-					$content = "<html>" . $content . "</html>";
+					$headers .= "MIME-Version: 1.0\r\n";
+					$headers .= "Content-Type: text/html; charset=UTF-8\r\n"
 				}
 				doorbitch::debug( "Sending mail: " . $content );
 				mail( $to, $subject, $content, $headers );
