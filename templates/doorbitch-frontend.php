@@ -52,8 +52,8 @@ if ( ! empty( $_POST ) ) {
 				$to = $_POST[ 'email' ];
 				$subject = $options[ 'confirmation_email_subject' ];
 				$headers = "From: " . $options[ 'confirmation_email_from' ];
-				$msg = $options[ 'confirmation_email_html' ];
-				mail( $to, $subject, $msg, $headers );
+				$content = $options[ 'confirmation_email_content' ];
+				mail( $to, $subject, $content, $headers );
 			}
 		} else {
 			array_push( $submission_errors, 'The data could not be saved.' );

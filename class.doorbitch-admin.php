@@ -21,14 +21,14 @@ class Doorbitch_Admin
         $this->options = get_option( DOORBITCH__OPTIONS );
 
         // Deal with _POST data
-        if ( $_POST ) {
+        if( $_POST ) {
             // show all _POST data in debug area:
             // TODO: this breaks because it's trying to convert an array to a string.
             // foreach ( $_POST as $key => $value) {
             //     doorbitch::debug( $key . ': ' . $value );
             // }
         // check_admin_referer( 'doorbitch-settings-admin' );
-        if ( array_key_exists( 'action', $_POST ) )
+        if( array_key_exists( 'action', $_POST ) )
         {
             switch ( $_POST[ 'action' ] ) {
                 //TODO: clean this up.
@@ -69,8 +69,8 @@ class Doorbitch_Admin
 
                 case 'create':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
-                    if ( isset( $_POST[ 'new_event_name' ] ) ) {
-                        if ( $_POST[ 'new_event_name' ] == '' ) {
+                    if( isset( $_POST[ 'new_event_name' ] ) ) {
+                        if( $_POST[ 'new_event_name' ] == '' ) {
                             $this->new_event = true;
                             doorbitch::debug( 'Please enter an event name' );
                             $this->visible_event = $_POST[ 'event' ];
@@ -106,7 +106,7 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        if ( $this->check_fs_creds() ) return;
+        if( $this->check_fs_creds() ) return;
         $this->options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
@@ -137,7 +137,7 @@ class Doorbitch_Admin
                                         $event_array = unserialize( $this->options[ 'events' ] );
                                         foreach ( $event_array as $event) {
                                             ?>
-                                            <option value="<?php echo $event;?>" <?php if ( $event == $this->visible_event ) { echo 'selected="selected"';} ?>"><?php echo $event; ?></option>
+                                            <option value="<?php echo $event;?>" <?php if( $event == $this->visible_event ) { echo 'selected="selected"';} ?>"><?php echo $event; ?></option>
                                             <?php
                                         }
                                        ?> 
@@ -155,7 +155,7 @@ class Doorbitch_Admin
                                 </td>
                             </tr>
                             <?php
-                            if ( isset( $this->del_event ) ) {
+                            if( isset( $this->del_event ) ) {
                                 ?>
                                 <tr>
                                     <td>
@@ -165,7 +165,7 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if ( isset( $this->new_event ) ) {
+                            if( isset( $this->new_event ) ) {
                                 ?>
                                 <tr>
                                     <td>
@@ -175,7 +175,7 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if ( isset( $this->exported_file ) && $this->exported_file == false ) {
+                            if( isset( $this->exported_file ) && $this->exported_file == false ) {
                                 ?>
                                 <tr>
                                     <td>
@@ -184,7 +184,7 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if ( isset( $this->exported_file ) ) {
+                            if( isset( $this->exported_file ) ) {
                                 ?>
                                 <tr>
                                     <td>
@@ -203,7 +203,7 @@ class Doorbitch_Admin
                         </table>
                     </form>
                     <?php 
-                    if ( $this->visible_event == '' ) {
+                    if( $this->visible_event == '' ) {
                         $this->visible_event = $this->options[ 'current_event' ];
                     }
                     echo "<h3>" . $this->visible_event . "</h3>";
@@ -228,16 +228,16 @@ class Doorbitch_Admin
     }
 
     public function check_fs_creds () {
-        if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
+        if( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
             $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
             $method = '';
             $form_fields = array ( 'event', 'action' );
 
-            if ( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
+            if( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
                 return true;
             }
 
-            if ( ! WP_Filesystem( $creds ) ) {
+            if( ! WP_Filesystem( $creds ) ) {
                 request_filesystem_credentials( $url, $method, true, false, $form_fields );
                 return true;
             }
@@ -328,6 +328,14 @@ class Doorbitch_Admin
             'options-section'
         );
 
+        add_settings_field (
+            'confirmation_email_use_html',
+            'Use HTML in Email',
+            array ( $this, 'confirmation_email_use_html_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
         add_settings_field(
             'confirmation_email_from',
             'Confimation Email From Address',
@@ -353,9 +361,9 @@ class Doorbitch_Admin
         );      
 
         add_settings_field (
-            'confirmation_email_html',
-            'Confirmation Email HTML',
-            array ( $this, 'confirmation_email_html_callback' ),
+            'confirmation_email_content',
+            'Confirmation Email Content',
+            array ( $this, 'confirmation_email_content_callback' ),
             'doorbitch-settings-admin',
             'options-section'
         );
@@ -377,48 +385,54 @@ class Doorbitch_Admin
      */
     public function sanitize_callback( $input )
     {
-        if ( isset( $input['initiated'] ) )
+        if( isset( $input['initiated'] ) )
             $sanitized_input['initiated'] = sanitize_text_field( $input['initiated'] );
 
-        if ( isset( $input['db_version'] ) )
+        if( isset( $input['db_version'] ) )
             $sanitized_input['db_version'] = sanitize_text_field( $input['db_version'] );
 
-        if ( isset( $input['events'] ) )
+        if( isset( $input['events'] ) )
             $sanitized_input['events'] = sanitize_text_field( unserialize( $input['events'] ) );
 
-        if ( isset( $input['current_event'] ) )
+        if( isset( $input['current_event'] ) )
             $sanitized_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
-        if ( isset( $input['form_url'] ) )
+        if( isset( $input['form_url'] ) )
             $sanitized_input['form_url'] = sanitize_text_field( $input[ 'form_url' ] );
 
-        if ( isset( $input[ 'require_auth' ] ) ) {
+        if( isset( $input[ 'require_auth' ] ) ) {
             $sanitized_input[ 'require_auth' ] = $input[ 'require_auth' ];
         } else {
             $sanitized_input[ 'require_auth' ] = 0;
         }
 
-        if ( isset( $input[ 'confirmation_email' ] ) ) {
+        if( isset( $input[ 'confirmation_email' ] ) ) {
             $sanitized_input[ 'confirmation_email' ] = $input[ 'confirmation_email' ];
         } else {
             $sanitized_input[ 'confirmation_email' ] = 0;
         }
 
-        if ( isset( $input[ 'confirmation_email_from' ] ) ) {
+        if( isset( $input['confirmation_email_use_html'] ) ) {
+            $sanitized_input[ 'confirmation_email_use_html'] = $input[ 'confirmation_email_use_html'];
+        } else {
+            $sanitized_input[ 'confirmation_email_use_html' ] = 0;
+        }
+
+        if( isset( $input[ 'confirmation_email_from' ] ) ) {
             $sanitized_input[ 'confirmation_email_from' ] = sanitize_text_field( $input[ 'confirmation_email_from' ] );
         }
 
-        if ( isset( $input[ 'confirmation_email_subject' ] ) ) {
+        if( isset( $input[ 'confirmation_email_subject' ] ) ) {
             $sanitized_input[ 'confirmation_email_subject' ] = sanitize_text_field ( $input[ 'confirmation_email_subject' ] );
         }
 
-        if ( isset( $input['form_html'] ) )
+        if( isset( $input['form_html'] ) )
             $sanitized_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
 
-        if ( isset( $input['confirmation_email_html'] ) )
-            $sanitized_input['confirmation_email_html'] = wp_kses( $input['confirmation_email_html'], $this->expanded_allowed_tags() );
+        if( isset( $input['confirmation_email_content'] ) )
+            $sanitized_input['confirmation_email_content'] = wp_kses( $input['confirmation_email_content'], $this->expanded_allowed_tags() );
 
-        if ( isset( $input[ 'debug_mode' ] ) ) {
+        if( isset( $input[ 'debug_mode' ] ) ) {
             $sanitized_input[ 'debug_mode' ] = $input[ 'debug_mode' ];
         } else {
             $sanitized_input[ 'debug_mode' ] = 0;
@@ -481,7 +495,7 @@ class Doorbitch_Admin
 
     public function require_auth_callback()
     {
-        if ( isset ( $this->options[ 'require_auth' ] ) && $this->options[ 'require_auth' ] ) {
+        if( isset ( $this->options[ 'require_auth' ] ) && $this->options[ 'require_auth' ] ) {
             $checked = 'checked="checked"';
         } else {
             $checked = '';
@@ -494,14 +508,26 @@ class Doorbitch_Admin
 
     public function confirmation_email_callback ()
     {
-        if ( isset ( $this->options [ 'confirmation_email' ] ) ) {
-            if ( $this->options[ 'confirmation_email'] ) { $checked = 'checked="checked"'; } else { $checked= ''; }
+        if( isset ( $this->options [ 'confirmation_email' ] ) ) {
+            if( $this->options[ 'confirmation_email'] ) { $checked = 'checked="checked"'; } else { $checked= ''; }
         } else { 
             $checked = '';
         }
         printf(
             '<input type="checkbox" id="confirmation_email" name="doorbitch_options[confirmation_email]" %s />',
             $checked
+        );
+    }
+
+    public function confirmation_email_use_html_callback ()
+    {
+        if( isset( $this->options[ 'confirmation_email_use_html' ] ) && $this->options[ 'confirmation_email_use_html' ] ) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
+        printf(
+            '<input type="checkbox" id="confirmation_email_use_html" name="doorbitch_options[confirmation_email_use_html]" %s />', $checked
         );
     }
 
@@ -533,19 +559,19 @@ class Doorbitch_Admin
         wp_editor( $content, 'form-html', $wp_editor_settings );
     }
 
-    public function confirmation_email_html_callback ()
+    public function confirmation_email_content_callback ()
     {
-        $content = isset( $this->options[ 'confirmation_email_html' ] ) ? $this->options[ 'confirmation_email_html' ] : file_get_contents(DOORBITCH__PLUGIN_DIR . '/email_templates/default.html' );
+        $content = isset( $this->options[ 'confirmation_email_content' ] ) ? $this->options[ 'confirmation_email_content' ] : file_get_contents(DOORBITCH__PLUGIN_DIR . '/email_templates/default.html' );
         $wp_editor_settings = array(
             'media_buttons' => true,
-            'textarea_name' => 'doorbitch_options[confirmation_email_html]'
+            'textarea_name' => 'doorbitch_options[confirmation_email_content]'
         );
-        wp_editor( $content, 'confirmation_email_html', $wp_editor_settings );
+        wp_editor( $content, 'confirmation_email_content', $wp_editor_settings );
     }
 
     public function debug_mode_callback()
     {
-        if ( isset ( $this->options[ 'debug_mode' ] ) && $this->options[ 'debug_mode' ] ) {
+        if( isset ( $this->options[ 'debug_mode' ] ) && $this->options[ 'debug_mode' ] ) {
             $checked = 'checked="checked"';
         } else {
             $checked = '';
@@ -562,7 +588,7 @@ class Doorbitch_Admin
         ?>
         <table class="doorbitch-records">
             <?php
-            if ( empty( $entries ) ){
+            if( empty( $entries ) ){
                 ?>
                 <h4>No registrants yet.</h4>
                 <?php
