@@ -53,6 +53,14 @@ if ( ! empty( $_POST ) ) {
 				$subject = $options[ 'confirmation_email_subject' ];
 				$headers = "From: " . $options[ 'confirmation_email_from' ];
 				$content = $options[ 'confirmation_email_content' ];
+				// Replace names:
+				foreach ($_POST as $field => $data) {
+				 	$content = str_replace( "%" . $field . "%", $data, $content );
+				} 
+				if ( $options[ 'confirmation_email_use_html' ] ) {
+					$content = "<html>" . $content . "</html>";
+				}
+				doorbitch::debug( "Sending mail: " . $content );
 				mail( $to, $subject, $content, $headers );
 			}
 		} else {
