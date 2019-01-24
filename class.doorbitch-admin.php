@@ -337,6 +337,14 @@ class Doorbitch_Admin
         );
 
         add_settings_field(
+            'confirmation_email_subject',
+            'Confimation Email Subject',
+            array ( $this, 'confirmation_email_subject_callback' ),
+            'doorbitch-settings-admin',
+            'options-section'
+        );
+
+        add_settings_field(
             'form_html', 
             'Form HTML', 
             array( $this, 'form_html_callback' ), 
@@ -369,43 +377,48 @@ class Doorbitch_Admin
      */
     public function sanitize_callback( $input )
     {
-        if( isset( $input['initiated'] ) )
+        if ( isset( $input['initiated'] ) )
             $sanitized_input['initiated'] = sanitize_text_field( $input['initiated'] );
 
-        if( isset( $input['db_version'] ) )
+        if ( isset( $input['db_version'] ) )
             $sanitized_input['db_version'] = sanitize_text_field( $input['db_version'] );
 
-        if( isset( $input['events'] ) )
+        if ( isset( $input['events'] ) )
             $sanitized_input['events'] = sanitize_text_field( unserialize( $input['events'] ) );
 
-        if( isset( $input['current_event'] ) )
+        if ( isset( $input['current_event'] ) )
             $sanitized_input['current_event'] = sanitize_text_field( $input['current_event'] );
 
-        if( isset( $input['form_url'] ) )
+        if ( isset( $input['form_url'] ) )
             $sanitized_input['form_url'] = sanitize_text_field( $input[ 'form_url' ] );
 
-        if( isset( $input[ 'require_auth' ] ) ) {
+        if ( isset( $input[ 'require_auth' ] ) ) {
             $sanitized_input[ 'require_auth' ] = $input[ 'require_auth' ];
         } else {
             $sanitized_input[ 'require_auth' ] = 0;
         }
 
-        if( isset( $input[ 'confirmation_email' ] ) ) {
+        if ( isset( $input[ 'confirmation_email' ] ) ) {
             $sanitized_input[ 'confirmation_email' ] = $input[ 'confirmation_email' ];
         } else {
             $sanitized_input[ 'confirmation_email' ] = 0;
         }
 
-        if( isset( $input[ 'confirmation_email_from' ] ) ) $sanitized_input[ 'confirmation_email_from' ] = sanitize_text_field( $input[ 'confirmation_email_from' ] 
-                );
+        if ( isset( $input[ 'confirmation_email_from' ] ) ) {
+            $sanitized_input[ 'confirmation_email_from' ] = sanitize_text_field( $input[ 'confirmation_email_from' ] );
+        }
 
-        if( isset( $input['form_html'] ) )
+        if ( isset( $input[ 'confirmation_email_subject' ] ) ) {
+            $sanitized_input[ 'confirmation_email_subject' ] = sanitize_text_field ( $input[ 'confirmation_email_subject' ] );
+        }
+
+        if ( isset( $input['form_html'] ) )
             $sanitized_input['form_html'] = wp_kses( $input['form_html'], $this->expanded_allowed_tags() );
 
-        if( isset( $input['confirmation_email_html'] ) )
+        if ( isset( $input['confirmation_email_html'] ) )
             $sanitized_input['confirmation_email_html'] = wp_kses( $input['confirmation_email_html'], $this->expanded_allowed_tags() );
 
-        if( isset( $input[ 'debug_mode' ] ) ) {
+        if ( isset( $input[ 'debug_mode' ] ) ) {
             $sanitized_input[ 'debug_mode' ] = $input[ 'debug_mode' ];
         } else {
             $sanitized_input[ 'debug_mode' ] = 0;
@@ -495,6 +508,15 @@ class Doorbitch_Admin
             '<input type="text" id="confirmation_email_from" name="doorbitch_options[confirmation_email_from]" value="%s" />',
             isset( $this->options['confirmation_email_from'] ) ? esc_attr( $this->options['confirmation_email_from'] ) : $default
             );
+    }
+
+    public function confirmation_email_subject_callback ()
+    {
+        $default = "Thank you for registering!";
+        printf (
+            '<input type="text" id="confirmation_email_subject" name="doorbitch_options[confirmation_email_subject]" value="%s" />',
+            isset( $this->options[ 'confirmation_email_subject' ] ) ? esc_attr( $this->options[ 'confirmation_email_subject' ] ) : $default
+        );
     }
 
     public function form_html_callback()

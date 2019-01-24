@@ -96,7 +96,6 @@ class Doorbitch {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 
-
 		$this->add_event( $this->default_event );
 		$this->set_current_event( $this->default_event );
 		$this->add_data( $this->default_event, 'Name:Joe Bloggs,Age:42,email:nobody@nowhere' );
@@ -109,14 +108,16 @@ class Doorbitch {
         }
 
 		$this->options[ 'events' ] = serialize( $event_array );
-		$this->options[ 'form_html' ] = file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+        // Set options to defaults if they are missing:
+		isset( $this->options[ 'form_html' ] ) ? $this->options[ 'form_html' ] : file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+
         if ( !isset( $this->options[ 'confirmation_email_html' ] ) ) {
             $this->options[ 'confirmation_email_html' ] = file_get_contents(DOORBITCH__PLUGIN_DIR . '/email_templates/default.html' );
         }
 		$this->options[ 'initiated' ] = true;
-        $this->options[ 'require_auth' ] = true;
-		$this->options[ 'debug_mode' ] = false;
-        $this->options[ 'form_url' ] = self::default_form_url;
+        isset( $this->options[ 'require_auth' ] ) ? $this->options[ 'require_auth' ] : true;
+		isset( $this->options[ 'debug_mode' ] ) ? $this->options[ 'debug_mode' ] : false;
+        isset( $this->options[ 'form_url' ] ) ? $this->options[ 'form_url' ] : self::default_form_url;
 
 		update_option( 'doorbitch_options', $this->options );
 		$this->debug( 'saving options' );

@@ -9,7 +9,7 @@ Class Doorbitch_Router
 		function doorbitch_router_query_vars ( $vars ) {
 			doorbitch::debug( 'adding query vars' );
 			$vars[] = 'virtualpage';
-			return $vars
+			return $vars;
 		}
 		add_filter( 'query_vars', 'doorbitch_router_query_vars' );
 
