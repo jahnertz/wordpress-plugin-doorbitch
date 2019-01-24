@@ -59,7 +59,7 @@ if ( ! empty( $_POST ) ) {
 				} 
 				if ( $options[ 'confirmation_email_use_html' ] ) {
 					$headers .= "MIME-Version: 1.0\r\n";
-					$headers .= "Content-Type: text/html; charset=UTF-8\r\n"
+					$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 				}
 				doorbitch::debug( "Sending mail: " . $content );
 				mail( $to, $subject, $content, $headers );
