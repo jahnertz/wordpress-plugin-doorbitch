@@ -481,7 +481,11 @@ class Doorbitch_Admin
 
     public function require_auth_callback()
     {
-        if ( $this->options[ 'require_auth' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
+        if ( isset ( $this->options[ 'require_auth' ] ) && $this->options[ 'require_auth' ] ) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
         printf(
             '<input type="checkbox" id="require_auth" name="doorbitch_options[require_auth]" %s />',
             $checked
@@ -521,11 +525,12 @@ class Doorbitch_Admin
 
     public function form_html_callback()
     {
+        $content = isset( $this->options[ 'form_html' ] ) ? $this->options[ 'form_html' ] : file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.html' );
         $wp_editor_settings = array(
             'media_buttons' => true,
             'textarea_name' => 'doorbitch_options[form_html]'
         );
-        wp_editor( $this->options[ 'form_html' ], 'form-html', $wp_editor_settings );
+        wp_editor( $content, 'form-html', $wp_editor_settings );
     }
 
     public function confirmation_email_html_callback ()
@@ -540,7 +545,11 @@ class Doorbitch_Admin
 
     public function debug_mode_callback()
     {
-        if ( $this->options[ 'debug_mode' ] ) { $checked = 'checked="checked"'; } else { $checked = ''; }
+        if ( isset ( $this->options[ 'debug_mode' ] ) && $this->options[ 'debug_mode' ] ) {
+            $checked = 'checked="checked"';
+        } else {
+            $checked = '';
+        }
         printf(
             '<input type="checkbox" id="debug_mode" name="doorbitch_options[debug_mode]" %s />',
             $checked

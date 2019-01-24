@@ -57,7 +57,8 @@ class Doorbitch {
 		// add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
 
 		// Add debug mode hooks if it's activated:
-		if ( $this->options[ 'debug_mode' ] == true ) {
+        // TODO: debug should be set in install() at this point so shouldn't need to check if it's set. Maybe need to break out of init() when install() is called.
+		if ( isset ( $this->options[ 'debug_mode' ] ) && $this->options[ 'debug_mode' ] ) {
 			function enqueue_debug_styles() { 
 				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
 			}
@@ -109,7 +110,7 @@ class Doorbitch {
 
 		$this->options[ 'events' ] = serialize( $event_array );
         // Set options to defaults if they are missing:
-		isset( $this->options[ 'form_html' ] ) ? $this->options[ 'form_html' ] : file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.php' );
+		isset( $this->options[ 'form_html' ] ) ? $this->options[ 'form_html' ] : file_get_contents( DOORBITCH__PLUGIN_DIR . '/forms/default.html' );
 
         if ( !isset( $this->options[ 'confirmation_email_html' ] ) ) {
             $this->options[ 'confirmation_email_html' ] = file_get_contents(DOORBITCH__PLUGIN_DIR . '/email_templates/default.html' );
