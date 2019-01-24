@@ -119,6 +119,7 @@ class Doorbitch {
         isset( $this->options[ 'require_auth' ] ) ? $this->options[ 'require_auth' ] : true;
 		isset( $this->options[ 'debug_mode' ] ) ? $this->options[ 'debug_mode' ] : false;
         isset( $this->options[ 'form_url' ] ) ? $this->options[ 'form_url' ] : self::default_form_url;
+        isset( $this->options[ 'confirmation_email_use_html' ] ) ? $this->options[ 'confirmation_email_use_html' ] : true;
 
 		update_option( 'doorbitch_options', $this->options );
 		$this->debug( 'saving options' );
