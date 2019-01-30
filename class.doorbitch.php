@@ -151,6 +151,53 @@ class Doorbitch {
 		}
 	}
 
+	public static function set_current_event( $event_name = NULL ) {
+		$options = get_option( 'doorbitch_options' );
+		$event_array = unserialize( $options[ 'events' ] );
+		if ( $event_name == NULL ) {
+			$event_name = $event_array[ 0 ];
+		}
+		if ( in_array( $event_name, $event_array ) ) {
+			$options[ 'current_event' ] = $event_name;
+		}
+		else {
+			// $this->debug( 'event \'' . $event_name . '\' not found' );
+			add_event( $event_name );
+		}
+		update_option( 'doorbitch_options', $options );
+	}
+
+	public function upgrade_database() {
+		global $wpdb;
+		$this->options = get_option( DOORBITCH__OPTIONS );
+
+		$table_name = $wpdb->prefix . $this->table_suffix;
+
+		$sql = "CREATE TABLE $table_name (
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			event tinytext NOT NULL,
+			time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			data text NOT NULL,	
+			PRIMARY KEY  (id)
+		);";
+
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+
+	    $this->options[ 'db_version' ] = DOORBITCH__DATABASE_VERSION;
+		update_option( 'doorbitch_options', $this->options );
+	}
+
+	public function update_db_check( $db_current_version ) {
+		//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
+		$this_db_version = DOORBITCH__DATABASE_VERSION;
+		if ( $this_db_version > $db_current_version ) {
+			$this->debug( "Installing database v." . DOORBITCH__DATABASE_VERSION );
+			$this->upgrade_database();
+		}
+		return $this_db_version;
+	}
+
 	public static function add_event( $event_name ) {
 		$options = get_option( DOORBITCH__OPTIONS );
 		if ( ! array_key_exists( 'events', $options ) ) {
@@ -189,55 +236,6 @@ class Doorbitch {
 		}
 	}
 
-	public static function set_current_event( $event_name = NULL ) {
-		$options = get_option( 'doorbitch_options' );
-		$event_array = unserialize( $options[ 'events' ] );
-		if ( $event_name == NULL ) {
-			$event_name = $event_array[ 0 ];
-		}
-		if ( in_array( $event_name, $event_array ) ) {
-			$options[ 'current_event' ] = $event_name;
-		}
-		else {
-			// $this->debug( 'event \'' . $event_name . '\' not found' );
-			add_event( $event_name );
-		}
-		update_option( 'doorbitch_options', $options );
-	}
-
-	public function upgrade_database() {
-		global $wpdb;
-		$this->options = get_option( DOORBITCH__OPTIONS );
-
-		$table_name = $wpdb->prefix . $this->table_suffix;
-
-		$sql = "CREATE TABLE $table_name (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			event tinytext NOT NULL,
-			time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-			data text NOT NULL,	
-			PRIMARY KEY  (id)
-		);";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
-
-	    $this->options[ 'db_version' ] = DOORBITCH__DATABASE_VERSION;
-		update_option( 'doorbitch_options', $this->options );
-	}
-
-	//Since 3.1 the activation function registered with register_activation_hook() is not called when a plugin is updated:
-	public function update_db_check( $db_current_version ) {
-		// global $db_version;
-		// TODO: Check if database needs upgrading
-		$this_db_version = DOORBITCH__DATABASE_VERSION;
-		if ( $this_db_version > $db_current_version ) {
-			$this->debug( "Installing database v." . DOORBITCH__DATABASE_VERSION );
-			$this->upgrade_database();
-		}
-		return $this_db_version;
-	}
-
 	public function add_data( $event, $data ) {
 		global $wpdb;
 		$this->options = get_option( DOORBITCH__OPTIONS );
@@ -255,45 +253,50 @@ class Doorbitch {
 		return true;
 	}
 
-    public static function export_records( $event, $format ) {
-		$export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
-		$export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
-		$temp_dir = trailingslashit( sys_get_temp_dir() );
-		$filename = preg_replace( '/\s/', '-', $event ) . '_' . current_time( 'Y-m-d_Hi') . '.' . $format;
-		$filepath = $export_dir . $filename;
-		$temp_filepath = $temp_dir . $filename;
+	public static function export_records( $event ) {
+		self::debug( 'Exporting records for ' . $event );
+		return true;
+	}
 
-    	switch ( $format ) {
-    		case 'xlsx':
-		    	if ( ! $spreadsheet = self::create_spreadsheet( $event ) ) return false;
+  //   public static function export_records( $event, $format ) {
+		// $export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
+		// $export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
+		// $temp_dir = trailingslashit( sys_get_temp_dir() );
+		// $filename = preg_replace( '/\s/', '-', $event ) . '_' . current_time( 'Y-m-d_Hi') . '.' . $format;
+		// $filepath = $export_dir . $filename;
+		// $temp_filepath = $temp_dir . $filename;
 
-		        $writer = new Xlsx( $spreadsheet );
-		        $writer->save( $temp_filepath );
+  //   	switch ( $format ) {
+  //   		case 'xlsx':
+		//     	if ( ! $spreadsheet = self::create_spreadsheet( $event ) ) return false;
 
-		        global $wp_filesystem;
+		//         $writer = new Xlsx( $spreadsheet );
+		//         $writer->save( $temp_filepath );
 
-		        //create the export directory if it doesn't already exist:
-		        if ( ! file_exists( $export_dir ) ) { $wp_filesystem->mkdir( $export_dir ); }
-		        $wp_filesystem->move( $temp_filepath, $filepath );
+		//         global $wp_filesystem;
 
-		        return $export_dir_url . $filename;
-    			break;
+		//         //create the export directory if it doesn't already exist:
+		//         if ( ! file_exists( $export_dir ) ) { $wp_filesystem->mkdir( $export_dir ); }
+		//         $wp_filesystem->move( $temp_filepath, $filepath );
 
-    		case 'csv':
-    			if ( ! $csv_data = self::create_csv ( $event ) ) {
-    				return false;
-    			}
+		//         return $export_dir_url . $filename;
+  //   			break;
 
-    			global $wp_filesystem;
+  //   		case 'csv':
+  //   			if ( ! $csv_data = self::create_csv ( $event ) ) {
+  //   				return false;
+  //   			}
 
-    			if (! $wp_filesystem->put_contents( $filepath, $csv_data, FS_CHMOD_FILE ) ) {
-    				echo "error saving csv file.";
-                    break;
-    			}
-    			return $export_dir_url . $filename;
-    			break;
-    	}
-    }
+  //   			global $wp_filesystem;
+
+  //   			if (! $wp_filesystem->put_contents( $filepath, $csv_data, FS_CHMOD_FILE ) ) {
+  //   				echo "error saving csv file.";
+  //                   break;
+  //   			}
+  //   			return $export_dir_url . $filename;
+  //   			break;
+  //   	}
+  //   }
 
     public static function get_registrants( $event ) {
         global $wpdb;
