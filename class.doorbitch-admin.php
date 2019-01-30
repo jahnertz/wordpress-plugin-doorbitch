@@ -5,33 +5,24 @@ class Doorbitch_Admin
     private $options;
 
     public  $visible_event = '';
-    public  $exported_file;
     private $new_event;
     private $del_event;
-    private $export;
+    private $export_flag;
     /**
      * Start up
      */
     public function init ()
     {
         global $doorbitch;
-
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
         $this->options = get_option( DOORBITCH__OPTIONS );
 
         // Deal with _POST data
         if( $_POST ) {
-            // show all _POST data in debug area:
-            // TODO: this breaks because it's trying to convert an array to a string.
-            // foreach ( $_POST as $key => $value) {
-            //     doorbitch::debug( $key . ': ' . $value );
-            // }
-        // check_admin_referer( 'doorbitch-settings-admin' );
         if( array_key_exists( 'action', $_POST ) )
         {
             switch ( $_POST[ 'action' ] ) {
-                //TODO: clean this up.
                 case 'view':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
                     $this->visible_event = $_POST[ 'event' ];
@@ -44,7 +35,8 @@ class Doorbitch_Admin
                     break;
                 
                 case 'export':
-                    // check_admin_referer( 'doorbitch_view_export_nonce' );
+                    check_admin_referer( 'doorbitch_view_export_nonce' );
+                    $this->export_flag = true;
                     $this->visible_event = $_POST[ 'event' ];
                     break;
 
@@ -106,8 +98,6 @@ class Doorbitch_Admin
 
     public function create_admin_page()
     {
-        if( $this->check_fs_creds() ) return;
-        $this->options = get_option( DOORBITCH__OPTIONS );
         ?>
         <div class="wrap">
             <?php
@@ -175,29 +165,27 @@ class Doorbitch_Admin
                                 </tr>
                                 <?php
                             }
-                            if( isset( $this->exported_file ) && $this->exported_file == false ) {
+                            if( $this->export_flag ) {
+                                doorbitch::debug( 'calling export_records ');
+                                $exported_file = doorbitch::export_records( $_POST[ 'event' ] );
                                 ?>
                                 <tr>
                                     <td>
-                                        <p>There was an error exporting the spreadsheet.</p>
+                                        <p>
+                                            <?php
+                                            doorbitch::debug( 'exporting' );
+                                            if ( $exported_file ) {
+                                                printf('<a href="%s">%s</a>',
+                                                $exported_file,
+                                                basename( $exported_file ) );
+                                            } else {
+                                                echo( 'There was an error exporting the spreadsheet.' );
+                                            }
+                                            ?>
+                                        </p>
                                     </td>
                                 </tr>
-                                <?php
-                            }
-                            if( isset( $this->exported_file ) ) {
-                                ?>
-                                <tr>
-                                    <td>
-                                        <?php
-                                        printf(
-                                            '<a href=%s alt="exported file">%s</a>',
-                                            $this->exported_file,
-                                            basename( $this->exported_file )
-                                        );
-                                        ?>
-                                    </td>
-                                </tr>
-                                <?php
+                            <?php
                             }
                             ?>
                         </table>
@@ -225,25 +213,6 @@ class Doorbitch_Admin
             ?>
         </div>
         <?php
-    }
-
-    public function check_fs_creds () {
-        if( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'export' ) {
-            $url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin' );
-            $method = '';
-            $form_fields = array ( 'event', 'action' );
-
-            if( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
-                return true;
-            }
-
-            if( ! WP_Filesystem( $creds ) ) {
-                request_filesystem_credentials( $url, $method, true, false, $form_fields );
-                return true;
-            }
-            $this->exported_file = doorbitch::export_records( $_POST[ 'event' ], 'csv' );
-        }
-
     }
 
     /**
@@ -380,8 +349,6 @@ class Doorbitch_Admin
 
     /**
      * Sanitize each setting field as needed
-     *
-     * @param array $input Contains all settings fields as array keys
      */
     public function sanitize_callback( $input )
     {
@@ -619,6 +586,7 @@ class Doorbitch_Admin
 
 
     private function expanded_allowed_tags() {
+        // TODO: This is dropping attributes for input and other tags!
         // general:
         $permitted_attrs = array(
             'id' => array(), 'class' => array(), 'style' => array(),
@@ -628,7 +596,7 @@ class Doorbitch_Admin
 
         // tag specific:
         $allowed[ 'label' ][] = array( 
-            'for' => array()
+            'for' => array(),
         );
         $allowed[ 'input' ][] = array(
             'class' => array(), 'id' => array(), 'name' => array(), 'value' => array(), 'type' => array(),

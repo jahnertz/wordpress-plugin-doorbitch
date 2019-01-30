@@ -254,8 +254,36 @@ class Doorbitch {
 	}
 
 	public static function export_records( $event ) {
+		global $wp_filesystem;
 		self::debug( 'Exporting records for ' . $event );
-		return true;
+		$export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
+		self::debug( 'Export Dir: ' . $export_dir );
+		$filename = preg_replace( '/\s/', '_', $event )
+			. '_'
+			. current_time( 'Y-m-d_Hi' )
+			. '.csv';
+		$spreadsheet = self::create_spreadsheet( $event );
+		$url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin', 'doorbitch-settings-admin');
+		$method = '';
+        $form_fields = array ( 'event', 'action' );
+		if( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
+			self::debug( 'failed at request_filesystem_credentials' );
+			return false;
+		}
+		if ( ! WP_Filesystem( $creds ) ) {
+			request_filesystem_credentials( $url, $method, true, false, $form_fields );
+			self::debug( 'failed at WP_Filesystem' );
+			return false;
+		} 
+		if ( ! $csv_data = self::format_csv( $event ) ) {
+			self::debug( 'export failed at formatting csv' );
+			return false;
+		}
+		if (! $wp_filesystem->put_contents( $filename, $csv_data, FS_CHMOD_FILE ) ) {
+			self::debug( 'export failed to create file' );
+			return false;
+		}
+		return $export_dir . $filename;
 	}
 
   //   public static function export_records( $event, $format ) {
@@ -283,7 +311,7 @@ class Doorbitch {
   //   			break;
 
   //   		case 'csv':
-  //   			if ( ! $csv_data = self::create_csv ( $event ) ) {
+  //   			if ( ! $csv_data = self::format_csv ( $event ) ) {
   //   				return false;
   //   			}
 
@@ -325,7 +353,7 @@ class Doorbitch {
         }
     }
 
-    public static function create_csv ( $event ) {
+    public static function format_csv ( $event ) {
     	if ( ! $entries = self::get_registrants ( $event ) ) {
     		return false;
     	}
