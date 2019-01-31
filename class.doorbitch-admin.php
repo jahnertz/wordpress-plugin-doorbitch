@@ -1,7 +1,7 @@
 <?php
 
-class Doorbitch_Admin
-{
+class Doorbitch_Admin {
+
     private $options;
 
     public  $visible_event = '';
@@ -36,6 +36,9 @@ class Doorbitch_Admin
                 
                 case 'export':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
+                    // load export class:
+                    require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-export.php' );
+                    $doorbitch_export = new Doorbitch_Export();
                     $this->export_flag = true;
                     $this->visible_event = $_POST[ 'event' ];
                     break;
@@ -167,7 +170,7 @@ class Doorbitch_Admin
                             }
                             if( $this->export_flag ) {
                                 doorbitch::debug( 'calling export_records ');
-                                $exported_file = doorbitch::export_records( $_POST[ 'event' ] );
+                                $exported_file = doorbitch_export::export_records( $_POST[ 'event' ] );
                                 ?>
                                 <tr>
                                     <td>
