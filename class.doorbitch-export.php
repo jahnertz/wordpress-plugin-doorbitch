@@ -76,34 +76,8 @@ class Doorbitch_Export {
   //   	}
   //   }
 
-    public static function get_registrants( $event ) {
-        global $wpdb;
-
-        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
-        if ( empty( $results ) ){
-            // maybe unnessesary.
-            return array();
-        } else {
-            $entries = array();
-            foreach( $results as $result ) {
-                $entry = array();
-                // hide event column
-                // $entry [ 'event' ] = $result->event;
-                $entry [ 'time' ] = $result->time;
-                $data = explode( ',', $result->data );
-                foreach ( $data as $datum ) {
-                    $keypair = explode( ':', $datum );
-                    if ( array_key_exists( 1, $keypair ) ) {
-                        $entry[ $keypair[0] ] = $keypair[1];
-                    }
-                }
-                array_push( $entries, $entry );
-            }
-            return $entries;
-        }
-    }
-
     public static function format_csv ( $event ) {
+    	global $doorbitch;
     	if ( ! $entries = doorbitch::get_registrants ( $event ) ) {
     		return false;
     	}
