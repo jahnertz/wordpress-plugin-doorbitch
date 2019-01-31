@@ -77,6 +77,7 @@ class Doorbitch_Export {
   //   }
 
     public static function format_csv ( $event ) {
+    	global $doorbitch;
     	if ( ! $entries = doorbitch::get_registrants ( $event ) ) {
     		return false;
     	}
