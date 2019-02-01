@@ -1,10 +1,11 @@
 <?php
 
-Class Doorbitch_Router
-{
+Class Doorbitch_Router {
+	public $doorbitch;
 
-	public function __construct()
-	{
+	public function __construct( Doorbitch $doorbitch ) {
+		$this->doorbitch = $doorbitch;
+
 		function doorbitch_router_query_vars ( $vars ) {
 			$vars[] = 'virtualpage';
 			return $vars;

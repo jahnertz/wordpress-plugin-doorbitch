@@ -1,14 +1,9 @@
 <?php
-// include PhpSpreadsheet library:
-require_once 'vendor/autoload.php';
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Doorbitch {
     const default_form_url = 'register';
 	public $debug_mode = true;
-	public static $debug_messages = array();
+	public $debug_messages = array();
 	public $table_suffix = 'doorbitch';
 	public $default_event = 'Example Event';
 
@@ -16,55 +11,41 @@ class Doorbitch {
 
 	public function init () {
 		$this->options = get_option( DOORBITCH__OPTIONS );
-
 		// Run the install function if we're not already initiated.
+		$this->debug( "Plugin started successfully." );
 		if ( ! isset( $this->options[ 'initiated' ] ) || $this->options[ 'initiated' ] == false ) {
 			$this->install();
 		} 
 
-		// Show _POST data:
-		// foreach ( $_POST as $key => $value) {
-		// 	$this->debug( $key . ':' . $value );
-		// }
-
         if ( ! is_admin() ) {
             // add routing class for virtual pages etc.
     		require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-router.php' );
-    		$doorbitch_router = new Doorbitch_Router();
-        }
-	
-		//Add admin options page under 'tools' section:
-		if( is_admin() ) {
-		    // include PhpSpreadsheet library:
-		    // require 'vendor/autoload.php';
+    		$doorbitch_router = new Doorbitch_Router( $this );
+			function enqueue_user_styles() {
+				wp_enqueue_style( 'doorbitch-frontend-styles', plugins_url( '/css/doorbitch.css' , __FILE__) );
+			}
+			add_action( 'wp_enqueue_scripts', 'enqueue_user_styles' );
+        } else {
+			// Add admin options page under 'tools' section:
 			require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-admin.php' );
-
-			$doorbitch_admin = new Doorbitch_Admin();
-			add_action( 'init', array( &$doorbitch_admin, 'init' ) );
+			$doorbitch_admin = new Doorbitch_Admin( $this );
 
 			function enqueue_admin_styles() {
 				wp_enqueue_style( 'doorbitch-admin', plugins_url( '/css/doorbitch-admin.css', __FILE__ ) );
 			}
 			add_action( 'admin_enqueue_scripts', 'enqueue_admin_styles' );
-		} else {
-			function enqueue_user_styles() {
-				wp_enqueue_style( 'doorbitch-frontend-styles', plugins_url( '/css/doorbitch.css' , __FILE__) );
-			}
-			add_action( 'wp_enqueue_scripts', 'enqueue_user_styles' );
 		}
 
-		//upgrade the database if neccessary:
+		// upgrade the database if neccessary:
 		// add_action( 'plugins_loaded', array( get_called_class(), 'update_db_check' ) );
 
 		// Add debug mode hooks if it's activated:
-        // TODO: debug should be set in install() at this point so shouldn't need to check if it's set. Maybe need to break out of init() when install() is called.
 		if ( isset ( $this->options[ 'debug_mode' ] ) && $this->options[ 'debug_mode' ] ) {
 			function enqueue_debug_styles() { 
 				wp_enqueue_style( 'debug', plugins_url( '/css/debug.css', __FILE__ ) ); 
 			}
 			add_action( 'wp_enqueue_scripts', 'enqueue_debug_styles' );
-			add_action( 'admin_notices', array( get_called_class(), 'debug_show' ) );
-			add_action( 'wp_footer', array( get_called_class(), 'debug_show' ) );
+			add_action( 'admin_notices', array( $this, 'debug_display_own' ) );
 		}
 	}
 
@@ -118,7 +99,7 @@ class Doorbitch {
 		$this->options[ 'initiated' ] = true;
         isset( $this->options[ 'require_auth' ] ) ? $this->options[ 'require_auth' ] : true;
 		isset( $this->options[ 'debug_mode' ] ) ? $this->options[ 'debug_mode' ] : false;
-        isset( $this->options[ 'form_url' ] ) ? $this->options[ 'form_url' ] : self::default_form_url;
+        isset( $this->options[ 'form_url' ] ) ? $this->options[ 'form_url' ] : $this->default_form_url;
         isset( $this->options[ 'confirmation_email_use_html' ] ) ? $this->options[ 'confirmation_email_use_html' ] : true;
 
 		update_option( 'doorbitch_options', $this->options );
@@ -151,7 +132,7 @@ class Doorbitch {
 		}
 	}
 
-	public static function set_current_event( $event_name = NULL ) {
+	public function set_current_event( $event_name = NULL ) {
 		$options = get_option( 'doorbitch_options' );
 		$event_array = unserialize( $options[ 'events' ] );
 		if ( $event_name == NULL ) {
@@ -161,7 +142,6 @@ class Doorbitch {
 			$options[ 'current_event' ] = $event_name;
 		}
 		else {
-			// $this->debug( 'event \'' . $event_name . '\' not found' );
 			add_event( $event_name );
 		}
 		update_option( 'doorbitch_options', $options );
@@ -198,7 +178,33 @@ class Doorbitch {
 		return $this_db_version;
 	}
 
-	public static function add_event( $event_name ) {
+    public function get_registrants( $event ) {
+        global $wpdb;
+
+        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
+        if ( empty( $results ) ){
+            // maybe unnessesary.
+            return array();
+        } else {
+            $entries = array();
+            foreach( $results as $result ) {
+                $entry = array();
+                // hide event column
+                // $entry [ 'event' ] = $result->event;
+                $entry [ 'time' ] = $result->time;
+                $data = explode( ',', $result->data );
+                foreach ( $data as $datum ) {
+                    $keypair = explode( ':', $datum );
+                    if ( array_key_exists( 1, $keypair ) ) {
+                        $entry[ $keypair[0] ] = $keypair[1];
+                    }
+                }
+                array_push( $entries, $entry );
+            }
+            return $entries;
+        }
+    }
+	public function add_event( $event_name ) {
 		$options = get_option( DOORBITCH__OPTIONS );
 		if ( ! array_key_exists( 'events', $options ) ) {
 			$event_array = array();
@@ -216,11 +222,11 @@ class Doorbitch {
 		update_option( DOORBITCH__OPTIONS, $options );
 	}
 
-	public static function remove_event( $event_name ) {
+	public function remove_event( $event_name ) {
 		$options = get_option( DOORBITCH__OPTIONS );
 		if ( ! array_key_exists( 'events', $options ) ) {
 			$event_array = array();
-			self::add_event( $default_event );
+			$this->add_event( $default_event );
 		}
 		else {
 			$event_array = unserialize( $options[ 'events' ] );
@@ -253,192 +259,26 @@ class Doorbitch {
 		return true;
 	}
 
-	public static function export_records( $event ) {
-		global $wp_filesystem;
-		self::debug( 'Exporting records for ' . $event );
-		$export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
-		self::debug( 'Export Dir: ' . $export_dir );
-		$filename = preg_replace( '/\s/', '_', $event )
-			. '_'
-			. current_time( 'Y-m-d_Hi' )
-			. '.csv';
-		$spreadsheet = self::create_spreadsheet( $event );
-		$url = wp_nonce_url( 'tools.php?page=doorbitch-settings-admin', 'doorbitch-settings-admin');
-		$method = '';
-        $form_fields = array ( 'event', 'action' );
-		if( false === ( $creds = request_filesystem_credentials( $url, $method, false, false, $form_fields ) ) ) {
-			self::debug( 'failed at request_filesystem_credentials' );
-			return false;
-		}
-		if ( ! WP_Filesystem( $creds ) ) {
-			request_filesystem_credentials( $url, $method, true, false, $form_fields );
-			self::debug( 'failed at WP_Filesystem' );
-			return false;
-		} 
-		if ( ! $csv_data = self::format_csv( $event ) ) {
-			self::debug( 'export failed at formatting csv' );
-			return false;
-		}
-		if (! $wp_filesystem->put_contents( $filename, $csv_data, FS_CHMOD_FILE ) ) {
-			self::debug( 'export failed to create file' );
-			return false;
-		}
-		return $export_dir . $filename;
+	public function debug_display_own() {
+		$this->debug_display( $this->debug_messages );
 	}
 
-  //   public static function export_records( $event, $format ) {
-		// $export_dir = trailingslashit( DOORBITCH__PLUGIN_DIR . 'export' );
-		// $export_dir_url = trailingslashit( DOORBITCH__PLUGIN_DIR_URL . 'export' );
-		// $temp_dir = trailingslashit( sys_get_temp_dir() );
-		// $filename = preg_replace( '/\s/', '-', $event ) . '_' . current_time( 'Y-m-d_Hi') . '.' . $format;
-		// $filepath = $export_dir . $filename;
-		// $temp_filepath = $temp_dir . $filename;
-
-  //   	switch ( $format ) {
-  //   		case 'xlsx':
-		//     	if ( ! $spreadsheet = self::create_spreadsheet( $event ) ) return false;
-
-		//         $writer = new Xlsx( $spreadsheet );
-		//         $writer->save( $temp_filepath );
-
-		//         global $wp_filesystem;
-
-		//         //create the export directory if it doesn't already exist:
-		//         if ( ! file_exists( $export_dir ) ) { $wp_filesystem->mkdir( $export_dir ); }
-		//         $wp_filesystem->move( $temp_filepath, $filepath );
-
-		//         return $export_dir_url . $filename;
-  //   			break;
-
-  //   		case 'csv':
-  //   			if ( ! $csv_data = self::format_csv ( $event ) ) {
-  //   				return false;
-  //   			}
-
-  //   			global $wp_filesystem;
-
-  //   			if (! $wp_filesystem->put_contents( $filepath, $csv_data, FS_CHMOD_FILE ) ) {
-  //   				echo "error saving csv file.";
-  //                   break;
-  //   			}
-  //   			return $export_dir_url . $filename;
-  //   			break;
-  //   	}
-  //   }
-
-    public static function get_registrants( $event ) {
-        global $wpdb;
-
-        $results = $wpdb->get_results ( "SELECT * FROM {$wpdb->prefix}doorbitch WHERE event='{$event}'" );
-        if ( empty( $results ) ){
-            // maybe unnessesary.
-            return array();
-        } else {
-            $entries = array();
-            foreach( $results as $result ) {
-                $entry = array();
-                // hide event column
-                // $entry [ 'event' ] = $result->event;
-                $entry [ 'time' ] = $result->time;
-                $data = explode( ',', $result->data );
-                foreach ( $data as $datum ) {
-                    $keypair = explode( ':', $datum );
-                    if ( array_key_exists( 1, $keypair ) ) {
-                        $entry[ $keypair[0] ] = $keypair[1];
-                    }
-                }
-                array_push( $entries, $entry );
-            }
-            return $entries;
-        }
-    }
-
-    public static function format_csv ( $event ) {
-    	if ( ! $entries = self::get_registrants ( $event ) ) {
-    		return false;
-    	}
-    	$csv = 'Event:,' . $event . "\n";
-
-    	// Add headers:
-    	foreach ( $entries[0] as $header => $value ) {
-    		$csv .= $header . ',' ;
-    	}
-    	$csv .= "\n";
-
-    	// Add entries:
-    	foreach ( $entries as $entry ) {
-    		foreach ( $entry as $field => $value ) {
-    			$csv .= $value . ',' ;
-    		}
-    		$csv .= "\n";
-    	}
-
-    	return $csv;
-    }
-
-    public static function create_spreadsheet ( $event ) {
-        $entries = self::get_registrants( $event );
-        if ( empty( $entries ) ) {
-        	return false;
-        }
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        // write the title on row 1:
-        $row = 1;
-        $col = 1;
-        $sheet->setCellValueByColumnAndRow( $col, $row, 'Event:' );
-        $sheet->setCellValueByColumnAndRow( $col + 1, $row, $event );
-
-        // write the headers on row 2:
-        $row = 2;
-        $col = 1;
-        foreach ( $entries[0] as $header => $value ) {
-            $sheet->setCellValueByColumnAndRow( $col, $row, $header );
-            $col++;
-        }
-
-        // write the entries, starting on row 3:
-        $row = 3;
-        foreach ( $entries as $entry ) {
-            $col = 1;
-            foreach ( $entry as $key => $value) {
-                $sheet->setCellValueByColumnAndRow( $col, $row, $value );
-                $col++;
-            }
-            $row++;
-        }
-
-        return $spreadsheet;
-    }
-
-	public static function debug_show() {
-        if ( ! is_admin() ) {
-    		echo "<h4>DOORBITCH DEBUG:</h4>";
-    		if ( ! empty( self::$debug_messages ) ) {
-    			echo "<div class='doorbitch-debug'>";
-    			for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
-    				print_r( '<p>' . self::$debug_messages[$i] . '<p>' );
-    				error_log( self::$debug_messages[$i] );
-    			}
-    			echo "</div>";
-    		}
-        }
-        else {
-            for ($i = 0; $i < count( self::$debug_messages ); $i++ ) {
-                error_log( self::$debug_messages[$i] );
-            }
-        }
+	public function debug_display( $debug_messages ) {
+		foreach ( $debug_messages as $debug_message ) {
+        	if ( is_admin() ) {
+	        	echo( "<p>" . $debug_message . "</p>" );
+	        }
+            error_log( $debug_message );
+		}
 	}
 
-	public static function debug( $object ) {
+	public function debug( $object ) {
         //collect debug messages and their origins:
 		$file = basename( debug_backtrace()[0]['file'] );
         if (is_array($object)) {
-            self::$debug_messages[] = htmlspecialchars( var_export( $object ) ) . ' -> ' . $file;
-        } elseif (is_string( $object )) {
-            self::$debug_messages[] = htmlspecialchars( $object ) . ' -> ' . $file;
+            $this->debug_messages[] = htmlspecialchars( var_export( $object ) ) . ' (' . $file . ')';
         } else {
-            self::$debug_messages[] =  'ERROR -> ' . $file;
+            $this->debug_messages[] = '[' . $file . '] ' . htmlspecialchars( $object );
         }
 	}
 

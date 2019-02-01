@@ -3,17 +3,18 @@
 class Doorbitch_Admin {
 
     private $options;
+    public $doorbitch;
 
     public  $visible_event = '';
     private $new_event;
     private $del_event;
     private $export_flag;
+    private $exported_file;
     /**
      * Start up
      */
-    public function init ()
-    {
-        global $doorbitch;
+    function __construct ( Doorbitch $doorbitch ) {
+        $this->doorbitch = $doorbitch;
         add_action( 'admin_menu', array( $this, 'add_plugin_page' ) );
         add_action( 'admin_init', array( $this, 'add_plugin_settings_page' ) );
         $this->options = get_option( DOORBITCH__OPTIONS );
@@ -30,15 +31,13 @@ class Doorbitch_Admin {
                 
                 case 'set as current event':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
-                    doorbitch::set_current_event( $_POST[ 'event' ] );
+                    $this->doorbitch->set_current_event( $_POST[ 'event' ] );
                     $this->visible_event = $_POST[ 'event' ];
                     break;
                 
                 case 'export':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
                     // load export class:
-                    require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-export.php' );
-                    $doorbitch_export = new Doorbitch_Export();
                     $this->export_flag = true;
                     $this->visible_event = $_POST[ 'event' ];
                     break;
@@ -57,8 +56,8 @@ class Doorbitch_Admin {
 
                 case 'delete this event':
                     check_admin_referer( 'doorbitch_view_export_nonce' );
-                    doorbitch::remove_event( $_POST[ 'event' ] );
-                    doorbitch::set_current_event();
+                    $doorbitch->remove_event( $_POST[ 'event' ] );
+                    $this->doorbitch->set_current_event();
                     $this->visible_event = $this->options[ 'current_event' ];
                     break;
 
@@ -67,11 +66,11 @@ class Doorbitch_Admin {
                     if( isset( $_POST[ 'new_event_name' ] ) ) {
                         if( $_POST[ 'new_event_name' ] == '' ) {
                             $this->new_event = true;
-                            doorbitch::debug( 'Please enter an event name' );
+                            $this->doorbitch->debug( 'Please enter an event name' );
                             $this->visible_event = $_POST[ 'event' ];
                         }
                         else {
-                            doorbitch::add_event( $_POST[ 'new_event_name' ] );
+                            $this->doorbitch->add_event( $_POST[ 'new_event_name' ] );
                             $this->visible_event = $_POST[ 'new_event_name' ];
                         }
                     }
@@ -80,6 +79,11 @@ class Doorbitch_Admin {
                 }
             } else {
                 $this->visible_event = $this->options[ 'current_event' ];
+            }
+            if( $this->export_flag ){
+                require_once( DOORBITCH__PLUGIN_DIR . 'class.doorbitch-export.php' );
+                $doorbitch_export = new Doorbitch_Export( $this->doorbitch );
+                $this->exported_file = $doorbitch_export->export_records( $_POST[ 'event' ] );
             }
         }
     }
@@ -169,18 +173,16 @@ class Doorbitch_Admin {
                                 <?php
                             }
                             if( $this->export_flag ) {
-                                doorbitch::debug( 'calling export_records ');
-                                $exported_file = doorbitch_export::export_records( $_POST[ 'event' ] );
                                 ?>
                                 <tr>
                                     <td>
                                         <p>
                                             <?php
-                                            doorbitch::debug( 'exporting' );
-                                            if ( $exported_file ) {
+                                            $this->doorbitch->debug( 'displaying link' );
+                                            if ( $this->exported_file ) {
                                                 printf('<a href="%s">%s</a>',
-                                                $exported_file,
-                                                basename( $exported_file ) );
+                                                $this->exported_file,
+                                                basename( $this->exported_file ) );
                                             } else {
                                                 echo( 'There was an error exporting the spreadsheet.' );
                                             }
@@ -554,7 +556,7 @@ class Doorbitch_Admin {
 
 
     private function display_records( $event ) {
-        $entries = doorbitch::get_registrants( $event );
+        $entries = $this->doorbitch->get_registrants( $event );
         ?>
         <table class="doorbitch-records">
             <?php
